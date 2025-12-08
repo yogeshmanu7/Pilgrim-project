@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Temple Management')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <h2 th:text="${temple.id != null ? 'Edit Temple' : 'Add New Temple'}">Temple Form</h2>
+                    <a th:href="@{/temple-admin/dashboard}" class="text-muted">← Back to Dashboard</a>
+                </div>
+            </div>
+            
+            <form th:action="${temple.id != null ? '/temple-admin/temple/' + temple.id + '/edit' : '/temple-admin/temple/add'}" 
+                  method="post" class="card" id="templeForm">
+                <div class="card-body">
+                    
+                    <!-- BASIC INFO -->
+                    <h4 style="color: var(--maroon); border-bottom: 2px solid var(--gold); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                        🛕 Basic Information
+                    </h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Temple Name (English) *</label>
+                            <input type="text" name="name" th:value="${temple.name}" class="form-control" required placeholder="e.g., Kashi Vishwanath Temple">
+                        </div>
+                        <div class="form-group" data-religion="HINDU">
+                            <label class="form-label">Temple Name (Hindi)</label>
+                            <input type="text" name="nameHindi" th:value="${temple.nameHindi}" class="form-control" placeholder="e.g., काशी विश्वनाथ मंदिर">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <!-- HINDU: Main Deity -->
+                        <div class="form-group" data-religion="HINDU">
+                            <label class="form-label">Main Deity *</label>
+                            <input type="text" name="mainDeity" th:value="${temple.mainDeity}" class="form-control" placeholder="e.g., Lord Shiva">
+                        </div>
+                        
+                        <!-- CHRISTIAN: Pastor Name -->
+                        <div class="form-group" data-religion="CHRISTIAN" style="display: none;">
+                            <label class="form-label">Pastor/Priest Name *</label>
+                            <input type="text" name="pastorName" th:value="${temple.pastorName}" class="form-control" placeholder="e.g., Rev. John Smith">
+                        </div>
+                        
+                        <!-- MUSLIM: Imam Name -->
+                        <div class="form-group" data-religion="MUSLIM" style="display: none;">
+                            <label class="form-label">Imam Name *</label>
+                            <input type="text" name="imamName" th:value="${temple.imamName}" class="form-control" placeholder="e.g., Imam Ahmed Ali">
+                        </div>
+                        
+                        <!-- JAIN: Tirthankara -->
+                        <div class="form-group" data-religion="JAIN" style="display: none;">
+                            <label class="form-label">Main Tirthankara *</label>
+                            <input type="text" name="tirthankara" th:value="${temple.tirthankara}" class="form-control" placeholder="e.g., Lord Mahavira">
+                        </div>
+                        
+                        <!-- BUDDHISM: Buddha Statue -->
+                        <div class="form-group" data-religion="BUDDHISM" style="display: none;">
+                            <label class="form-label">Buddha Statue Type *</label>
+                            <input type="text" name="buddhaStatue" th:value="${temple.buddhaStatue}" class="form-control" placeholder="e.g., Gautama Buddha, Amitabha Buddha">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Religion *</label>
+                            <input type="text" th:value="${temple.religion != null ? temple.religion.displayName : (adminReligion != null ? adminReligion.displayName : 'Hindu')}" 
+                                   class="form-control" readonly style="background-color: #f5f5f5;" 
+                                   title="Religion is set based on your account type">
+                            <input type="hidden" name="religion" id="religionInput" th:value="${temple.religion != null ? temple.religion : (adminReligion != null ? adminReligion : 'HINDU')}">
+                            <small class="text-muted">Religion is automatically set based on your account</small>
+                        </div>
+                    </div>
+                    
+                    <!-- CHRISTIAN: Denomination and Church Type -->
+                    <div data-religion="CHRISTIAN" style="display: none;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Denomination</label>
+                                <select name="denomination" class="form-control">
+                                    <option value="">Select Denomination</option>
+                                    <option value="Catholic" th:selected="${temple.denomination == 'Catholic'}">Catholic</option>
+                                    <option value="Protestant" th:selected="${temple.denomination == 'Protestant'}">Protestant</option>
+                                    <option value="Orthodox" th:selected="${temple.denomination == 'Orthodox'}">Orthodox</option>
+                                    <option value="Anglican" th:selected="${temple.denomination == 'Anglican'}">Anglican</option>
+                                    <option value="Baptist" th:selected="${temple.denomination == 'Baptist'}">Baptist</option>
+                                    <option value="Methodist" th:selected="${temple.denomination == 'Methodist'}">Methodist</option>
+                                    <option value="Lutheran" th:selected="${temple.denomination == 'Lutheran'}">Lutheran</option>
+                                    <option value="Other" th:selected="${temple.denomination == 'Other'}">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Church Type</label>
+                                <select name="churchType" class="form-control">
+                                    <option value="">Select Type</option>
+                                    <option value="Cathedral" th:selected="${temple.churchType == 'Cathedral'}">Cathedral</option>
+                                    <option value="Church" th:selected="${temple.churchType == 'Church'}">Church</option>
+                                    <option value="Chapel" th:selected="${temple.churchType == 'Chapel'}">Chapel</option>
+                                    <option value="Basilica" th:selected="${temple.churchType == 'Basilica'}">Basilica</option>
+                                    <option value="Monastery" th:selected="${temple.churchType == 'Monastery'}">Monastery</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- MUSLIM: Mosque Type -->
+                    <div data-religion="MUSLIM" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Mosque Type</label>
+                            <select name="mosqueType" class="form-control">
+                                <option value="">Select Type</option>
+                                <option value="Masjid" th:selected="${temple.mosqueType == 'Masjid'}">Masjid</option>
+                                <option value="Jama Masjid" th:selected="${temple.mosqueType == 'Jama Masjid'}">Jama Masjid</option>
+                                <option value="Dargah" th:selected="${temple.mosqueType == 'Dargah'}">Dargah</option>
+                                <option value="Shrine" th:selected="${temple.mosqueType == 'Shrine'}">Shrine</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- JAIN: Jain Sect -->
+                    <div data-religion="JAIN" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Jain Sect</label>
+                            <select name="jainSect" class="form-control">
+                                <option value="">Select Sect</option>
+                                <option value="Digambara" th:selected="${temple.jainSect == 'Digambara'}">Digambara</option>
+                                <option value="Shwetambara" th:selected="${temple.jainSect == 'Shwetambara'}">Shwetambara</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- BUDDHISM: Buddhist Sect -->
+                    <div data-religion="BUDDHISM" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Buddhist Sect</label>
+                            <select name="buddhistSect" class="form-control">
+                                <option value="">Select Sect</option>
+                                <option value="Theravada" th:selected="${temple.buddhistSect == 'Theravada'}">Theravada</option>
+                                <option value="Mahayana" th:selected="${temple.buddhistSect == 'Mahayana'}">Mahayana</option>
+                                <option value="Vajrayana" th:selected="${temple.buddhistSect == 'Vajrayana'}">Vajrayana</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description (English) *</label>
+                        <textarea name="description" class="form-control" rows="3" required th:text="${temple.description}" placeholder="Brief description of the temple..."></textarea>
+                    </div>
+                    
+                    <div class="form-group" data-religion="HINDU">
+                        <label class="form-label">Description (Hindi)</label>
+                        <textarea name="descriptionHindi" class="form-control" rows="3" th:text="${temple.descriptionHindi}" placeholder="मंदिर का संक्षिप्त विवरण..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">History (English)</label>
+                        <textarea name="history" class="form-control" rows="4" th:text="${temple.history}" placeholder="Historical background of the temple..."></textarea>
+                    </div>
+                    
+                    <div class="form-group" data-religion="HINDU">
+                        <label class="form-label">History (Hindi)</label>
+                        <textarea name="historyHindi" class="form-control" rows="4" th:text="${temple.historyHindi}" placeholder="मंदिर का इतिहास..."></textarea>
+                    </div>
+                    
+                    <!-- CHRISTIAN: Mass Times and Confession Times -->
+                    <div data-religion="CHRISTIAN" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Mass/Service Times</label>
+                            <textarea name="massTimes" class="form-control" rows="3" th:text="${temple.massTimes}" placeholder="e.g., Sunday: 8:00 AM, 10:00 AM, 6:00 PM&#10;Weekdays: 7:00 AM"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confession Times</label>
+                            <textarea name="confessionTimes" class="form-control" rows="2" th:text="${temple.confessionTimes}" placeholder="e.g., Saturday: 4:00 PM - 5:00 PM"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- MUSLIM: Prayer Times and Qibla -->
+                    <div data-religion="MUSLIM" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Prayer Times</label>
+                            <textarea name="prayerTimes" class="form-control" rows="5" th:text="${temple.prayerTimes}" placeholder="Fajr: 5:30 AM&#10;Dhuhr: 12:30 PM&#10;Asr: 4:00 PM&#10;Maghrib: 6:30 PM&#10;Isha: 8:00 PM"></textarea>
+                            <small class="text-muted">Enter prayer times for Fajr, Dhuhr, Asr, Maghrib, and Isha</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Qibla Direction</label>
+                            <input type="text" name="qiblaDirection" th:value="${temple.qiblaDirection}" class="form-control" placeholder="e.g., West, 270 degrees">
+                        </div>
+                    </div>
+                    
+                    <!-- JAIN: Jain Rituals -->
+                    <div data-religion="JAIN" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Jain Rituals & Practices</label>
+                            <textarea name="jainRituals" class="form-control" rows="4" th:text="${temple.jainRituals}" placeholder="Describe Jain-specific rituals and practices..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- BUDDHISM: Meditation Times -->
+                    <div data-religion="BUDDHISM" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Meditation Times</label>
+                            <textarea name="meditationTimes" class="form-control" rows="3" th:text="${temple.meditationTimes}" placeholder="e.g., Morning: 6:00 AM - 7:00 AM&#10;Evening: 6:00 PM - 7:00 PM"></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- LOCATION -->
+                    <h4 style="color: var(--maroon); border-bottom: 2px solid var(--gold); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem;">
+                        📍 Location Details
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Full Address *</label>
+                        <textarea name="address" class="form-control" rows="2" required th:text="${temple.address}" placeholder="Complete address of the temple"></textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">City *</label>
+                            <input type="text" name="city" th:value="${temple.city}" class="form-control" required placeholder="e.g., Varanasi">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State *</label>
+                            <input type="text" name="state" th:value="${temple.state}" class="form-control" required placeholder="e.g., Uttar Pradesh">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Pincode</label>
+                            <input type="text" name="pincode" th:value="${temple.pincode}" class="form-control" placeholder="e.g., 221001">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Latitude</label>
+                            <input type="text" name="latitude" th:value="${temple.latitude}" class="form-control" placeholder="e.g., 25.3109">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Longitude</label>
+                            <input type="text" name="longitude" th:value="${temple.longitude}" class="form-control" placeholder="e.g., 83.0107">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Google Maps Embed URL</label>
+                        <input type="url" name="mapEmbedUrl" th:value="${temple.mapEmbedUrl}" class="form-control" placeholder="https://www.google.com/maps/embed?pb=...">
+                        <small class="text-muted">Go to Google Maps → Share → Embed map → Copy iframe src URL</small>
+                    </div>
+                    
+                    <!-- CONTACT -->
+                    <h4 style="color: var(--maroon); border-bottom: 2px solid var(--gold); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem;">
+                        📞 Contact Information
+                    </h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" name="phone" th:value="${temple.phone}" class="form-control" placeholder="+91 9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" th:value="${temple.email}" class="form-control" placeholder="info@temple.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Website</label>
+                            <input type="url" name="website" th:value="${temple.website}" class="form-control" placeholder="https://temple.com">
+                        </div>
+                    </div>
+                    
+                    <!-- TIMINGS -->
+                    <h4 style="color: var(--maroon); border-bottom: 2px solid var(--gold); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem;">
+                        ⏰ Opening Hours
+                    </h4>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Morning Opening</label>
+                            <input type="time" name="morningOpenTime" th:value="${temple.morningOpenTime}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Morning Closing</label>
+                            <input type="time" name="morningCloseTime" th:value="${temple.morningCloseTime}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Evening Opening</label>
+                            <input type="time" name="eveningOpenTime" th:value="${temple.eveningOpenTime}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Evening Closing</label>
+                            <input type="time" name="eveningCloseTime" th:value="${temple.eveningCloseTime}" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Special Timings / Notes</label>
+                        <textarea name="specialTimings" class="form-control" rows="2" th:text="${temple.specialTimings}" placeholder="e.g., Closed on Ekadashi, Special darshan on Mondays from 4am"></textarea>
+                    </div>
+                    
+                    <!-- RULES -->
+                    <h4 style="color: var(--maroon); border-bottom: 2px solid var(--gold); padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem;">
+                        📋 Rules & Guidelines
+                    </h4>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Rules (English)</label>
+                        <textarea name="rules" class="form-control" rows="4" th:text="${temple.rules}" placeholder="1. Dress code: Traditional attire required
+2. Photography not allowed inside
+3. Mobile phones to be kept in lockers
+4. Remove footwear before entering"></textarea>
+                    </div>
+                    
+                    <div class="form-group" data-religion="HINDU">
+                        <label class="form-label">Rules (Hindi)</label>
+                        <textarea name="rulesHindi" class="form-control" rows="4" th:text="${temple.rulesHindi}" placeholder="1. पारंपरिक वस्त्र पहनें
+2. अंदर फोटोग्राफी निषेध
+3. मोबाइल लॉकर में रखें
+4. प्रवेश से पहले जूते उतारें"></textarea>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save"></i>
+                            <span th:text="${temple.id != null ? 'Update Temple' : 'Create Temple'}">Save Temple</span>
+                        </button>
+                        <a th:href="@{/temple-admin/dashboard}" class="btn btn-outline-dark">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const religionInput = document.getElementById('religionInput');
+            const currentReligion = religionInput ? religionInput.value : 'HINDU';
+            
+            // Function to show/hide fields based on religion
+            function toggleReligionFields(religion) {
+                // Hide all religion-specific fields
+                document.querySelectorAll('[data-religion]').forEach(function(element) {
+                    element.style.display = 'none';
+                });
+                
+                // Show fields for the selected religion
+                document.querySelectorAll('[data-religion="' + religion + '"]').forEach(function(element) {
+                    element.style.display = '';
+                });
+                
+                // Handle required fields
+                if (religion === 'HINDU') {
+                    const mainDeityInput = document.querySelector('input[name="mainDeity"]');
+                    if (mainDeityInput) {
+                        mainDeityInput.required = true;
+                    }
+                } else {
+                    const mainDeityInput = document.querySelector('input[name="mainDeity"]');
+                    if (mainDeityInput) {
+                        mainDeityInput.required = false;
+                    }
+                }
+                
+                // Set required for religion-specific primary fields
+                if (religion === 'CHRISTIAN') {
+                    const pastorInput = document.querySelector('input[name="pastorName"]');
+                    if (pastorInput) pastorInput.required = true;
+                } else {
+                    const pastorInput = document.querySelector('input[name="pastorName"]');
+                    if (pastorInput) pastorInput.required = false;
+                }
+                
+                if (religion === 'MUSLIM') {
+                    const imamInput = document.querySelector('input[name="imamName"]');
+                    if (imamInput) imamInput.required = true;
+                } else {
+                    const imamInput = document.querySelector('input[name="imamName"]');
+                    if (imamInput) imamInput.required = false;
+                }
+                
+                if (religion === 'JAIN') {
+                    const tirthankaraInput = document.querySelector('input[name="tirthankara"]');
+                    if (tirthankaraInput) tirthankaraInput.required = true;
+                } else {
+                    const tirthankaraInput = document.querySelector('input[name="tirthankara"]');
+                    if (tirthankaraInput) tirthankaraInput.required = false;
+                }
+                
+                if (religion === 'BUDDHISM') {
+                    const buddhaInput = document.querySelector('input[name="buddhaStatue"]');
+                    if (buddhaInput) buddhaInput.required = true;
+                } else {
+                    const buddhaInput = document.querySelector('input[name="buddhaStatue"]');
+                    if (buddhaInput) buddhaInput.required = false;
+                }
+            }
+            
+            // Initialize with current religion
+            toggleReligionFields(currentReligion);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('All Temples')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 3rem 0;">
+        <div class="container hero-content">
+            <h1>🛕 Explore Sacred Temples</h1>
+            <p>Discover divine destinations across India</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <!-- Filter by City -->
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <span class="text-muted">Filter by city:</span>
+                <a th:href="@{/temples}" class="gallery-tab active">All</a>
+                <a th:each="city : ${cities}" th:href="@{/search(city=${city})}" 
+                   class="gallery-tab" th:text="${city}">City</a>
+            </div>
+            
+            <!-- Temples Grid -->
+            <div th:if="${temples != null && !temples.isEmpty()}" class="temple-grid">
+                <div th:each="temple, iterStat : ${temples}" 
+                     class="card temple-card animate-on-scroll"
+                     th:classappend="'stagger-' + ${(iterStat.index % 5) + 1}">
+                    <img th:src="${temple.photos != null && !temple.photos.isEmpty()} ? ${contextPath} + ${temple.photos[0].photoUrl} : ${contextPath} + '/images/temple-default.jpg'" 
+                         th:alt="${temple.name}" class="card-img">
+                    <div class="card-body">
+                        <h4 class="card-title" th:text="${temple.name}">Temple Name</h4>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt text-saffron"></i>
+                            <span th:text="${temple.city + ', ' + temple.state}">City, State</span>
+                        </p>
+                        <p class="card-text" th:if="${temple.mainDeity != null}">
+                            <i class="fas fa-om text-gold"></i>
+                            <span th:text="${temple.mainDeity}">Main Deity</span>
+                        </p>
+                        <p class="card-text text-muted" th:text="${#strings.abbreviate(temple.description, 100)}">Description...</p>
+                        
+                        <div class="d-flex gap-1 flex-wrap mt-2">
+                            <span class="language-tag"><i class="fas fa-clock"></i> Darshan</span>
+                            <span class="language-tag"><i class="fas fa-fire"></i> Pooja</span>
+                            <span class="language-tag"><i class="fas fa-gift"></i> Prasadham</span>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-between align-center">
+                        <span class="text-muted" th:if="${temple.morningOpenTime != null}">
+                            <i class="fas fa-clock"></i>
+                            <span th:text="${temple.morningOpenTime + ' - ' + temple.eveningCloseTime}">Timings</span>
+                        </span>
+                        <a th:href="@{/temples/{id}(id=${temple.id})}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- No Temples -->
+            <div th:if="${temples == null || temples.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-temple fa-4x text-muted mb-3"></i>
+                <h3>No temples found</h3>
+                <p class="text-muted">Check back later for more temples</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

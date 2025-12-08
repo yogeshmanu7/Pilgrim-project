@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Donations')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <h1 class="mb-4">💝 My Donations</h1>
+            
+            <div th:if="${donations != null && !donations.isEmpty()}" class="temple-grid">
+                <div th:each="donation : ${donations}" class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-between align-center mb-2">
+                            <span class="darshan-type special" th:text="${donation.donationType.displayName}">Type</span>
+                            <span class="prasadham-price" th:text="'₹' + ${donation.amount}">Amount</span>
+                        </div>
+                        <h4 th:text="${donation.temple.name}">Temple</h4>
+                        <div class="pooja-info">
+                            <i class="fas fa-receipt"></i>
+                            <span th:text="${donation.donationNumber}">Donation#</span>
+                        </div>
+                        <div class="pooja-info" th:if="${donation.receiptNumber != null}">
+                            <i class="fas fa-file-invoice"></i>
+                            <span th:text="'Receipt: ' + ${donation.receiptNumber}">Receipt</span>
+                        </div>
+                        <div class="pooja-info">
+                            <i class="fas fa-calendar"></i>
+                            <span th:text="${donation.createdAt}">Date</span>
+                        </div>
+                        <div class="pooja-info" th:if="${donation.purpose != null}">
+                            <i class="fas fa-heart"></i>
+                            <span th:text="${donation.purpose}">Purpose</span>
+                        </div>
+                        <div class="mt-2">
+                            <span th:if="${donation.is80GApplicable}" class="language-tag" style="background: #E8F5E9; color: #2E7D32;">
+                                <i class="fas fa-check"></i> 80G Applicable
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${donations == null || donations.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-hand-holding-heart fa-4x text-muted mb-3"></i>
+                <h3>No donations found</h3>
+                <p class="text-muted">Support temples through your generous donations</p>
+                <a th:href="@{/temples}" class="btn btn-secondary">Make a Donation</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

@@ -1,0 +1,16 @@
+/* User Dashboard Styles for GlobalPiligrim */
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-600: #4b5563;
+    --gray-800: #1f2937;
+    --success: #10b981;
+    --error: #ef4444;
+}
+
+/* Additional styles can be added here if needed */
+/* Most styles are inline in JSP files for simplicity */
+

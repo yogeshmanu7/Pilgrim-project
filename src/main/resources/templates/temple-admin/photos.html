@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Photos')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <h2>Manage Photos - <span th:text="${temple.name}">Temple</span></h2>
+                    <a th:href="@{/temple-admin/dashboard}" class="text-muted">← Back to Dashboard</a>
+                </div>
+            </div>
+            
+            <!-- Add New Photo Form -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h4>➕ Add New Photo</h4>
+                    <form th:action="@{/temple-admin/temple/{id}/photos/add(id=${temple.id})}" method="post" enctype="multipart/form-data">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Photo *</label>
+                                <input type="file" name="file" class="form-control" accept="image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Title *</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Category *</label>
+                                <select name="category" class="form-control" required>
+                                    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}">Category</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Upload Photo
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Photo Categories Info -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5>📷 Photo Categories</h5>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="language-tag"><strong>EXTERIOR</strong> - Outside views of temple</span>
+                        <span class="language-tag"><strong>INTERIOR</strong> - Inside temple views</span>
+                        <span class="language-tag"><strong>SCULPTURE</strong> - Carvings, statues</span>
+                        <span class="language-tag"><strong>DEITY</strong> - Main deity photos</span>
+                        <span class="language-tag"><strong>EVENT</strong> - Festival/event photos</span>
+                        <span class="language-tag"><strong>OTHER</strong> - Other photos</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Existing Photos -->
+            <h4 class="mb-3">Existing Photos (<span th:text="${#lists.size(photos)}">0</span>)</h4>
+            <div th:if="${photos != null && !photos.isEmpty()}" class="gallery-grid">
+                <div th:each="photo : ${photos}" class="gallery-item">
+                    <img th:src="${photo.photoUrl}" th:alt="${photo.title}">
+                    <div class="overlay">
+                        <div>
+                            <strong th:text="${photo.title}">Photo Title</strong>
+                            <br>
+                            <small th:text="${photo.category}">Category</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${photos == null || photos.isEmpty()}" class="text-center py-4 text-muted">
+                <i class="fas fa-images fa-4x mb-3"></i>
+                <p>No photos added yet</p>
+                <p class="text-muted">Upload photos to showcase your temple</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

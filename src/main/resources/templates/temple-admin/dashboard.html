@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Temple Admin Dashboard')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="dashboard-header">
+        <div class="container">
+            <!-- Hindu Dashboard Header -->
+            <div th:if="${adminReligion == null || adminReligion.name() == 'HINDU'}">
+                <h1>🛕 Temple Admin Dashboard</h1>
+                <p>Manage your temples, bookings, and more</p>
+            </div>
+            <!-- Christian Dashboard Header -->
+            <div th:if="${adminReligion != null && adminReligion.name() == 'CHRISTIAN'}">
+                <h1>⛪ Church Admin Dashboard</h1>
+                <p>Manage your churches, services, and more</p>
+            </div>
+            <!-- Muslim Dashboard Header -->
+            <div th:if="${adminReligion != null && adminReligion.name() == 'MUSLIM'}">
+                <h1>🕌 Mosque Admin Dashboard</h1>
+                <p>Manage your mosques, prayers, and more</p>
+            </div>
+            <!-- Jain Dashboard Header -->
+            <div th:if="${adminReligion != null && adminReligion.name() == 'JAIN'}">
+                <h1>🕉️ Jain Temple Admin Dashboard</h1>
+                <p>Manage your Jain temples, rituals, and more</p>
+            </div>
+            <!-- Buddhism Dashboard Header -->
+            <div th:if="${adminReligion != null && adminReligion.name() == 'BUDDHISM'}">
+                <h1>☸️ Buddhist Temple Admin Dashboard</h1>
+                <p>Manage your Buddhist temples, meditation, and more</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <!-- Hindu: "Your Temples" -->
+                <h2 th:if="${adminReligion == null || adminReligion.name() == 'HINDU'}">Your Temples</h2>
+                <!-- Christian: "Your Churches" -->
+                <h2 th:if="${adminReligion != null && adminReligion.name() == 'CHRISTIAN'}">Your Churches</h2>
+                <!-- Muslim: "Your Mosques" -->
+                <h2 th:if="${adminReligion != null && adminReligion.name() == 'MUSLIM'}">Your Mosques</h2>
+                <!-- Jain: "Your Jain Temples" -->
+                <h2 th:if="${adminReligion != null && adminReligion.name() == 'JAIN'}">Your Jain Temples</h2>
+                <!-- Buddhism: "Your Buddhist Temples" -->
+                <h2 th:if="${adminReligion != null && adminReligion.name() == 'BUDDHISM'}">Your Buddhist Temples</h2>
+                
+                <!-- Only show "Add Temple" button if admin doesn't have a temple yet -->
+                <a th:href="@{/temple-admin/temple/add}" class="btn btn-primary" th:if="${!hasTemple}">
+                    <i class="fas fa-plus"></i> 
+                    <span th:if="${adminReligion == null || adminReligion.name() == 'HINDU'}">Add New Temple</span>
+                    <span th:if="${adminReligion != null && adminReligion.name() == 'CHRISTIAN'}">Add New Church</span>
+                    <span th:if="${adminReligion != null && adminReligion.name() == 'MUSLIM'}">Add New Mosque</span>
+                    <span th:if="${adminReligion != null && adminReligion.name() == 'JAIN'}">Add New Jain Temple</span>
+                    <span th:if="${adminReligion != null && adminReligion.name() == 'BUDDHISM'}">Add New Buddhist Temple</span>
+                </a>
+            </div>
+            
+            <div th:if="${temples != null && !temples.isEmpty()}" class="temple-grid">
+                <div th:each="temple : ${temples}" class="card">
+                    <div class="card-body">
+                        <h4 th:text="${temple.name}">Temple Name</h4>
+                        <p class="text-muted" th:text="${temple.city + ', ' + temple.state}">Location</p>
+                        
+                        <!-- HINDU: Show Darshans, Poojas, Prasadhams -->
+                        <div th:if="${adminReligion == null || adminReligion.name() == 'HINDU'}" class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="language-tag" th:text="${#lists.size(temple.darshans)} + ' Darshans'">Darshans</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.poojas)} + ' Poojas'">Poojas</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.prasadhams)} + ' Prasadhams'">Prasadhams</span>
+                        </div>
+                        
+                        <!-- CHRISTIAN: Show Services, Masses, etc. -->
+                        <div th:if="${adminReligion != null && adminReligion.name() == 'CHRISTIAN'}" class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="language-tag" th:text="${#lists.size(temple.darshans)} + ' Services'">Services</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.poojas)} + ' Masses'">Masses</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.prasadhams)} + ' Offerings'">Offerings</span>
+                        </div>
+                        
+                        <!-- MUSLIM: Show Prayers, etc. -->
+                        <div th:if="${adminReligion != null && adminReligion.name() == 'MUSLIM'}" class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="language-tag" th:text="${#lists.size(temple.darshans)} + ' Prayer Sessions'">Prayer Sessions</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.poojas)} + ' Religious Services'">Religious Services</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.prasadhams)} + ' Offerings'">Offerings</span>
+                        </div>
+                        
+                        <!-- JAIN: Show Darshans, Rituals, etc. -->
+                        <div th:if="${adminReligion != null && adminReligion.name() == 'JAIN'}" class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="language-tag" th:text="${#lists.size(temple.darshans)} + ' Darshans'">Darshans</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.poojas)} + ' Rituals'">Rituals</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.prasadhams)} + ' Offerings'">Offerings</span>
+                        </div>
+                        
+                        <!-- BUDDHISM: Show Meditation, etc. -->
+                        <div th:if="${adminReligion != null && adminReligion.name() == 'BUDDHISM'}" class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="language-tag" th:text="${#lists.size(temple.darshans)} + ' Meditation Sessions'">Meditation Sessions</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.poojas)} + ' Ceremonies'">Ceremonies</span>
+                            <span class="language-tag" th:text="${#lists.size(temple.prasadhams)} + ' Offerings'">Offerings</span>
+                        </div>
+                        
+                        <div class="d-flex flex-wrap gap-2" style="flex-direction: column;">
+                            <a th:href="@{/temple-admin/temple/{id}/edit(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                <i class="fas fa-edit"></i> Edit Temple
+                            </a>
+                            
+                            <!-- HINDU: Show all Hindu-specific management options -->
+                            <div th:if="${adminReligion == null || adminReligion.name() == 'HINDU'}">
+                                <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-om"></i> Manage Darshans
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-fire"></i> Manage Poojas
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/prasadhams(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-gift"></i> Manage Prasadhams
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-calendar"></i> Manage Festivals
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/rituals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-clock"></i> Manage Rituals
+                                </a>
+                            </div>
+                            
+                            <!-- CHRISTIAN: Show Christian-specific management options -->
+                            <div th:if="${adminReligion != null && adminReligion.name() == 'CHRISTIAN'}">
+                                <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-cross"></i> Manage Services
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-church"></i> Manage Masses
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/prasadhams(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-gift"></i> Manage Offerings
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-calendar"></i> Manage Events
+                                </a>
+                            </div>
+                            
+                            <!-- MUSLIM: Show Muslim-specific management options -->
+                            <div th:if="${adminReligion != null && adminReligion.name() == 'MUSLIM'}">
+                                <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-mosque"></i> Manage Prayer Sessions
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-star-and-crescent"></i> Manage Religious Services
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/prasadhams(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-gift"></i> Manage Offerings
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-calendar"></i> Manage Religious Events
+                                </a>
+                            </div>
+                            
+                            <!-- JAIN: Show Jain-specific management options -->
+                            <div th:if="${adminReligion != null && adminReligion.name() == 'JAIN'}">
+                                <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-om"></i> Manage Darshans
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-hands-praying"></i> Manage Rituals
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/prasadhams(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-gift"></i> Manage Offerings
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-calendar"></i> Manage Festivals
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/rituals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-clock"></i> Manage Rituals
+                                </a>
+                            </div>
+                            
+                            <!-- BUDDHISM: Show Buddhist-specific management options -->
+                            <div th:if="${adminReligion != null && adminReligion.name() == 'BUDDHISM'}">
+                                <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-yin-yang"></i> Manage Meditation Sessions
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-lotus"></i> Manage Ceremonies
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/prasadhams(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-gift"></i> Manage Offerings
+                                </a>
+                                <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-calendar"></i> Manage Events
+                                </a>
+                            </div>
+                            
+                            <!-- Common options for all religions -->
+                            <a th:href="@{/temple-admin/temple/{id}/photos(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                <i class="fas fa-images"></i> Manage Photos
+                            </a>
+                            <a th:href="@{/temple-admin/temple/{id}/tour-guides(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                <i class="fas fa-user-tie"></i> Manage Tour Guides
+                            </a>
+                            <a th:href="@{/temple-admin/temple/{id}/bookings(id=${temple.id})}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-list"></i> View Bookings
+                            </a>
+                            <a th:href="@{/temple-admin/temple/{id}/donations(id=${temple.id})}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-hand-holding-heart"></i> View Donations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${temples == null || temples.isEmpty()}" class="text-center py-5">
+                <!-- Hindu empty state -->
+                <div th:if="${adminReligion == null || adminReligion.name() == 'HINDU'}">
+                    <i class="fas fa-temple fa-4x text-muted mb-3"></i>
+                    <h3>No temples found</h3>
+                    <p class="text-muted">Add your first temple to get started</p>
+                    <a th:href="@{/temple-admin/temple/add}" class="btn btn-primary">Add Temple</a>
+                </div>
+                
+                <!-- Christian empty state -->
+                <div th:if="${adminReligion != null && adminReligion.name() == 'CHRISTIAN'}">
+                    <i class="fas fa-church fa-4x text-muted mb-3"></i>
+                    <h3>No churches found</h3>
+                    <p class="text-muted">Add your first church to get started</p>
+                    <a th:href="@{/temple-admin/temple/add}" class="btn btn-primary">Add Church</a>
+                </div>
+                
+                <!-- Muslim empty state -->
+                <div th:if="${adminReligion != null && adminReligion.name() == 'MUSLIM'}">
+                    <i class="fas fa-mosque fa-4x text-muted mb-3"></i>
+                    <h3>No mosques found</h3>
+                    <p class="text-muted">Add your first mosque to get started</p>
+                    <a th:href="@{/temple-admin/temple/add}" class="btn btn-primary">Add Mosque</a>
+                </div>
+                
+                <!-- Jain empty state -->
+                <div th:if="${adminReligion != null && adminReligion.name() == 'JAIN'}">
+                    <i class="fas fa-om fa-4x text-muted mb-3"></i>
+                    <h3>No Jain temples found</h3>
+                    <p class="text-muted">Add your first Jain temple to get started</p>
+                    <a th:href="@{/temple-admin/temple/add}" class="btn btn-primary">Add Jain Temple</a>
+                </div>
+                
+                <!-- Buddhism empty state -->
+                <div th:if="${adminReligion != null && adminReligion.name() == 'BUDDHISM'}">
+                    <i class="fas fa-yin-yang fa-4x text-muted mb-3"></i>
+                    <h3>No Buddhist temples found</h3>
+                    <p class="text-muted">Add your first Buddhist temple to get started</p>
+                    <a th:href="@{/temple-admin/temple/add}" class="btn btn-primary">Add Buddhist Temple</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

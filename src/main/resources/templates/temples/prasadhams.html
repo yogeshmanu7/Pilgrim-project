@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Prasadham - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>🎁 Prasadham from <span th:text="${temple.name}">Temple</span></h1>
+            <p>Receive sacred prasadham at your doorstep</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <a th:href="@{/temples/{id}(id=${temple.id})}" class="gallery-tab">Overview</a>
+                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="gallery-tab">Darshan</a>
+                <a th:href="@{/temples/{id}/poojas(id=${temple.id})}" class="gallery-tab">Poojas</a>
+                <a th:href="@{/temples/{id}/prasadhams(id=${temple.id})}" class="gallery-tab active">Prasadham</a>
+                <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" class="gallery-tab">Gallery</a>
+            </div>
+            
+            <div th:if="${prasadhams != null && !prasadhams.isEmpty()}" class="pooja-grid">
+                <div th:each="prasadham : ${prasadhams}" class="prasadham-card">
+                    <img th:src="${prasadham.imageUrl != null} ? (${contextPath} + ${prasadham.imageUrl}) : (${contextPath} + '/images/prasadham-default.jpg')" 
+                         th:alt="${prasadham.name}" class="prasadham-img">
+                    <div class="prasadham-body">
+                        <span th:if="${prasadham.type != null}" class="darshan-type special" th:text="${prasadham.type.displayName}">Type</span>
+                        <h4 th:text="${prasadham.name}">Prasadham Name</h4>
+                        <p th:if="${prasadham.nameHindi != null}" class="text-muted" th:text="${prasadham.nameHindi}">Hindi Name</p>
+                        
+                        <p th:text="${prasadham.description}">Description...</p>
+                        
+                        <div class="d-flex justify-between align-center mb-3">
+                            <span class="prasadham-price" th:text="'₹' + ${prasadham.price}">Price</span>
+                            <span th:if="${prasadham.weight != null}" class="text-muted" th:text="${prasadham.weight}">Weight</span>
+                        </div>
+                        
+                        <div th:if="${prasadham.canBeDelivered}" class="mb-3">
+                            <span class="language-tag"><i class="fas fa-truck"></i> Home Delivery Available</span>
+                            <span th:if="${prasadham.deliveryCharge != null}" class="text-muted">
+                                (+ ₹<span th:text="${prasadham.deliveryCharge}">0</span> delivery)
+                            </span>
+                        </div>
+                        
+                        <div th:if="${prasadham.stockQuantity != null}" class="mb-3">
+                            <small class="text-muted">
+                                <span th:if="${prasadham.stockQuantity > 0}" th:text="${prasadham.stockQuantity + ' in stock'}">In Stock</span>
+                                <span th:if="${prasadham.stockQuantity <= 0}" class="text-danger">Out of Stock</span>
+                            </small>
+                        </div>
+                        
+                        <a sec:authorize="isAuthenticated()" 
+                           th:href="@{/booking/prasadham/{id}(id=${prasadham.id})}" 
+                           class="btn btn-primary" 
+                           th:classappend="${prasadham.stockQuantity != null && prasadham.stockQuantity <= 0} ? 'disabled'"
+                           style="width: 100%;">
+                            <i class="fas fa-shopping-cart"></i> Order Now
+                        </a>
+                        <a sec:authorize="isAnonymous()" 
+                           th:href="@{/auth/login}" 
+                           class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Login to Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${prasadhams == null || prasadhams.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-gift fa-4x text-muted mb-3"></i>
+                <h3>No prasadham available</h3>
+                <p class="text-muted">Please check back later</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

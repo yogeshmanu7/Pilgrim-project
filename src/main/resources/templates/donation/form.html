@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Donate to ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="donation-section" style="padding: 2rem 0;">
+        <div class="container">
+            <h1>🙏 Donate to <span th:text="${temple.name}">Temple</span></h1>
+            <p>Your contribution helps maintain and preserve this sacred place</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="booking-form">
+                <h3>Make a Donation</h3>
+                
+                <form th:action="@{/donation/{id}(id=${temple.id})}" method="post" data-validate>
+                    <h5 class="mb-3">Donation Amount</h5>
+                    
+                    <div class="donation-amount-options mb-4">
+                        <button type="button" class="amount-option" data-amount="101">₹101</button>
+                        <button type="button" class="amount-option" data-amount="501">₹501</button>
+                        <button type="button" class="amount-option" data-amount="1001">₹1,001</button>
+                        <button type="button" class="amount-option" data-amount="5001">₹5,001</button>
+                        <button type="button" class="amount-option" data-amount="11001">₹11,001</button>
+                        <button type="button" class="amount-option" data-amount="custom">Custom</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Amount (₹) *</label>
+                        <input type="number" name="amount" id="donationAmount" class="form-control" 
+                               min="1" placeholder="Enter amount" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Donation Type *</label>
+                        <select name="donationType" class="form-control" required>
+                            <option th:each="type : ${donationTypes}" th:value="${type}" th:text="${type.displayName}">Type</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Purpose (Optional)</label>
+                        <textarea name="purpose" class="form-control" rows="2"
+                                  placeholder="Specify the purpose of your donation"></textarea>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Donor Details</h5>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" name="donorName" class="form-control" 
+                               placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="donorEmail" class="form-control" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" name="donorPhone" class="form-control" placeholder="Phone">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea name="donorAddress" class="form-control" rows="2"
+                                  placeholder="Enter your address"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">PAN Number (for 80G benefit)</label>
+                        <input type="text" name="donorPanNumber" class="form-control" 
+                               placeholder="Enter PAN number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">In Memory Of (Optional)</label>
+                        <input type="text" name="inMemoryOf" class="form-control" 
+                               placeholder="Dedicate this donation to someone">
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Options</h5>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="isAnonymous" value="true"> 
+                            Make this donation anonymous
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="receiptRequired" value="true" checked> 
+                            I need a receipt
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="is80GApplicable" value="true"> 
+                            I want 80G tax exemption certificate
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea name="notes" class="form-control" rows="2"
+                                  placeholder="Any additional notes"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-secondary btn-lg" style="width: 100%;">
+                        <i class="fas fa-hand-holding-heart"></i> Proceed to Donate
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

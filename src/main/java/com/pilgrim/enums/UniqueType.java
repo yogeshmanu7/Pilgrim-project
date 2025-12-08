@@ -1,0 +1,22 @@
+package com.pilgrim.enums;
+
+public enum UniqueType {
+	CAPSULE_HOTEL,
+	CASTLE,
+	CAVE_HOUSE,
+	CRUISE,
+	DOME_HOUSE,
+	FARMSTAY,
+	HAVELI,
+	HOLIDAY_PARK_CARAVAN_PARK,
+	HOUSEBOAT,
+	IGLOO,
+	MACHIYA,
+	RYOKAN,
+	TENT,
+	TIPI,
+	TREEHOUSE,
+	YURT,
+	CUSTOM
+}
+

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Search Temples')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <h1 class="text-center mb-4">🔍 Search Temples</h1>
+            
+            <!-- Search Form -->
+            <div class="search-box mb-5">
+                <form th:action="@{/search}" method="get" class="search-form">
+                    <input type="text" name="keyword" class="form-control" 
+                           th:value="${searchKeyword}" placeholder="Search by name, deity, or location...">
+                    <select name="city" class="form-control">
+                        <option value="">All Cities</option>
+                        <option th:each="city : ${cities}" th:value="${city}" 
+                                th:text="${city}" th:selected="${city == selectedCity}"></option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Search Results -->
+            <div th:if="${searchKeyword != null}" class="mb-4">
+                <h3>Search results for: "<span th:text="${searchKeyword}"></span>"</h3>
+            </div>
+            
+            <div th:if="${selectedCity != null}" class="mb-4">
+                <h3>Temples in <span th:text="${selectedCity}"></span></h3>
+            </div>
+            
+            <!-- Filter Tags -->
+            <div class="d-flex gap-2 flex-wrap mb-4">
+                <span class="text-muted">Filter by city:</span>
+                <a th:href="@{/search}" class="gallery-tab" th:classappend="${selectedCity == null} ? 'active'">All</a>
+                <a th:each="city : ${cities}" th:href="@{/search(city=${city})}" 
+                   class="gallery-tab" th:classappend="${city == selectedCity} ? 'active'" th:text="${city}">City</a>
+            </div>
+            
+            <!-- Results Grid -->
+            <div th:if="${temples != null && !temples.isEmpty()}" class="temple-grid">
+                <div th:each="temple : ${temples}" class="card temple-card">
+                    <img th:src="${temple.photos != null && !temple.photos.isEmpty()} ? (${contextPath} + ${temple.photos[0].photoUrl}) : (${contextPath} + '/images/temple-default.jpg')" 
+                         th:alt="${temple.name}" class="card-img">
+                    <div class="card-body">
+                        <h4 class="card-title" th:text="${temple.name}">Temple Name</h4>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt text-saffron"></i>
+                            <span th:text="${temple.city + ', ' + temple.state}">City, State</span>
+                        </p>
+                        <p class="card-text" th:if="${temple.mainDeity != null}">
+                            <i class="fas fa-om text-gold"></i>
+                            Main Deity: <span th:text="${temple.mainDeity}">Deity</span>
+                        </p>
+                        <p class="card-text text-muted" th:text="${#strings.abbreviate(temple.description, 100)}">Description...</p>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{/temples/{id}(id=${temple.id})}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- No Results -->
+            <div th:if="${temples == null || temples.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <h3>No temples found</h3>
+                <p class="text-muted">Try adjusting your search criteria</p>
+                <a th:href="@{/temples}" class="btn btn-primary">View All Temples</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

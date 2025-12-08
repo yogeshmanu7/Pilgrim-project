@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Darshan - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>🙏 Darshan at <span th:text="${temple.name}">Temple</span></h1>
+            <p>Book your divine darshan experience</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <a th:href="@{/temples/{id}(id=${temple.id})}" class="gallery-tab">Overview</a>
+                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="gallery-tab active">Darshan</a>
+                <a th:href="@{/temples/{id}/poojas(id=${temple.id})}" class="gallery-tab">Poojas</a>
+                <a th:href="@{/temples/{id}/prasadhams(id=${temple.id})}" class="gallery-tab">Prasadham</a>
+                <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" class="gallery-tab">Gallery</a>
+            </div>
+            
+            <h2 class="mb-4">Available Darshan Types</h2>
+            
+            <div th:if="${darshans != null && !darshans.isEmpty()}" class="temple-grid">
+                <div th:each="darshan : ${darshans}" class="darshan-card" 
+                     th:classappend="${darshan.darshanType.name() == 'VIP'} ? 'vip' : (${darshan.darshanType.name() == 'VVIP'} ? 'vvip' : '')">
+                    <div class="d-flex justify-between align-center mb-3">
+                        <span class="darshan-type" 
+                              th:classappend="${darshan.darshanType.name().toLowerCase()}"
+                              th:text="${darshan.darshanType.displayName}">Type</span>
+                        <span class="darshan-price" th:if="${darshan.price != null}">
+                            ₹<span th:text="${darshan.price}">0</span>
+                            <small>/person</small>
+                        </span>
+                        <span class="darshan-price" th:if="${darshan.price == null}" style="color: var(--forest-green);">FREE</span>
+                    </div>
+                    
+                    <h4 th:text="${darshan.name}">Darshan Name</h4>
+                    <p th:if="${darshan.nameHindi != null}" class="text-muted" th:text="${darshan.nameHindi}">Hindi Name</p>
+                    
+                    <p th:text="${darshan.description}">Description...</p>
+                    
+                    <div class="pooja-info" th:if="${darshan.startTime != null}">
+                        <i class="fas fa-clock"></i>
+                        <span th:text="${darshan.startTime + ' - ' + darshan.endTime}">Timing</span>
+                    </div>
+                    
+                    <div class="pooja-info" th:if="${darshan.durationMinutes != null}">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span th:text="${darshan.durationMinutes + ' minutes'}">Duration</span>
+                    </div>
+                    
+                    <div th:if="${darshan.benefits != null}" class="mt-3">
+                        <strong>Benefits:</strong>
+                        <p class="text-muted" th:text="${darshan.benefits}">Benefits...</p>
+                    </div>
+                    
+                    <div th:if="${darshan.instructions != null}" class="mt-3">
+                        <strong>Instructions:</strong>
+                        <p class="text-muted" th:text="${darshan.instructions}">Instructions...</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a sec:authorize="isAuthenticated()" 
+                           th:href="@{/booking/darshan/{id}(id=${darshan.id})}" 
+                           class="btn btn-primary">
+                            <i class="fas fa-calendar-check"></i> Book Now
+                        </a>
+                        <a sec:authorize="isAnonymous()" 
+                           th:href="@{/auth/login}" 
+                           class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Login to Book
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${darshans == null || darshans.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-om fa-4x text-muted mb-3"></i>
+                <h3>No darshan options available</h3>
+                <p class="text-muted">Please check back later</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

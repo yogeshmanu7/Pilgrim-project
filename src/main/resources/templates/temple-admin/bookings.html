@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('View Bookings')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <h2>Bookings - <span th:text="${temple.name}">Temple</span></h2>
+                    <a th:href="@{/temple-admin/dashboard}" class="text-muted">← Back to Dashboard</a>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <button class="gallery-tab active" data-tab="darshan">Darshan Bookings</button>
+                <button class="gallery-tab" data-tab="pooja">Pooja Bookings</button>
+                <button class="gallery-tab" data-tab="tour">Tour Bookings</button>
+                <button class="gallery-tab" data-tab="prasadham">Prasadham Orders</button>
+            </div>
+            
+            <!-- Darshan Bookings -->
+            <div id="darshan-tab" class="tab-content">
+                <h3 class="mb-3">🙏 Darshan Bookings (<span th:text="${#lists.size(darshanBookings)}">0</span>)</h3>
+                <div th:if="${darshanBookings != null && !darshanBookings.isEmpty()}">
+                    <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-md);">
+                        <thead style="background: var(--maroon); color: white;">
+                            <tr>
+                                <th style="padding: 12px;">Booking #</th>
+                                <th style="padding: 12px;">Darshan</th>
+                                <th style="padding: 12px;">Devotee</th>
+                                <th style="padding: 12px;">Date</th>
+                                <th style="padding: 12px;">Persons</th>
+                                <th style="padding: 12px;">Amount</th>
+                                <th style="padding: 12px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="booking : ${darshanBookings}">
+                                <td style="padding: 12px;" th:text="${booking.bookingNumber}">Booking#</td>
+                                <td style="padding: 12px;" th:text="${booking.darshan.name}">Darshan</td>
+                                <td style="padding: 12px;" th:text="${booking.primaryDevoteeName}">Name</td>
+                                <td style="padding: 12px;" th:text="${booking.bookingDate}">Date</td>
+                                <td style="padding: 12px;" th:text="${booking.numberOfPersons}">Persons</td>
+                                <td style="padding: 12px;" th:text="${booking.totalAmount != null ? '₹' + booking.totalAmount : 'FREE'}">Amount</td>
+                                <td style="padding: 12px;"><span class="status-badge" th:classappend="'status-' + ${booking.status.name().toLowerCase()}" th:text="${booking.status}">Status</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${darshanBookings == null || darshanBookings.isEmpty()}" class="text-center py-4 text-muted">
+                    <p>No darshan bookings yet</p>
+                </div>
+            </div>
+            
+            <!-- Pooja Bookings -->
+            <div id="pooja-tab" class="tab-content" style="display: none;">
+                <h3 class="mb-3">🔥 Pooja Bookings (<span th:text="${#lists.size(poojaBookings)}">0</span>)</h3>
+                <div th:if="${poojaBookings != null && !poojaBookings.isEmpty()}">
+                    <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-md);">
+                        <thead style="background: var(--maroon); color: white;">
+                            <tr>
+                                <th style="padding: 12px;">Booking #</th>
+                                <th style="padding: 12px;">Pooja</th>
+                                <th style="padding: 12px;">Devotee</th>
+                                <th style="padding: 12px;">Date</th>
+                                <th style="padding: 12px;">Amount</th>
+                                <th style="padding: 12px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="booking : ${poojaBookings}">
+                                <td style="padding: 12px;" th:text="${booking.bookingNumber}">Booking#</td>
+                                <td style="padding: 12px;" th:text="${booking.pooja.name}">Pooja</td>
+                                <td style="padding: 12px;" th:text="${booking.devoteeName}">Name</td>
+                                <td style="padding: 12px;" th:text="${booking.bookingDate}">Date</td>
+                                <td style="padding: 12px;" th:text="'₹' + ${booking.amount}">Amount</td>
+                                <td style="padding: 12px;"><span class="status-badge" th:classappend="'status-' + ${booking.status.name().toLowerCase()}" th:text="${booking.status}">Status</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${poojaBookings == null || poojaBookings.isEmpty()}" class="text-center py-4 text-muted">
+                    <p>No pooja bookings yet</p>
+                </div>
+            </div>
+            
+            <!-- Tour Bookings -->
+            <div id="tour-tab" class="tab-content" style="display: none;">
+                <h3 class="mb-3">👤 Tour Bookings (<span th:text="${#lists.size(tourBookings)}">0</span>)</h3>
+                <div th:if="${tourBookings != null && !tourBookings.isEmpty()}">
+                    <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-md);">
+                        <thead style="background: var(--maroon); color: white;">
+                            <tr>
+                                <th style="padding: 12px;">Booking #</th>
+                                <th style="padding: 12px;">Guide</th>
+                                <th style="padding: 12px;">Contact</th>
+                                <th style="padding: 12px;">Date</th>
+                                <th style="padding: 12px;">Amount</th>
+                                <th style="padding: 12px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="booking : ${tourBookings}">
+                                <td style="padding: 12px;" th:text="${booking.bookingNumber}">Booking#</td>
+                                <td style="padding: 12px;" th:text="${booking.tourGuide.name}">Guide</td>
+                                <td style="padding: 12px;" th:text="${booking.contactName}">Name</td>
+                                <td style="padding: 12px;" th:text="${booking.tourDate}">Date</td>
+                                <td style="padding: 12px;" th:text="'₹' + ${booking.totalAmount}">Amount</td>
+                                <td style="padding: 12px;"><span class="status-badge" th:classappend="'status-' + ${booking.status.name().toLowerCase()}" th:text="${booking.status}">Status</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${tourBookings == null || tourBookings.isEmpty()}" class="text-center py-4 text-muted">
+                    <p>No tour bookings yet</p>
+                </div>
+            </div>
+            
+            <!-- Prasadham Orders -->
+            <div id="prasadham-tab" class="tab-content" style="display: none;">
+                <h3 class="mb-3">🎁 Prasadham Orders (<span th:text="${#lists.size(prasadhamOrders)}">0</span>)</h3>
+                <div th:if="${prasadhamOrders != null && !prasadhamOrders.isEmpty()}">
+                    <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-md);">
+                        <thead style="background: var(--maroon); color: white;">
+                            <tr>
+                                <th style="padding: 12px;">Order #</th>
+                                <th style="padding: 12px;">Prasadham</th>
+                                <th style="padding: 12px;">Qty</th>
+                                <th style="padding: 12px;">Delivery</th>
+                                <th style="padding: 12px;">Amount</th>
+                                <th style="padding: 12px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${prasadhamOrders}">
+                                <td style="padding: 12px;" th:text="${order.orderNumber}">Order#</td>
+                                <td style="padding: 12px;" th:text="${order.prasadham.name}">Prasadham</td>
+                                <td style="padding: 12px;" th:text="${order.quantity}">Qty</td>
+                                <td style="padding: 12px;" th:text="${order.forDelivery ? 'Yes' : 'Pickup'}">Delivery</td>
+                                <td style="padding: 12px;" th:text="'₹' + ${order.totalAmount}">Amount</td>
+                                <td style="padding: 12px;"><span class="status-badge" th:classappend="'status-' + ${order.status.name().toLowerCase()}" th:text="${order.status}">Status</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:if="${prasadhamOrders == null || prasadhamOrders.isEmpty()}" class="text-center py-4 text-muted">
+                    <p>No prasadham orders yet</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        document.querySelectorAll('[data-tab]').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('[data-tab]').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + '-tab').style.display = 'block';
+            });
+        });
+    </script>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

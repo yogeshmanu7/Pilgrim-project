@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Events - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>📅 Events at <span th:text="${temple.name}">Temple</span></h1>
+            <p>Join our spiritual programs and community events</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <!-- Upcoming Events -->
+            <div th:if="${upcomingEvents != null && !upcomingEvents.isEmpty()}" class="mb-5">
+                <h2 class="mb-4">🔜 Upcoming Events</h2>
+                <div class="event-timeline">
+                    <div th:each="event : ${upcomingEvents}" class="timeline-item">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-between align-center mb-2">
+                                    <span class="darshan-type special" th:text="${event.eventType.displayName}">Event Type</span>
+                                    <span th:if="${event.isFree}" class="language-tag" style="background: #E8F5E9; color: #2E7D32;">Free Entry</span>
+                                </div>
+                                
+                                <h4 th:text="${event.title}">Event Title</h4>
+                                <p th:if="${event.titleHindi != null}" class="text-muted" th:text="${event.titleHindi}">Hindi Title</p>
+                                
+                                <div class="d-flex gap-3 flex-wrap mb-3">
+                                    <span><i class="fas fa-calendar text-saffron"></i> <span th:text="${event.eventDate}">Date</span></span>
+                                    <span th:if="${event.startTime != null}"><i class="fas fa-clock text-saffron"></i> <span th:text="${event.startTime + (event.endTime != null ? ' - ' + event.endTime : '')}">Time</span></span>
+                                    <span th:if="${event.venue != null}"><i class="fas fa-map-marker-alt text-saffron"></i> <span th:text="${event.venue}">Venue</span></span>
+                                </div>
+                                
+                                <p th:text="${event.description}">Description...</p>
+                                
+                                <div th:if="${event.requiresRegistration}" class="mb-3">
+                                    <span class="language-tag"><i class="fas fa-user-check"></i> Registration Required</span>
+                                    <span th:if="${event.maxParticipants != null}" class="text-muted">
+                                        (Seats: <span th:text="${event.currentParticipants + '/' + event.maxParticipants}">0/100</span>)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- All Events -->
+            <div th:if="${events != null && !events.isEmpty()}">
+                <h2 class="mb-4">📋 All Events</h2>
+                <div class="temple-grid">
+                    <div th:each="event : ${events}" class="card">
+                        <div class="card-body">
+                            <span class="darshan-type special" th:text="${event.eventType.displayName}">Type</span>
+                            <h4 th:text="${event.title}">Event Title</h4>
+                            <p class="text-muted" th:text="${event.eventDate}">Date</p>
+                            <p th:text="${#strings.abbreviate(event.description, 80)}">Description...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${(events == null || events.isEmpty()) && (upcomingEvents == null || upcomingEvents.isEmpty())}" class="text-center py-5">
+                <i class="fas fa-calendar-check fa-4x text-muted mb-3"></i>
+                <h3>No events scheduled</h3>
+                <p class="text-muted">Event information will be added soon</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

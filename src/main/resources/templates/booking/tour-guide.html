@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Book Tour Guide')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="booking-form">
+                <h3>👤 Book Tour Guide - <span th:text="${tourGuide.name}">Guide</span></h3>
+                
+                <div class="booking-summary">
+                    <h5>Guide Details</h5>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${temple.name}">Temple Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Guide:</span>
+                        <span th:text="${tourGuide.name}">Guide Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Hourly Rate:</span>
+                        <span th:text="'₹' + ${tourGuide.hourlyRate}">Rate</span>
+                    </div>
+                    <div class="summary-row" th:if="${tourGuide.fullDayRate != null}">
+                        <span>Full Day Rate:</span>
+                        <span th:text="'₹' + ${tourGuide.fullDayRate}">Full Day</span>
+                    </div>
+                    <div class="summary-row" th:if="${tourGuide.languages != null}">
+                        <span>Languages:</span>
+                        <span th:text="${tourGuide.languages}">Languages</span>
+                    </div>
+                </div>
+                
+                <form th:action="@{/booking/tour-guide/{id}(id=${tourGuide.id})}" method="post" data-validate>
+                    <div class="form-group">
+                        <label class="form-label">Tour Date *</label>
+                        <input type="date" name="tourDate" class="form-control" 
+                               th:min="${minDate}" th:max="${maxDate}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tour Type *</label>
+                        <select name="tourType" class="form-control" required>
+                            <option th:each="type : ${tourTypes}" th:value="${type}" th:text="${type.displayName}">Type</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Start Time *</label>
+                            <input type="time" name="startTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">End Time</label>
+                            <input type="time" name="endTime" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Number of Persons *</label>
+                        <input type="number" name="numberOfPersons" class="form-control" 
+                               min="1" max="20" value="1" required>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Contact Details</h5>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Contact Name *</label>
+                        <input type="text" name="contactName" class="form-control" 
+                               placeholder="Enter contact name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Contact Phone *</label>
+                        <input type="tel" name="contactPhone" class="form-control" 
+                               placeholder="Enter phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preferred Language</label>
+                        <select name="preferredLanguage" class="form-control">
+                            <option value="">Select Language</option>
+                            <option value="English">English</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Tamil">Tamil</option>
+                            <option value="Telugu">Telugu</option>
+                            <option value="Kannada">Kannada</option>
+                            <option value="Malayalam">Malayalam</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Special Requirements</label>
+                        <textarea name="specialRequirements" class="form-control" rows="2"
+                                  placeholder="Any special requirements or areas of interest"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-check-circle"></i> Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

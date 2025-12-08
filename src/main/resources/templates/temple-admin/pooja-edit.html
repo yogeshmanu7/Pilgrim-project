@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Hindu: "Edit Pooja" -->
+<head th:replace="~{fragments/layout :: head(${templeReligion != null && templeReligion.name() == 'HINDU'} ? 'Edit Pooja' : (${templeReligion != null && templeReligion.name() == 'CHRISTIAN'} ? 'Edit Mass' : (${templeReligion != null && templeReligion.name() == 'MUSLIM'} ? 'Edit Religious Service' : (${templeReligion != null && templeReligion.name() == 'JAIN'} ? 'Edit Ritual' : 'Edit Ceremony'))))}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <!-- Hindu: "Edit Pooja" -->
+                    <h2 th:if="${templeReligion == null || templeReligion.name() == 'HINDU'}">
+                        Edit Pooja - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <!-- Christian: "Edit Mass" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">
+                        Edit Mass - <span th:text="${temple.name}">Church</span>
+                    </h2>
+                    <!-- Muslim: "Edit Religious Service" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">
+                        Edit Religious Service - <span th:text="${temple.name}">Mosque</span>
+                    </h2>
+                    <!-- Jain: "Edit Ritual" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'JAIN'}">
+                        Edit Ritual - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <!-- Buddhism: "Edit Ceremony" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">
+                        Edit Ceremony - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="text-muted">← Back to Poojas</a>
+                </div>
+            </div>
+            
+            <!-- Edit Form -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <form th:action="@{/temple-admin/temple/{templeId}/poojas/{poojaId}/edit(templeId=${temple.id}, poojaId=${pooja.id})}" method="post">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Name *</label>
+                                <input type="text" name="name" class="form-control" th:value="${pooja.name}" required>
+                            </div>
+                            <!-- Show Hindi field only for Hindu and Jain -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <label class="form-label">Name (Hindi)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${pooja.nameHindi}">
+                            </div>
+                            <div class="form-group" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                                <label class="form-label">Name (Local Language)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${pooja.nameHindi}">
+                            </div>
+                            <div class="form-group">
+                                <!-- Hindu: "Category" -->
+                                <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU'}">Category *</label>
+                                <!-- Christian: "Mass Type" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Mass Type *</label>
+                                <!-- Muslim: "Service Type" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Service Type *</label>
+                                <!-- Jain: "Ritual Category" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'JAIN'}">Ritual Category *</label>
+                                <!-- Buddhism: "Ceremony Type" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Ceremony Type *</label>
+                                <div class="searchable-select-wrapper">
+                                    <input type="text" id="categorySearch" class="form-control" 
+                                           th:value="${pooja.category != null ? pooja.category.displayName : ''}"
+                                           placeholder="Search category..." style="margin-bottom: 5px;">
+                                    <select name="category" id="categorySelect" class="form-control" required size="8" style="display: none;">
+                                        <option value="">-- Select Category --</option>
+                                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat.displayName}" th:selected="${pooja.category == cat}">Category</option>
+                                    </select>
+                                    <div id="categoryDropdown" class="searchable-dropdown" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="2" th:text="${pooja.description}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Significance" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Significance</label>
+                            <!-- Christian: "Religious Significance" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Religious Significance</label>
+                            <!-- Muslim: "Religious Significance" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Religious Significance</label>
+                            <!-- Buddhism: "Spiritual Significance" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Spiritual Significance</label>
+                            <textarea name="significance" class="form-control" rows="2" th:text="${pooja.significance}"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Price (₹) *</label>
+                                <input type="number" name="price" step="0.01" class="form-control" th:value="${pooja.price}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Duration (minutes)</label>
+                                <input type="number" name="durationMinutes" class="form-control" th:value="${pooja.durationMinutes}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Default Time</label>
+                                <input type="time" name="defaultTime" class="form-control" th:value="${pooja.defaultTime != null ? #temporals.format(pooja.defaultTime, 'HH:mm') : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Max Bookings/Day</label>
+                                <input type="number" name="maxBookingsPerDay" class="form-control" th:value="${pooja.maxBookingsPerDay}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Items Included" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Items Included</label>
+                            <!-- Christian: "Offerings Included" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Offerings Included</label>
+                            <!-- Muslim: "Items Included" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Items Included</label>
+                            <!-- Buddhism: "Items Included" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Items Included</label>
+                            <textarea name="itemsIncluded" class="form-control" rows="2" th:text="${pooja.itemsIncluded}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Benefits" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Benefits</label>
+                            <!-- Christian: "Spiritual Benefits" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Spiritual Benefits</label>
+                            <!-- Muslim: "Spiritual Benefits" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Spiritual Benefits</label>
+                            <!-- Buddhism: "Spiritual Benefits" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Spiritual Benefits</label>
+                            <textarea name="benefits" class="form-control" rows="2" th:text="${pooja.benefits}"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group pt-4">
+                                <label>
+                                    <input type="checkbox" name="requiresAdvanceBooking" value="true" th:checked="${pooja.requiresAdvanceBooking}"> Requires Advance Booking
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Advance Booking Days</label>
+                                <input type="number" name="advanceBookingDays" class="form-control" th:value="${pooja.advanceBookingDays != null ? pooja.advanceBookingDays : 7}">
+                            </div>
+                        </div>
+                        <div class="form-group pt-4">
+                            <label>
+                                <input type="checkbox" name="isActive" value="true" th:checked="${pooja.isActive}"> Active
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <a th:href="@{/temple-admin/temple/{id}/poojas(id=${temple.id})}" class="btn btn-outline">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <style>
+        .searchable-dropdown {
+            position: relative;
+            z-index: 1000;
+        }
+        .searchable-dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .searchable-dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+        .searchable-dropdown-item.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        .searchable-dropdown-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+    
+    <script>
+        // Function to create searchable dropdown for enum values
+        function createSearchableDropdown(selectId, searchId, dropdownId, placeholder) {
+            const select = document.getElementById(selectId);
+            const searchInput = document.getElementById(searchId);
+            const dropdown = document.getElementById(dropdownId);
+            let allOptions = [];
+            
+            function populateDropdown(options, searchTerm = '') {
+                allOptions = options;
+                const filtered = searchTerm 
+                    ? options.filter(opt => opt.text.toLowerCase().includes(searchTerm.toLowerCase()))
+                    : options;
+                
+                dropdown.innerHTML = '';
+                if (filtered.length === 0) {
+                    dropdown.innerHTML = '<div class="searchable-dropdown-item" style="color: #999;">No results found</div>';
+                    return;
+                }
+                
+                filtered.forEach(option => {
+                    const item = document.createElement('div');
+                    item.className = 'searchable-dropdown-item';
+                    item.textContent = option.text;
+                    item.addEventListener('click', function() {
+                        select.value = option.value;
+                        searchInput.value = option.text;
+                        dropdown.style.display = 'none';
+                        // Trigger change event
+                        select.dispatchEvent(new Event('change'));
+                    });
+                    dropdown.appendChild(item);
+                });
+            }
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value;
+                populateDropdown(allOptions, searchTerm);
+                dropdown.style.display = 'block';
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (allOptions.length > 0) {
+                    dropdown.style.display = 'block';
+                }
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            
+            // Update search input when select changes
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    const selectedOption = allOptions.find(opt => opt.value === this.value);
+                    if (selectedOption) {
+                        searchInput.value = selectedOption.text;
+                    }
+                }
+            });
+            
+            return {
+                populate: populateDropdown,
+                setOptions: function(options) {
+                    populateDropdown(options);
+                }
+            };
+        }
+        
+        // Initialize category searchable dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('categorySelect');
+            if (categorySelect) {
+                const categoryOptions = Array.from(categorySelect.options).map(opt => ({
+                    value: opt.value,
+                    text: opt.textContent
+                })).filter(opt => opt.value !== ''); // Exclude empty option
+                
+                const categorySearchable = createSearchableDropdown(
+                    'categorySelect', 
+                    'categorySearch', 
+                    'categoryDropdown', 
+                    'Search category...'
+                );
+                
+                categorySearchable.setOptions(categoryOptions);
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('View Donations')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <h2>Donations - <span th:text="${temple.name}">Temple</span></h2>
+                    <a th:href="@{/temple-admin/dashboard}" class="text-muted">← Back to Dashboard</a>
+                </div>
+            </div>
+            
+            <!-- Summary Card -->
+            <div class="card mb-5" style="background: var(--gradient-temple); color: white;">
+                <div class="card-body text-center">
+                    <h3 style="color: var(--gold);">Total Donations Received</h3>
+                    <div style="font-size: 3rem; font-weight: bold; color: var(--gold);">
+                        ₹<span th:text="${totalDonations != null ? #numbers.formatDecimal(totalDonations, 0, 'COMMA', 2, 'POINT')} : '0.00'">0.00</span>
+                    </div>
+                    <p style="opacity: 0.9;">From <span th:text="${#lists.size(donations)}">0</span> completed donations</p>
+                </div>
+            </div>
+            
+            <!-- Donations Table -->
+            <h4 class="mb-3">Recent Donations</h4>
+            <div th:if="${donations != null && !donations.isEmpty()}">
+                <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-md);">
+                    <thead style="background: var(--maroon); color: white;">
+                        <tr>
+                            <th style="padding: 12px;">Donation #</th>
+                            <th style="padding: 12px;">Donor</th>
+                            <th style="padding: 12px;">Type</th>
+                            <th style="padding: 12px;">Amount</th>
+                            <th style="padding: 12px;">Date</th>
+                            <th style="padding: 12px;">Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="donation : ${donations}">
+                            <td style="padding: 12px;" th:text="${donation.donationNumber}">DON#</td>
+                            <td style="padding: 12px;" th:text="${donation.isAnonymous ? 'Anonymous' : donation.donorName}">Donor</td>
+                            <td style="padding: 12px;"><span class="darshan-type special" th:text="${donation.donationType.displayName}">Type</span></td>
+                            <td style="padding: 12px; font-weight: bold; color: var(--forest-green);" th:text="'₹' + ${donation.amount}">Amount</td>
+                            <td style="padding: 12px;" th:text="${#temporals.format(donation.createdAt, 'dd MMM yyyy')}">Date</td>
+                            <td style="padding: 12px;" th:text="${donation.receiptNumber != null ? donation.receiptNumber : '-'}">Receipt</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div th:if="${donations == null || donations.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-hand-holding-heart fa-4x text-muted mb-3"></i>
+                <h3>No donations yet</h3>
+                <p class="text-muted">Donations will appear here once devotees contribute</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

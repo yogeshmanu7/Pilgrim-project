@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Orders')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <h1 class="mb-4">🛒 My Orders</h1>
+            
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div th:if="${prasadhamOrders != null && !prasadhamOrders.isEmpty()}" class="temple-grid">
+                <div th:each="order : ${prasadhamOrders}" class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-between align-center mb-2">
+                            <span class="status-badge" 
+                                  th:classappend="'status-' + ${order.status?.name()?.toLowerCase() ?: 'pending'}"
+                                  th:text="${order.status ?: 'PENDING'}">Status</span>
+                            <small th:text="'#' + ${order.orderNumber}">Order#</small>
+                        </div>
+                        <h4 th:text="${order.prasadham.name}">Prasadham</h4>
+                        <p class="text-muted" th:text="${order.prasadham.temple.name}">Temple</p>
+                        <div class="pooja-info">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span th:text="'Quantity: ' + ${order.quantity}">Qty</span>
+                        </div>
+                        <div class="pooja-info" th:if="${order.forDelivery}">
+                            <i class="fas fa-truck"></i>
+                            <span>Home Delivery</span>
+                        </div>
+                        <div class="pooja-info">
+                            <i class="fas fa-rupee-sign"></i>
+                            <span th:text="'₹' + ${order.totalAmount}">Amount</span>
+                        </div>
+                        <div class="pooja-info">
+                            <i class="fas fa-calendar"></i>
+                            <span th:text="${order.createdAt}">Date</span>
+                        </div>
+                        <div class="mt-3">
+                            <a th:href="@{/user/orders/prasadham/{id}(id=${order.id})}" class="btn btn-outline btn-sm">View Details</a>
+                            <button th:if="${order.status?.name() == 'PENDING'}"
+                                    onclick="confirmAction('Cancel this order?', () => location.href='/user/orders/prasadham/' + this.dataset.id + '/cancel')" 
+                                    th:data-id="${order.id}"
+                                    class="btn btn-sm" style="color: #C62828;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${prasadhamOrders == null || prasadhamOrders.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+                <h3>No orders found</h3>
+                <p class="text-muted">You haven't ordered any prasadham yet</p>
+                <a th:href="@{/temples}" class="btn btn-primary">Browse Temples</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

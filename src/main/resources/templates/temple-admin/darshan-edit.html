@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Hindu: "Edit Darshan" -->
+<head th:replace="~{fragments/layout :: head(${templeReligion != null && templeReligion.name() == 'HINDU'} ? 'Edit Darshan' : (${templeReligion != null && templeReligion.name() == 'CHRISTIAN'} ? 'Edit Service' : (${templeReligion != null && templeReligion.name() == 'MUSLIM'} ? 'Edit Prayer Session' : (${templeReligion != null && templeReligion.name() == 'JAIN'} ? 'Edit Darshan' : 'Edit Meditation Session'))))}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <!-- Hindu: "Edit Darshan" -->
+                    <h2 th:if="${templeReligion == null || templeReligion.name() == 'HINDU'}">
+                        Edit Darshan - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <!-- Christian: "Edit Service" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">
+                        Edit Service - <span th:text="${temple.name}">Church</span>
+                    </h2>
+                    <!-- Muslim: "Edit Prayer Session" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">
+                        Edit Prayer Session - <span th:text="${temple.name}">Mosque</span>
+                    </h2>
+                    <!-- Jain: "Edit Darshan" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'JAIN'}">
+                        Edit Darshan - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <!-- Buddhism: "Edit Meditation Session" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">
+                        Edit Meditation Session - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="text-muted">← Back to Darshans</a>
+                </div>
+            </div>
+            
+            <!-- Edit Form -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <form th:action="@{/temple-admin/temple/{templeId}/darshans/{darshanId}/edit(templeId=${temple.id}, darshanId=${darshan.id})}" method="post">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Name *</label>
+                                <input type="text" name="name" class="form-control" th:value="${darshan.name}" required>
+                            </div>
+                            <!-- Show Hindi field only for Hindu and Jain -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <label class="form-label">Name (Hindi)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${darshan.nameHindi}">
+                            </div>
+                            <div class="form-group" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                                <label class="form-label">Name (Local Language)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${darshan.nameHindi}">
+                            </div>
+                            <div class="form-group">
+                                <!-- Hindu/Jain: "Darshan Type" -->
+                                <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Darshan Type *</label>
+                                <!-- Christian: "Service Type" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Service Type *</label>
+                                <!-- Muslim: "Prayer Type" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Prayer Type *</label>
+                                <!-- Buddhism: "Meditation Type" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Meditation Type *</label>
+                                <div class="searchable-select-wrapper">
+                                    <input type="text" id="darshanTypeSearch" class="form-control" 
+                                           th:value="${darshan.darshanType != null ? darshan.darshanType.displayName : ''}"
+                                           placeholder="Search type..." style="margin-bottom: 5px;">
+                                    <select name="darshanType" id="darshanTypeSelect" class="form-control" required size="8" style="display: none;">
+                                        <option value="">-- Select Type --</option>
+                                        <option th:each="type : ${darshanTypes}" 
+                                                th:value="${type}" 
+                                                th:text="${type.displayName}"
+                                                th:selected="${darshan.darshanType == type}">Type</option>
+                                    </select>
+                                    <div id="darshanTypeDropdown" class="searchable-dropdown" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="2" th:text="${darshan.description}"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Price (₹)</label>
+                                <input type="number" name="price" step="0.01" class="form-control" th:value="${darshan.price}" placeholder="0 for free">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Start Time</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" name="startHour" id="startHour" class="form-control" min="1" max="12" placeholder="Hour" onchange="updateStartTime()">
+                                    <input type="number" name="startMinute" id="startMinute" class="form-control" min="0" max="59" placeholder="Minute" onchange="updateStartTime()">
+                                    <select name="startAmPm" id="startAmPm" class="form-control" onchange="updateStartTime()">
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" name="startTime" id="startTime" th:value="${darshan.startTime != null ? #temporals.format(darshan.startTime, 'HH:mm') : ''}">
+                                <input type="hidden" id="startTimeValue" th:value="${darshan.startTime != null ? #temporals.format(darshan.startTime, 'HH:mm') : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Time</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                                    <input type="number" name="endHour" id="endHour" class="form-control" min="1" max="12" placeholder="Hour" onchange="updateEndTime()">
+                                    <input type="number" name="endMinute" id="endMinute" class="form-control" min="0" max="59" placeholder="Minute" onchange="updateEndTime()">
+                                    <select name="endAmPm" id="endAmPm" class="form-control" onchange="updateEndTime()">
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" name="endTime" id="endTime" th:value="${darshan.endTime != null ? #temporals.format(darshan.endTime, 'HH:mm') : ''}">
+                                <input type="hidden" id="endTimeValue" th:value="${darshan.endTime != null ? #temporals.format(darshan.endTime, 'HH:mm') : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Available Seats Per Day *</label>
+                                <input type="number" name="maxBookingsPerSlot" class="form-control" th:value="${darshan.maxBookingsPerSlot}" required placeholder="Maximum number of seats available per day">
+                                <small class="text-muted">Seats will be closed automatically when this limit is reached</small>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Duration (minutes)</label>
+                                <input type="number" name="durationMinutes" class="form-control" th:value="${darshan.durationMinutes}">
+                            </div>
+                            <div class="form-group pt-4">
+                                <label>
+                                    <input type="checkbox" name="requiresBooking" value="true" th:checked="${darshan.requiresBooking}"> Requires Advance Booking
+                                </label>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Booking Open From Date *</label>
+                                <input type="date" name="bookingStartDate" class="form-control" 
+                                       th:value="${darshan.bookingStartDate != null ? #temporals.format(darshan.bookingStartDate, 'yyyy-MM-dd') : ''}" required>
+                                <small class="text-muted">From when users can start booking</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Booking Open Until Date *</label>
+                                <input type="date" name="bookingEndDate" class="form-control" 
+                                       th:value="${darshan.bookingEndDate != null ? #temporals.format(darshan.bookingEndDate, 'yyyy-MM-dd') : ''}" required>
+                                <small class="text-muted">Until when users can book</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="isActive" value="true" th:checked="${darshan.isActive}"> Active
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Benefits" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Benefits</label>
+                            <!-- Christian: "Spiritual Benefits" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Spiritual Benefits</label>
+                            <!-- Muslim: "Spiritual Benefits" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Spiritual Benefits</label>
+                            <!-- Buddhism: "Meditation Benefits" -->
+                            <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Meditation Benefits</label>
+                            <textarea name="benefits" class="form-control" rows="2" th:text="${darshan.benefits}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Instructions</label>
+                            <textarea name="instructions" class="form-control" rows="2" th:text="${darshan.instructions}"></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update
+                            </button>
+                            <a th:href="@{/temple-admin/temple/{id}/darshans(id=${temple.id})}" class="btn btn-outline">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <style>
+        .searchable-dropdown {
+            position: relative;
+            z-index: 1000;
+        }
+        .searchable-dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .searchable-dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+        .searchable-dropdown-item.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        .searchable-dropdown-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+    
+    <script>
+        // Function to create searchable dropdown (same as register page)
+        function createSearchableDropdown(selectId, searchId, dropdownId, placeholder) {
+            const select = document.getElementById(selectId);
+            const searchInput = document.getElementById(searchId);
+            const dropdown = document.getElementById(dropdownId);
+            let allOptions = [];
+            
+            function populateDropdown(options, searchTerm = '') {
+                allOptions = options;
+                const filtered = searchTerm 
+                    ? options.filter(opt => opt.text.toLowerCase().includes(searchTerm.toLowerCase()))
+                    : options;
+                
+                dropdown.innerHTML = '';
+                if (filtered.length === 0) {
+                    dropdown.innerHTML = '<div class="searchable-dropdown-item" style="color: #999;">No results found</div>';
+                    return;
+                }
+                
+                filtered.forEach(option => {
+                    const item = document.createElement('div');
+                    item.className = 'searchable-dropdown-item';
+                    if (option.selected) {
+                        item.classList.add('selected');
+                    }
+                    item.textContent = option.text;
+                    item.addEventListener('click', function() {
+                        select.value = option.value;
+                        searchInput.value = option.text;
+                        dropdown.style.display = 'none';
+                        // Trigger change event
+                        select.dispatchEvent(new Event('change'));
+                    });
+                    dropdown.appendChild(item);
+                });
+            }
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value;
+                populateDropdown(allOptions, searchTerm);
+                dropdown.style.display = 'block';
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (allOptions.length > 0) {
+                    dropdown.style.display = 'block';
+                }
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            
+            // Update search input when select changes
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    const selectedOption = allOptions.find(opt => opt.value === this.value);
+                    if (selectedOption) {
+                        searchInput.value = selectedOption.text;
+                    }
+                }
+            });
+            
+            return {
+                populate: populateDropdown,
+                setOptions: function(options) {
+                    populateDropdown(options);
+                }
+            };
+        }
+        
+        // Initialize darshan type searchable dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const darshanTypeSelect = document.getElementById('darshanTypeSelect');
+            const darshanTypeOptions = Array.from(darshanTypeSelect.options).map(opt => ({
+                value: opt.value,
+                text: opt.textContent,
+                selected: opt.selected
+            }));
+            
+            const darshanTypeSearchable = createSearchableDropdown(
+                'darshanTypeSelect', 
+                'darshanTypeSearch', 
+                'darshanTypeDropdown', 
+                'Search type...'
+            );
+            
+            darshanTypeSearchable.setOptions(darshanTypeOptions);
+        });
+        
+        // Update hidden time field for start time
+        function updateStartTime() {
+            const hour = document.getElementById('startHour').value;
+            const minute = document.getElementById('startMinute').value;
+            const amPm = document.getElementById('startAmPm').value;
+            
+            if (hour && minute) {
+                let hour24 = parseInt(hour);
+                if (amPm === 'PM' && hour24 !== 12) {
+                    hour24 += 12;
+                } else if (amPm === 'AM' && hour24 === 12) {
+                    hour24 = 0;
+                }
+                const timeString = String(hour24).padStart(2, '0') + ':' + String(minute).padStart(2, '0');
+                document.getElementById('startTime').value = timeString;
+            }
+        }
+        
+        // Update hidden time field for end time
+        function updateEndTime() {
+            const hour = document.getElementById('endHour').value;
+            const minute = document.getElementById('endMinute').value;
+            const amPm = document.getElementById('endAmPm').value;
+            
+            if (hour && minute) {
+                let hour24 = parseInt(hour);
+                if (amPm === 'PM' && hour24 !== 12) {
+                    hour24 += 12;
+                } else if (amPm === 'AM' && hour24 === 12) {
+                    hour24 = 0;
+                }
+                const timeString = String(hour24).padStart(2, '0') + ':' + String(minute).padStart(2, '0');
+                document.getElementById('endTime').value = timeString;
+            }
+        }
+        
+        // Initialize time fields on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parse and set start time
+            const startTimeValue = document.getElementById('startTimeValue').value;
+            if (startTimeValue) {
+                const [hours, minutes] = startTimeValue.split(':');
+                let hour24 = parseInt(hours);
+                let hour12 = hour24;
+                let amPm = 'AM';
+                
+                if (hour24 === 0) {
+                    hour12 = 12;
+                    amPm = 'AM';
+                } else if (hour24 === 12) {
+                    hour12 = 12;
+                    amPm = 'PM';
+                } else if (hour24 > 12) {
+                    hour12 = hour24 - 12;
+                    amPm = 'PM';
+                } else {
+                    hour12 = hour24;
+                    amPm = 'AM';
+                }
+                
+                document.getElementById('startHour').value = hour12;
+                document.getElementById('startMinute').value = minutes;
+                document.getElementById('startAmPm').value = amPm;
+            }
+            
+            // Parse and set end time
+            const endTimeValue = document.getElementById('endTimeValue').value;
+            if (endTimeValue) {
+                const [hours, minutes] = endTimeValue.split(':');
+                let hour24 = parseInt(hours);
+                let hour12 = hour24;
+                let amPm = 'AM';
+                
+                if (hour24 === 0) {
+                    hour12 = 12;
+                    amPm = 'AM';
+                } else if (hour24 === 12) {
+                    hour12 = 12;
+                    amPm = 'PM';
+                } else if (hour24 > 12) {
+                    hour12 = hour24 - 12;
+                    amPm = 'PM';
+                } else {
+                    hour12 = hour24;
+                    amPm = 'AM';
+                }
+                
+                document.getElementById('endHour').value = hour12;
+                document.getElementById('endMinute').value = minutes;
+                document.getElementById('endAmPm').value = amPm;
+            }
+            
+            updateStartTime();
+            updateEndTime();
+        });
+    </script>
+</body>
+</html>
+

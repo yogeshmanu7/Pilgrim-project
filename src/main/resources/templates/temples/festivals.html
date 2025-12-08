@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Festivals - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>🎉 Festivals at <span th:text="${temple.name}">Temple</span></h1>
+            <p>Celebrate divine occasions with us</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <!-- Upcoming Festivals -->
+            <div th:if="${upcomingFestivals != null && !upcomingFestivals.isEmpty()}" class="mb-5">
+                <h2 class="mb-4">🗓️ Upcoming Festivals</h2>
+                <div class="temple-grid">
+                    <div th:each="festival : ${upcomingFestivals}" class="festival-card">
+                        <div class="festival-date">
+                            <div class="day" th:text="${festival.startDate.dayOfMonth}">15</div>
+                            <div class="month" th:text="${festival.startDate.month}">JAN</div>
+                        </div>
+                        <div class="festival-body">
+                            <h4 th:text="${festival.name}">Festival Name</h4>
+                            <p th:if="${festival.nameHindi != null}" class="text-gold" th:text="${festival.nameHindi}">Hindi Name</p>
+                            
+                            <p th:text="${festival.description}">Description...</p>
+                            
+                            <div th:if="${festival.endDate != null && festival.endDate != festival.startDate}" class="text-muted mb-2">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span th:text="${festival.startDate + ' to ' + festival.endDate}">Date Range</span>
+                            </div>
+                            
+                            <div th:if="${festival.significance != null}" class="mb-3">
+                                <strong>Significance:</strong>
+                                <p class="text-muted" th:text="${#strings.abbreviate(festival.significance, 150)}">Significance...</p>
+                            </div>
+                            
+                            <div th:if="${festival.specialPoojas != null}" class="mb-2">
+                                <small><strong>Special Poojas:</strong> <span th:text="${festival.specialPoojas}">Poojas</span></small>
+                            </div>
+                            
+                            <div th:if="${festival.schedule != null}" class="mb-2">
+                                <small><strong>Schedule:</strong> <span th:text="${festival.schedule}">Schedule</span></small>
+                            </div>
+                            
+                            <span th:if="${festival.isAnnual}" class="language-tag">Annual Festival</span>
+                            <span th:if="${festival.lunarDate != null}" class="language-tag" th:text="${festival.lunarDate}">Hindu Date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- All Festivals -->
+            <div th:if="${festivals != null && !festivals.isEmpty()}">
+                <h2 class="mb-4">📜 All Temple Festivals</h2>
+                <div class="temple-grid">
+                    <div th:each="festival : ${festivals}" class="card">
+                        <div class="card-body">
+                            <h4 th:text="${festival.name}">Festival Name</h4>
+                            <p th:if="${festival.nameHindi != null}" class="text-muted" th:text="${festival.nameHindi}">Hindi</p>
+                            <p th:text="${#strings.abbreviate(festival.description, 100)}">Description...</p>
+                            <span th:if="${festival.isAnnual}" class="language-tag">Annual</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${(festivals == null || festivals.isEmpty()) && (upcomingFestivals == null || upcomingFestivals.isEmpty())}" class="text-center py-5">
+                <i class="fas fa-calendar-alt fa-4x text-muted mb-3"></i>
+                <h3>No festivals listed yet</h3>
+                <p class="text-muted">Festival information will be added soon</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

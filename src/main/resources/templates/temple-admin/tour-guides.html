@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Manage Tour Guides')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <h2>Manage Tour Guides - <span th:text="${temple.name}">Temple</span></h2>
+                    <a th:href="@{/temple-admin/dashboard}" class="text-muted">← Back to Dashboard</a>
+                </div>
+            </div>
+            
+            <!-- Add New Tour Guide Form -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h4>➕ Add New Tour Guide</h4>
+                    <form th:action="@{/temple-admin/temple/{id}/tour-guides/add(id=${temple.id})}" method="post">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Guide Name *</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" name="phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Bio / About</label>
+                            <textarea name="bio" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Languages (comma separated)</label>
+                                <input type="text" name="languages" class="form-control" placeholder="English, Hindi, Tamil">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Experience (years)</label>
+                                <input type="number" name="experienceYears" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Certifications</label>
+                                <input type="text" name="certifications" class="form-control">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Hourly Rate (₹) *</label>
+                                <input type="number" name="hourlyRate" step="0.01" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Full Day Rate (₹)</label>
+                                <input type="number" name="fullDayRate" step="0.01" class="form-control">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Tour Guide
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Existing Tour Guides -->
+            <h4 class="mb-3">Existing Tour Guides</h4>
+            <div th:if="${tourGuides != null && !tourGuides.isEmpty()}" class="temple-grid">
+                <div th:each="guide : ${tourGuides}" class="guide-card">
+                    <img th:src="${guide.photoUrl != null ? (${contextPath} + guide.photoUrl) : (${contextPath} + '/images/guide-default.jpg')}" 
+                         th:alt="${guide.name}" class="guide-avatar">
+                    <h4 th:text="${guide.name}">Guide Name</h4>
+                    
+                    <div class="guide-rating" th:if="${guide.rating != null}">
+                        <i class="fas fa-star"></i>
+                        <span th:text="${#numbers.formatDecimal(guide.rating, 1, 1)}">4.5</span>
+                        <small class="text-muted" th:text="'(' + ${guide.totalTours != null ? guide.totalTours : 0} + ' tours)'"></small>
+                    </div>
+                    
+                    <p class="text-muted" th:if="${guide.experienceYears != null}">
+                        <i class="fas fa-briefcase"></i>
+                        <span th:text="${guide.experienceYears + ' years experience'}">Experience</span>
+                    </p>
+                    
+                    <div class="guide-languages" th:if="${guide.languages != null}">
+                        <span th:each="lang : ${#strings.arraySplit(guide.languages, ',')}" 
+                              class="language-tag" th:text="${lang}">Language</span>
+                    </div>
+                    
+                    <div class="d-flex justify-between align-center mt-3">
+                        <div>
+                            <small class="text-muted">Hourly</small>
+                            <div class="prasadham-price" th:text="'₹' + ${guide.hourlyRate}">Rate</div>
+                        </div>
+                        <div th:if="${guide.fullDayRate != null}">
+                            <small class="text-muted">Full Day</small>
+                            <div class="text-maroon" th:text="'₹' + ${guide.fullDayRate}">Full Day Rate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <span th:if="${guide.isAvailable}" class="language-tag" style="background: #E8F5E9; color: #2E7D32;">
+                            <i class="fas fa-check"></i> Available
+                        </span>
+                        <span th:if="${!guide.isAvailable}" class="language-tag" style="background: #FFEBEE; color: #C62828;">
+                            <i class="fas fa-times"></i> Unavailable
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${tourGuides == null || tourGuides.isEmpty()}" class="text-center py-4 text-muted">
+                <p>No tour guides added yet</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

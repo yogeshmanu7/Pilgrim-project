@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head(${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <!-- Temple Header -->
+    <section class="hero" style="padding: 3rem 0;">
+        <div class="container hero-content">
+            <h1 th:text="${temple.name}">Temple Name</h1>
+            <p th:if="${temple.nameHindi != null}" th:text="${temple.nameHindi}" style="font-size: 1.5rem; opacity: 0.9;"></p>
+            <p>
+                <i class="fas fa-map-marker-alt"></i>
+                <span th:text="${temple.address + ', ' + temple.city + ', ' + temple.state + ' - ' + temple.pincode}">Address</span>
+            </p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <a th:href="@{/temples/{id}(id=${temple.id})}" class="gallery-tab active">Overview</a>
+                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="gallery-tab">Darshan</a>
+                <a th:href="@{/temples/{id}/poojas(id=${temple.id})}" class="gallery-tab">Poojas</a>
+                <a th:href="@{/temples/{id}/prasadhams(id=${temple.id})}" class="gallery-tab">Prasadham</a>
+                <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" class="gallery-tab">Gallery</a>
+                <a th:href="@{/temples/{id}/festivals(id=${temple.id})}" class="gallery-tab">Festivals</a>
+                <a th:href="@{/temples/{id}/events(id=${temple.id})}" class="gallery-tab">Events</a>
+                <a th:href="@{/temples/{id}/tour-guides(id=${temple.id})}" class="gallery-tab">Tour Guides</a>
+                <a th:href="@{/temples/{id}/map(id=${temple.id})}" class="gallery-tab">Map</a>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <!-- Main Content -->
+                <div>
+                    <!-- Photo Gallery Preview -->
+                    <div th:if="${photos != null && !photos.isEmpty()}" class="mb-5">
+                        <div class="gallery-grid" style="grid-template-columns: repeat(3, 1fr);">
+                            <div th:each="photo, iterStat : ${photos}" th:if="${iterStat.index < 6}" class="gallery-item">
+                                <img th:src="${contextPath} + ${photo.photoUrl}" th:alt="${photo.title}">
+                                <div class="overlay">
+                                    <span th:text="${photo.title}">Photo Title</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" class="btn btn-outline mt-3">View All Photos</a>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>About the Temple</h3>
+                            <p th:text="${temple.description}">Description...</p>
+                            <p th:if="${temple.descriptionHindi != null}" th:text="${temple.descriptionHindi}" class="text-muted"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- History -->
+                    <div th:if="${temple.history != null}" class="card mb-4">
+                        <div class="card-body">
+                            <h3>History</h3>
+                            <p th:text="${temple.history}">History...</p>
+                            <p th:if="${temple.historyHindi != null}" th:text="${temple.historyHindi}" class="text-muted"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Daily Rituals -->
+                    <div th:if="${rituals != null && !rituals.isEmpty()}" class="card mb-4">
+                        <div class="card-body">
+                            <h3>Daily Rituals & Schedule</h3>
+                            <div class="ritual-list">
+                                <div th:each="ritual : ${rituals}" class="ritual-item">
+                                    <span class="ritual-time" th:text="${ritual.time}">6:00 AM</span>
+                                    <span class="ritual-name">
+                                        <strong th:text="${ritual.name}">Ritual Name</strong>
+                                        <br>
+                                        <small class="text-muted" th:text="${ritual.description}">Description</small>
+                                    </span>
+                                    <span class="ritual-frequency" th:text="${ritual.frequency.displayName}">Daily</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rules -->
+                    <div th:if="${temple.rules != null}" class="card mb-4">
+                        <div class="card-body">
+                            <h3>Temple Rules & Guidelines</h3>
+                            <div th:utext="${temple.rules}">Rules...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div>
+                    <!-- Timings -->
+                    <div class="timings-box mb-4">
+                        <h4 class="mb-3"><i class="fas fa-clock text-saffron"></i> Temple Timings</h4>
+                        <div class="timing-row">
+                            <span class="timing-label">Morning</span>
+                            <span class="timing-value" th:text="${temple.morningOpenTime + ' - ' + temple.morningCloseTime}">6:00 AM - 12:00 PM</span>
+                        </div>
+                        <div class="timing-row">
+                            <span class="timing-label">Evening</span>
+                            <span class="timing-value" th:text="${temple.eveningOpenTime + ' - ' + temple.eveningCloseTime}">4:00 PM - 9:00 PM</span>
+                        </div>
+                        <div th:if="${temple.specialTimings != null}" class="timing-row">
+                            <span class="timing-label">Special</span>
+                            <span class="timing-value" th:text="${temple.specialTimings}">Special timings</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4><i class="fas fa-phone text-saffron"></i> Contact</h4>
+                            <p th:if="${temple.phone != null}"><i class="fas fa-phone"></i> <span th:text="${temple.phone}">Phone</span></p>
+                            <p th:if="${temple.email != null}"><i class="fas fa-envelope"></i> <span th:text="${temple.email}">Email</span></p>
+                            <p th:if="${temple.website != null}"><i class="fas fa-globe"></i> <a th:href="${temple.website}" target="_blank" th:text="${temple.website}">Website</a></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4><i class="fas fa-bolt text-saffron"></i> Quick Actions</h4>
+                            <div class="d-flex flex-wrap gap-2" style="flex-direction: column;">
+                                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="btn btn-primary">
+                                    <i class="fas fa-om"></i> Book Darshan
+                                </a>
+                                <a th:href="@{/temples/{id}/poojas(id=${temple.id})}" class="btn btn-outline">
+                                    <i class="fas fa-fire"></i> Book Pooja
+                                </a>
+                                <a th:href="@{/temples/{id}/prasadhams(id=${temple.id})}" class="btn btn-outline">
+                                    <i class="fas fa-gift"></i> Order Prasadham
+                                </a>
+                                <a th:href="@{/donation/{id}(id=${temple.id})}" class="btn btn-secondary">
+                                    <i class="fas fa-hand-holding-heart"></i> Donate
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upcoming Festivals -->
+                    <div th:if="${upcomingFestivals != null && !upcomingFestivals.isEmpty()}" class="card mb-4">
+                        <div class="card-body">
+                            <h4><i class="fas fa-calendar text-saffron"></i> Upcoming Festivals</h4>
+                            <div th:each="festival : ${upcomingFestivals}" class="mb-3">
+                                <strong th:text="${festival.name}">Festival Name</strong>
+                                <br>
+                                <small class="text-muted" th:text="${festival.startDate}">Date</small>
+                            </div>
+                            <a th:href="@{/temples/{id}/festivals(id=${temple.id})}" class="btn btn-outline btn-sm">View All</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Tour Guides -->
+                    <div th:if="${tourGuides != null && !tourGuides.isEmpty()}" class="card">
+                        <div class="card-body">
+                            <h4><i class="fas fa-user-tie text-saffron"></i> Tour Guides Available</h4>
+                            <p th:text="${#lists.size(tourGuides)} + ' guides available'">N guides available</p>
+                            <a th:href="@{/temples/{id}/tour-guides(id=${temple.id})}" class="btn btn-outline btn-sm">View Guides</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

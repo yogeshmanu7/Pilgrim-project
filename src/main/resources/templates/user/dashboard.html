@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Dashboard')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="dashboard-header">
+        <div class="container">
+            <h1>🙏 Namaste, <span th:text="${user.fullName}">User</span>!</h1>
+            <p>Welcome to your spiritual journey dashboard</p>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#lists.size(darshanBookings)}">0</div>
+                    <div class="stat-label">Darshan Bookings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#lists.size(poojaBookings)}">0</div>
+                    <div class="stat-label">Pooja Bookings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#lists.size(prasadhamOrders)}">0</div>
+                    <div class="stat-label">Prasadham Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" th:text="${#lists.size(donations)}">0</div>
+                    <div class="stat-label">Donations</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="dashboard-grid">
+                <!-- Recent Darshan Bookings -->
+                <div class="dashboard-section">
+                    <h3>🙏 Recent Darshan Bookings</h3>
+                    <div th:if="${darshanBookings != null && !darshanBookings.isEmpty()}">
+                        <div th:each="booking, iterStat : ${darshanBookings}" th:if="${iterStat.index < 5}" class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-between align-center">
+                                    <strong th:text="${booking.darshan.temple.name}">Temple</strong>
+                                    <span class="status-badge" 
+                                          th:classappend="'status-' + ${booking.status.name().toLowerCase()}"
+                                          th:text="${booking.status}">Status</span>
+                                </div>
+                                <p class="text-muted mb-1" th:text="${booking.darshan.name + ' - ' + booking.darshan.darshanType.displayName}">Darshan</p>
+                                <small><i class="fas fa-calendar"></i> <span th:text="${booking.bookingDate}">Date</span></small>
+                                <small class="ml-2"><i class="fas fa-users"></i> <span th:text="${booking.numberOfPersons}">1</span> person(s)</small>
+                                <br>
+                                <a th:href="@{/user/bookings/darshan/{id}(id=${booking.id})}" class="btn btn-sm btn-outline mt-2">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${darshanBookings == null || darshanBookings.isEmpty()}" class="text-center text-muted py-4">
+                        <p>No darshan bookings yet</p>
+                        <a th:href="@{/temples}" class="btn btn-primary btn-sm">Browse Temples</a>
+                    </div>
+                    <a th:if="${darshanBookings != null && !darshanBookings.isEmpty()}" th:href="@{/user/bookings}" class="btn btn-outline btn-sm">View All</a>
+                </div>
+                
+                <!-- Recent Pooja Bookings -->
+                <div class="dashboard-section">
+                    <h3>🔥 Recent Pooja Bookings</h3>
+                    <div th:if="${poojaBookings != null && !poojaBookings.isEmpty()}">
+                        <div th:each="booking, iterStat : ${poojaBookings}" th:if="${iterStat.index < 5}" class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-between align-center">
+                                    <strong th:text="${booking.pooja.temple.name}">Temple</strong>
+                                    <span class="status-badge" 
+                                          th:classappend="'status-' + ${booking.status.name().toLowerCase()}"
+                                          th:text="${booking.status}">Status</span>
+                                </div>
+                                <p class="text-muted mb-1" th:text="${booking.pooja.name}">Pooja</p>
+                                <small><i class="fas fa-calendar"></i> <span th:text="${booking.bookingDate}">Date</span></small>
+                                <small class="ml-2"><i class="fas fa-rupee-sign"></i> <span th:text="${booking.amount}">0</span></small>
+                                <br>
+                                <a th:href="@{/user/bookings/pooja/{id}(id=${booking.id})}" class="btn btn-sm btn-outline mt-2">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${poojaBookings == null || poojaBookings.isEmpty()}" class="text-center text-muted py-4">
+                        <p>No pooja bookings yet</p>
+                    </div>
+                    <a th:if="${poojaBookings != null && !poojaBookings.isEmpty()}" th:href="@{/user/bookings}" class="btn btn-outline btn-sm">View All</a>
+                </div>
+                
+                <!-- Recent Prasadham Orders -->
+                <div class="dashboard-section">
+                    <h3>🎁 Recent Prasadham Orders</h3>
+                    <div th:if="${prasadhamOrders != null && !prasadhamOrders.isEmpty()}">
+                        <div th:each="order, iterStat : ${prasadhamOrders}" th:if="${iterStat.index < 5}" class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-between align-center">
+                                    <strong th:text="${order.prasadham.name}">Prasadham</strong>
+                                    <span class="status-badge" 
+                                          th:classappend="'status-' + ${order.status.name().toLowerCase()}"
+                                          th:text="${order.status}">Status</span>
+                                </div>
+                                <p class="text-muted mb-1" th:text="${order.prasadham.temple.name}">Temple</p>
+                                <small><i class="fas fa-shopping-cart"></i> Qty: <span th:text="${order.quantity}">1</span></small>
+                                <small class="ml-2"><i class="fas fa-rupee-sign"></i> <span th:text="${order.totalAmount}">0</span></small>
+                                <br>
+                                <a th:href="@{/user/orders/prasadham/{id}(id=${order.id})}" class="btn btn-sm btn-outline mt-2">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${prasadhamOrders == null || prasadhamOrders.isEmpty()}" class="text-center text-muted py-4">
+                        <p>No prasadham orders yet</p>
+                    </div>
+                    <a th:if="${prasadhamOrders != null && !prasadhamOrders.isEmpty()}" th:href="@{/user/orders}" class="btn btn-outline btn-sm">View All</a>
+                </div>
+                
+                <!-- Recent Donations -->
+                <div class="dashboard-section">
+                    <h3>💝 Recent Donations</h3>
+                    <div th:if="${donations != null && !donations.isEmpty()}">
+                        <div th:each="donation, iterStat : ${donations}" th:if="${iterStat.index < 5}" class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-between align-center">
+                                    <strong th:text="${donation.temple.name}">Temple</strong>
+                                    <span class="prasadham-price" th:text="'₹' + ${donation.amount}">Amount</span>
+                                </div>
+                                <p class="text-muted mb-1" th:text="${donation.donationType.displayName}">Type</p>
+                                <small><i class="fas fa-calendar"></i> <span th:text="${donation.createdAt}">Date</span></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${donations == null || donations.isEmpty()}" class="text-center text-muted py-4">
+                        <p>No donations yet</p>
+                        <a th:href="@{/temples}" class="btn btn-secondary btn-sm">Make a Donation</a>
+                    </div>
+                    <a th:if="${donations != null && !donations.isEmpty()}" th:href="@{/user/donations}" class="btn btn-outline btn-sm">View All</a>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h4>Quick Actions</h4>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a th:href="@{/temples}" class="btn btn-primary">Browse Temples</a>
+                        <a th:href="@{/user/bookings}" class="btn btn-outline">View All Bookings</a>
+                        <a th:href="@{/user/orders}" class="btn btn-outline">View Orders</a>
+                        <a th:href="@{/user/profile}" class="btn btn-outline">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

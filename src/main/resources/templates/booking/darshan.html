@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Book Darshan')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="booking-form">
+                <h3>🙏 Book Darshan - <span th:text="${darshan.name}">Darshan</span></h3>
+                
+                <div class="booking-summary">
+                    <h5>Booking Summary</h5>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${temple.name}">Temple Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Darshan Type:</span>
+                        <span th:text="${darshan.darshanType.displayName}">Type</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Price per Person:</span>
+                        <span th:text="${darshan.price != null ? '₹' + darshan.price : 'FREE'}">Price</span>
+                    </div>
+                    <div class="summary-row" th:if="${darshan.startTime != null}">
+                        <span>Available Time Period:</span>
+                        <span class="font-weight-bold" th:text="${darshan.startTime + ' - ' + darshan.endTime}">Timing</span>
+                    </div>
+                    <input type="hidden" id="startTime" th:value="${darshan.startTime != null ? #temporals.format(darshan.startTime, 'HH:mm') : ''}">
+                    <input type="hidden" id="endTime" th:value="${darshan.endTime != null ? #temporals.format(darshan.endTime, 'HH:mm') : ''}">
+                    <!-- Available Seats Display -->
+                    <div class="summary-row" th:if="${maxSeats != null}" id="availableSeatsDisplay" style="display: none;">
+                        <span>Available Seats:</span>
+                        <span id="availableSeatsCount" class="text-success font-weight-bold">-</span>
+                        <span th:if="${maxSeats != null}" class="text-muted" th:text="' / ' + ${maxSeats}"> / Total</span>
+                    </div>
+                    <input type="hidden" id="pricePerPerson" th:value="${darshan.price != null ? darshan.price : 0}">
+                    <input type="hidden" id="darshanId" th:value="${darshan.id}">
+                    <input type="hidden" id="maxSeats" th:value="${maxSeats}">
+                </div>
+                
+                <form th:action="@{/booking/darshan/{id}(id=${darshan.id})}" method="post" id="bookingForm" data-validate>
+                    <!-- Booking Availability Date Range Info -->
+                    <div class="alert alert-info" th:if="${bookingStartDate != null || bookingEndDate != null}">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Booking Availability:</strong>
+                        <span th:if="${bookingStartDate != null && bookingEndDate != null}">
+                            Bookings are open from <strong th:text="${#temporals.format(bookingStartDate, 'dd MMM yyyy')}"></strong> to <strong th:text="${#temporals.format(bookingEndDate, 'dd MMM yyyy')}"></strong>
+                        </span>
+                        <span th:if="${bookingStartDate != null && bookingEndDate == null}">
+                            Bookings are open from <strong th:text="${#temporals.format(bookingStartDate, 'dd MMM yyyy')}"></strong> onwards
+                        </span>
+                        <span th:if="${bookingStartDate == null && bookingEndDate != null}">
+                            Bookings are open until <strong th:text="${#temporals.format(bookingEndDate, 'dd MMM yyyy')}"></strong>
+                        </span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Booking Date *</label>
+                        <input type="date" name="bookingDate" id="bookingDate" class="form-control" 
+                               th:min="${minDate}" th:max="${maxDate}" required
+                               onchange="updateAvailableSeats()">
+                    </div>
+                    
+                    <div class="form-group" th:if="${darshan.startTime != null && darshan.endTime != null}">
+                        <label class="form-label">Preferred Slot Time *</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                            <input type="number" id="slotHour" class="form-control" min="1" max="12" placeholder="Hour" 
+                                   onchange="updateSlotTime(); updateSubmitButtonState()" oninput="updateSlotTime(); updateSubmitButtonState()">
+                            <input type="number" id="slotMinute" class="form-control" min="0" max="59" placeholder="Minute" 
+                                   onchange="updateSlotTime(); updateSubmitButtonState()" oninput="updateSlotTime(); updateSubmitButtonState()">
+                            <select id="slotAmPm" class="form-control" onchange="updateSlotTime(); updateSubmitButtonState()">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="slotTime" id="slotTime" required>
+                        <small class="text-muted" id="timeHelpText">
+                            Please select a time between 
+                            <strong th:text="${darshan.startTime}"></strong> and 
+                            <strong th:text="${darshan.endTime}"></strong>
+                        </small>
+                        <div id="timeError" class="text-danger mt-1" style="display: none;"></div>
+                    </div>
+                    <div class="form-group" th:if="${darshan.startTime != null && darshan.endTime == null}">
+                        <label class="form-label">Preferred Slot Time</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                            <input type="number" id="slotHour" class="form-control" min="1" max="12" placeholder="Hour" 
+                                   onchange="updateSlotTime(); updateSubmitButtonState()" oninput="updateSlotTime(); updateSubmitButtonState()">
+                            <input type="number" id="slotMinute" class="form-control" min="0" max="59" placeholder="Minute" 
+                                   onchange="updateSlotTime(); updateSubmitButtonState()" oninput="updateSlotTime(); updateSubmitButtonState()">
+                            <select id="slotAmPm" class="form-control" onchange="updateSlotTime(); updateSubmitButtonState()">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="slotTime" id="slotTime">
+                        <small class="text-muted" id="timeHelpText">
+                            Available from <strong th:text="${darshan.startTime}"></strong> onwards
+                        </small>
+                        <div id="timeError" class="text-danger mt-1" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Number of Persons *</label>
+                        <input type="number" name="numberOfPersons" id="numberOfPersons" 
+                               class="form-control" min="1" value="1" required
+                               onchange="updateBookingSummary(); updateSubmitButtonState()"
+                               oninput="updateSubmitButtonState()">
+                        <small class="text-muted" id="seatsHelpText">Select a date to see available seats</small>
+                        <div id="seatsError" class="text-danger mt-1" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Primary Devotee Name *</label>
+                        <input type="text" name="primaryDevoteeName" class="form-control" 
+                               placeholder="Enter primary devotee name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="tel" name="primaryDevoteePhone" class="form-control" 
+                               placeholder="Enter phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Additional Devotee Names (if any)</label>
+                        <textarea name="additionalDevoteeNames" class="form-control" rows="3"
+                                  placeholder="Enter names of additional devotees (one per line)"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Special Notes</label>
+                        <textarea name="notes" class="form-control" rows="2"
+                                  placeholder="Any special requirements or notes"></textarea>
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <div class="summary-row summary-total">
+                            <span>Total Amount:</span>
+                            <span id="totalAmount" th:text="${darshan.price != null ? '₹' + darshan.price : 'FREE'}">₹0</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="submitButton" class="btn btn-primary btn-lg" style="width: 100%;" onclick="return validateBookingBeforeSubmit(event);">
+                        <i class="fas fa-check-circle"></i> Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const darshanId = /*[[${darshan.id}]]*/ null;
+        const maxSeats = /*[[${maxSeats}]]*/ null;
+        let currentAvailableSeats = /*[[${availableSeatsToday}]]*/ null;
+        
+        function updateAvailableSeats() {
+            const bookingDate = document.getElementById('bookingDate').value;
+            if (!bookingDate) {
+                document.getElementById('availableSeatsDisplay').style.display = 'none';
+                return;
+            }
+            
+            if (maxSeats == null) {
+                document.getElementById('availableSeatsDisplay').style.display = 'none';
+                document.getElementById('numberOfPersons').removeAttribute('max');
+                return;
+            }
+            
+            fetch('/booking/api/darshan/' + darshanId + '/available-seats?date=' + bookingDate)
+                .then(response => response.json())
+                .then(data => {
+                    currentAvailableSeats = data.availableSeats;
+                    const availableSeatsCount = document.getElementById('availableSeatsCount');
+                    const availableSeatsDisplay = document.getElementById('availableSeatsDisplay');
+                    const numberOfPersonsInput = document.getElementById('numberOfPersons');
+                    const seatsHelpText = document.getElementById('seatsHelpText');
+                    
+                    if (data.hasLimit) {
+                        availableSeatsDisplay.style.display = 'flex';
+                        availableSeatsCount.textContent = data.availableSeats;
+                        
+                        if (data.availableSeats > 0) {
+                            availableSeatsCount.className = 'text-success font-weight-bold';
+                            numberOfPersonsInput.setAttribute('max', data.availableSeats);
+                            numberOfPersonsInput.disabled = false;
+                            seatsHelpText.textContent = data.availableSeats + ' seat(s) available for this date';
+                            seatsHelpText.className = 'text-success';
+                        } else {
+                            availableSeatsCount.className = 'text-danger font-weight-bold';
+                            availableSeatsCount.textContent = 'FULL';
+                            numberOfPersonsInput.setAttribute('max', 0);
+                            numberOfPersonsInput.disabled = true;
+                            seatsHelpText.textContent = 'No seats available for this date';
+                            seatsHelpText.className = 'text-danger';
+                        }
+                        
+                        // Validate current input
+                        updateSubmitButtonState();
+                    } else {
+                        availableSeatsDisplay.style.display = 'none';
+                        numberOfPersonsInput.removeAttribute('max');
+                        numberOfPersonsInput.disabled = false;
+                        seatsHelpText.textContent = 'No seat limit';
+                        seatsHelpText.className = 'text-muted';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching available seats:', error);
+                    document.getElementById('availableSeatsDisplay').style.display = 'none';
+                });
+        }
+        
+        function validateSeats() {
+            const numberOfPersonsInput = document.getElementById('numberOfPersons');
+            const numberOfPersons = parseInt(numberOfPersonsInput.value) || 0;
+            const seatsError = document.getElementById('seatsError');
+            const seatsHelpText = document.getElementById('seatsHelpText');
+            
+            if (maxSeats == null || currentAvailableSeats == null) {
+                seatsError.style.display = 'none';
+                return true;
+            }
+            
+            if (numberOfPersons > currentAvailableSeats) {
+                seatsError.textContent = 'Only ' + currentAvailableSeats + ' seat(s) available. Please reduce the number of persons.';
+                seatsError.style.display = 'block';
+                numberOfPersonsInput.setCustomValidity('Number of persons exceeds available seats');
+                return false;
+            } else if (numberOfPersons <= 0) {
+                seatsError.textContent = 'Please enter a valid number of persons';
+                seatsError.style.display = 'block';
+                numberOfPersonsInput.setCustomValidity('Please enter a valid number');
+                return false;
+            } else {
+                seatsError.style.display = 'none';
+                numberOfPersonsInput.setCustomValidity('');
+                return true;
+            }
+        }
+        
+        // Update submit button state based on all validations
+        function updateSubmitButtonState() {
+            const submitButton = document.getElementById('submitButton');
+            const seatsValid = validateSeats();
+            const timeValid = validateTime();
+            
+            // Only enable button if both validations pass
+            if (seatsValid && timeValid) {
+                submitButton.disabled = false;
+                submitButton.classList.remove('disabled');
+            } else {
+                submitButton.disabled = true;
+                submitButton.classList.add('disabled');
+            }
+        }
+        
+        // Update hidden time field for slot time
+        function updateSlotTime() {
+            const slotHour = document.getElementById('slotHour');
+            const slotMinute = document.getElementById('slotMinute');
+            const slotAmPm = document.getElementById('slotAmPm');
+            const slotTimeInput = document.getElementById('slotTime');
+            
+            if (!slotHour || !slotMinute || !slotAmPm || !slotTimeInput) {
+                return; // Elements don't exist
+            }
+            
+            const hour = slotHour.value;
+            const minute = slotMinute.value;
+            const amPm = slotAmPm.value;
+            
+            if (hour && minute && amPm) {
+                let hour24 = parseInt(hour);
+                if (amPm === 'PM' && hour24 !== 12) {
+                    hour24 += 12;
+                } else if (amPm === 'AM' && hour24 === 12) {
+                    hour24 = 0;
+                }
+                const timeString = String(hour24).padStart(2, '0') + ':' + String(minute).padStart(2, '0');
+                slotTimeInput.value = timeString;
+            } else {
+                slotTimeInput.value = '';
+            }
+        }
+        
+        function validateTime() {
+            const slotTimeInput = document.getElementById('slotTime');
+            const slotHour = document.getElementById('slotHour');
+            const slotMinute = document.getElementById('slotMinute');
+            
+            if (!slotTimeInput || !slotHour || !slotMinute) {
+                return true; // No time field, no validation needed
+            }
+            
+            const startTimeStr = document.getElementById('startTime').value;
+            const endTimeStr = document.getElementById('endTime').value;
+            const timeError = document.getElementById('timeError');
+            
+            if (!startTimeStr || !endTimeStr) {
+                // No time restriction
+                if (timeError) {
+                    timeError.style.display = 'none';
+                }
+                if (slotTimeInput) {
+                    slotTimeInput.setCustomValidity('');
+                }
+                return true;
+            }
+            
+            const slotTime = slotTimeInput.value;
+            const hour = slotHour.value;
+            const minute = slotMinute.value;
+            
+            if (!hour || !minute || !slotTime) {
+                if (timeError) {
+                    timeError.textContent = 'Please select a preferred slot time (hour, minute, and AM/PM)';
+                    timeError.style.display = 'block';
+                }
+                slotTimeInput.setCustomValidity('Please select a preferred slot time');
+                return false;
+            }
+            
+            // Compare times (HH:mm format)
+            if (slotTime < startTimeStr || slotTime > endTimeStr) {
+                if (timeError) {
+                    timeError.textContent = 'Selected time must be between ' + startTimeStr + ' and ' + endTimeStr;
+                    timeError.style.display = 'block';
+                }
+                slotTimeInput.setCustomValidity('Time must be within the allowed period');
+                return false;
+            } else {
+                if (timeError) {
+                    timeError.style.display = 'none';
+                }
+                slotTimeInput.setCustomValidity('');
+                return true;
+            }
+        }
+        
+        function validateBookingBeforeSubmit(event) {
+            const numberOfPersonsInput = document.getElementById('numberOfPersons');
+            const numberOfPersons = parseInt(numberOfPersonsInput.value) || 0;
+            const bookingDate = document.getElementById('bookingDate').value;
+            const slotTimeInput = document.getElementById('slotTime');
+            const startTimeElement = document.getElementById('startTime');
+            const endTimeElement = document.getElementById('endTime');
+            const slotHour = document.getElementById('slotHour');
+            const slotMinute = document.getElementById('slotMinute');
+            const slotAmPm = document.getElementById('slotAmPm');
+            
+            if (!bookingDate) {
+                alert('Please select a booking date.');
+                event.preventDefault();
+                return false;
+            }
+            
+            // Ensure slotTime is updated before validation
+            if (slotHour && slotMinute && slotAmPm) {
+                updateSlotTime();
+            }
+            
+            // Validate time if time period is set
+            if (startTimeElement && endTimeElement) {
+                const startTimeStr = startTimeElement.value;
+                const endTimeStr = endTimeElement.value;
+                
+                if (startTimeStr && endTimeStr) {
+                    if (!slotHour || !slotMinute || !slotAmPm || !slotHour.value || !slotMinute.value || !slotAmPm.value) {
+                        alert('Please select a preferred slot time (hour, minute, and AM/PM).');
+                        event.preventDefault();
+                        return false;
+                    }
+                    
+                    if (!slotTimeInput || !slotTimeInput.value) {
+                        alert('Please ensure all time fields are filled correctly.');
+                        event.preventDefault();
+                        return false;
+                    }
+                    
+                    if (slotTimeInput.value < startTimeStr || slotTimeInput.value > endTimeStr) {
+                        alert('Selected time must be between ' + startTimeStr + ' and ' + endTimeStr + '. Please select a time within the allowed period.');
+                        event.preventDefault();
+                        return false;
+                    }
+                }
+            }
+            
+            if (maxSeats != null && currentAvailableSeats != null) {
+                if (numberOfPersons > currentAvailableSeats) {
+                    alert('Cannot book! Only ' + currentAvailableSeats + ' seat(s) available for the selected date. You are trying to book ' + numberOfPersons + ' seat(s). Please reduce the number of persons.');
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function updateBookingSummary() {
+            const pricePerPerson = parseFloat(document.getElementById('pricePerPerson').value) || 0;
+            const numberOfPersons = parseInt(document.getElementById('numberOfPersons').value) || 0;
+            const totalAmount = pricePerPerson * numberOfPersons;
+            const totalAmountElement = document.getElementById('totalAmount');
+            
+            if (totalAmount > 0) {
+                totalAmountElement.textContent = '₹' + totalAmount.toFixed(2);
+            } else {
+                totalAmountElement.textContent = 'FREE';
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingDate = document.getElementById('bookingDate');
+            if (bookingDate.value) {
+                updateAvailableSeats();
+            }
+            // Set today's date as default if not set
+            if (!bookingDate.value) {
+                const today = new Date().toISOString().split('T')[0];
+                bookingDate.value = today;
+                updateAvailableSeats();
+            }
+            
+            // Ensure slotTime is updated on form submit
+            const bookingForm = document.getElementById('bookingForm');
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', function(e) {
+                    // Update slotTime before form submission
+                    if (document.getElementById('slotHour') && document.getElementById('slotMinute') && document.getElementById('slotAmPm')) {
+                        updateSlotTime();
+                    }
+                });
+            }
+            
+            // Initial validation
+            updateSubmitButtonState();
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

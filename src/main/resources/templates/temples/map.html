@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Location - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>📍 Location - <span th:text="${temple.name}">Temple</span></h1>
+            <p th:text="${temple.address + ', ' + temple.city + ', ' + temple.state}">Address</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <div class="map-container">
+                    <!-- Embedded Map -->
+                    <div th:if="${temple.mapEmbedUrl != null}">
+                        <iframe th:src="${temple.mapEmbedUrl}" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <div th:if="${temple.mapEmbedUrl == null && temple.latitude != null && temple.longitude != null}">
+                        <iframe th:src="'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d' + ${temple.longitude} + '!3d' + ${temple.latitude} + '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMap!5e0!3m2!1sen!2sin!4v1234567890'" 
+                               allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <div th:if="${temple.mapEmbedUrl == null && (temple.latitude == null || temple.longitude == null)}" class="text-center py-5" style="background: var(--cream);">
+                        <i class="fas fa-map-marked-alt fa-4x text-muted mb-3"></i>
+                        <h3>Map not available</h3>
+                        <p class="text-muted">Please use the address below to navigate</p>
+                    </div>
+                    
+                    <div class="map-info">
+                        <h4><i class="fas fa-map-marker-alt text-saffron"></i> Full Address</h4>
+                        <p th:text="${temple.address}">Address Line</p>
+                        <p th:text="${temple.city + ', ' + temple.state + ' - ' + temple.pincode}">City, State - Pincode</p>
+                        
+                        <div th:if="${temple.latitude != null && temple.longitude != null}" class="mt-3">
+                            <a th:href="'https://www.google.com/maps/dir/?api=1&destination=' + ${temple.latitude} + ',' + ${temple.longitude}" 
+                               target="_blank" class="btn btn-primary">
+                                <i class="fas fa-directions"></i> Get Directions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <!-- Contact Info -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4><i class="fas fa-phone text-saffron"></i> Contact Information</h4>
+                            <div class="mt-3">
+                                <p th:if="${temple.phone != null}">
+                                    <i class="fas fa-phone-alt"></i> 
+                                    <a th:href="'tel:' + ${temple.phone}" th:text="${temple.phone}">Phone</a>
+                                </p>
+                                <p th:if="${temple.email != null}">
+                                    <i class="fas fa-envelope"></i> 
+                                    <a th:href="'mailto:' + ${temple.email}" th:text="${temple.email}">Email</a>
+                                </p>
+                                <p th:if="${temple.website != null}">
+                                    <i class="fas fa-globe"></i> 
+                                    <a th:href="${temple.website}" target="_blank" th:text="${temple.website}">Website</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Timings -->
+                    <div class="timings-box">
+                        <h4 class="mb-3"><i class="fas fa-clock text-saffron"></i> Temple Timings</h4>
+                        <div class="timing-row">
+                            <span class="timing-label">Morning</span>
+                            <span class="timing-value" th:text="${temple.morningOpenTime + ' - ' + temple.morningCloseTime}">6:00 AM - 12:00 PM</span>
+                        </div>
+                        <div class="timing-row">
+                            <span class="timing-label">Evening</span>
+                            <span class="timing-value" th:text="${temple.eveningOpenTime + ' - ' + temple.eveningCloseTime}">4:00 PM - 9:00 PM</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h4>Quick Links</h4>
+                            <div class="d-flex flex-wrap gap-2" style="flex-direction: column;">
+                                <a th:href="@{/temples/{id}(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-info-circle"></i> Temple Info
+                                </a>
+                                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-om"></i> Book Darshan
+                                </a>
+                                <a th:href="@{/donation/{id}(id=${temple.id})}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-hand-holding-heart"></i> Donate
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tour Booking Details')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="booking-form">
+                <div class="d-flex justify-between align-center mb-4">
+                    <h3>👤 Tour Guide Booking Details</h3>
+                    <span class="status-badge" 
+                          th:classappend="'status-' + ${booking.status?.name()?.toLowerCase() ?: 'pending'}"
+                          th:text="${booking.status ?: 'PENDING'}">Status</span>
+                </div>
+                
+                <div class="booking-summary">
+                    <div class="summary-row">
+                        <span>Booking Number:</span>
+                        <strong th:text="${booking.bookingNumber}">Booking#</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${booking.tourGuide.temple.name}">Temple</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tour Guide:</span>
+                        <span th:text="${booking.tourGuide.name}">Guide</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tour Date:</span>
+                        <span th:text="${booking.tourDate}">Date</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tour Type:</span>
+                        <span th:text="${booking.tourType?.displayName ?: 'Tour'}">Type</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.startTime != null}">
+                        <span>Start Time:</span>
+                        <span th:text="${booking.startTime}">Time</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.endTime != null}">
+                        <span>End Time:</span>
+                        <span th:text="${booking.endTime}">Time</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Number of Persons:</span>
+                        <span th:text="${booking.numberOfPersons}">Persons</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Contact Name:</span>
+                        <span th:text="${booking.contactName}">Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Contact Phone:</span>
+                        <span th:text="${booking.contactPhone}">Phone</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.preferredLanguage != null}">
+                        <span>Preferred Language:</span>
+                        <span th:text="${booking.preferredLanguage}">Language</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total Amount:</span>
+                        <span th:text="'₹' + ${booking.totalAmount}">Amount</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Payment Status:</span>
+                        <span class="status-badge" 
+                              th:classappend="'status-' + ${booking.paymentStatus?.name()?.toLowerCase() ?: 'pending'}"
+                              th:text="${booking.paymentStatus ?: 'PENDING'}">Status</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.paymentTransactionId != null}">
+                        <span>Transaction ID:</span>
+                        <span th:text="${booking.paymentTransactionId}">Transaction ID</span>
+                    </div>
+                </div>
+                
+                <!-- Payment Button -->
+                <div class="mt-4" th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING' && booking.totalAmount != null && booking.totalAmount.compareTo(0) > 0}">
+                    <button id="payButton" class="btn btn-primary btn-lg" onclick="initiatePayment()">
+                        <i class="fas fa-credit-card"></i> Pay Now - ₹<span th:text="${booking.totalAmount}">Amount</span>
+                    </button>
+                    <div id="paymentError" class="alert alert-danger mt-2" style="display: none;"></div>
+                </div>
+                
+                <div class="mt-4">
+                    <button onclick="printBooking()" class="btn btn-outline">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <a th:href="@{/user/bookings}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Back to Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const bookingId = /*[[${booking.id}]]*/ 0;
+        const bookingAmount = /*[[${booking.totalAmount != null ? booking.totalAmount : 0}]]*/ 0;
+        const paymentStatus = /*[[${booking.paymentStatus != null ? booking.paymentStatus.name() : 'PENDING'}]]*/ 'PENDING';
+        
+        function initiatePayment() {
+            if (paymentStatus !== 'PENDING' || bookingAmount <= 0) {
+                document.getElementById('paymentError').textContent = 'Payment not required or already processed.';
+                document.getElementById('paymentError').style.display = 'block';
+                return;
+            }
+            
+            const payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            document.getElementById('paymentError').style.display = 'none';
+            
+            // Get CSRF token
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+            const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+            const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : 'X-CSRF-TOKEN';
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            if (csrfToken) {
+                headers[csrfHeader] = csrfToken;
+            }
+            
+            // Get context path from current URL (everything before /user/ or /payment/)
+            let contextPath = '';
+            const pathname = window.location.pathname;
+            const userIndex = pathname.indexOf('/user/');
+            const paymentIndex = pathname.indexOf('/payment/');
+            if (userIndex > 0) {
+                contextPath = pathname.substring(0, userIndex);
+            } else if (paymentIndex > 0) {
+                contextPath = pathname.substring(0, paymentIndex);
+            }
+            const paymentUrl = contextPath + '/payment/tour/' + bookingId + '/create-order';
+            
+            fetch(paymentUrl, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP ${response.status}: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.orderId) {
+                    const options = {
+                        key: data.key,
+                        amount: data.amount,
+                        currency: data.currency,
+                        name: 'Temple Management System',
+                        description: 'Tour Booking Payment',
+                        order_id: data.orderId,
+                        handler: function(response) {
+                            verifyPayment(response);
+                        },
+                        prefill: {
+                            name: /*[[${booking.contactName}]]*/ '',
+                            contact: /*[[${booking.contactPhone}]]*/ '',
+                            email: /*[[${#authentication.principal.username}]]*/ ''
+                        },
+                        theme: {
+                            color: '#3399cc'
+                        },
+                        modal: {
+                            ondismiss: function() {
+                                payButton.disabled = false;
+                                payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                            }
+                        }
+                    };
+                    
+                    const razorpay = new Razorpay(options);
+                    razorpay.open();
+                } else {
+                    if (data.message) {
+                        window.location.reload();
+                    } else {
+                        document.getElementById('paymentError').textContent = data.error || 'Failed to initialize payment';
+                        document.getElementById('paymentError').style.display = 'block';
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                document.getElementById('paymentError').textContent = 'An error occurred. Please try again.';
+                document.getElementById('paymentError').style.display = 'block';
+                payButton.disabled = false;
+                payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+            });
+        }
+        
+        function verifyPayment(response) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            // Get context path from current URL
+            let contextPath = '';
+            const pathname = window.location.pathname;
+            const userIndex = pathname.indexOf('/user/');
+            const paymentIndex = pathname.indexOf('/payment/');
+            if (userIndex > 0) {
+                contextPath = pathname.substring(0, userIndex);
+            } else if (paymentIndex > 0) {
+                contextPath = pathname.substring(0, paymentIndex);
+            }
+            form.action = contextPath + '/payment/tour/' + bookingId + '/verify';
+            
+            const orderIdInput = document.createElement('input');
+            orderIdInput.type = 'hidden';
+            orderIdInput.name = 'razorpay_order_id';
+            orderIdInput.value = response.razorpay_order_id;
+            
+            const paymentIdInput = document.createElement('input');
+            paymentIdInput.type = 'hidden';
+            paymentIdInput.name = 'razorpay_payment_id';
+            paymentIdInput.value = response.razorpay_payment_id;
+            
+            const signatureInput = document.createElement('input');
+            signatureInput.type = 'hidden';
+            signatureInput.name = 'razorpay_signature';
+            signatureInput.value = response.razorpay_signature;
+            
+            form.appendChild(orderIdInput);
+            form.appendChild(paymentIdInput);
+            form.appendChild(signatureInput);
+            
+            // Add CSRF token
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
+            if (csrfTokenMeta) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrfTokenMeta.getAttribute('content');
+                form.appendChild(csrfInput);
+            } else if (csrfTokenInput) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrfTokenInput.value;
+                form.appendChild(csrfInput);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        function printBooking() {
+            window.print();
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
+

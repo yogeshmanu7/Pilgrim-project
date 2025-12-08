@@ -1,0 +1,9 @@
+package com.pilgrim.enums;
+
+public enum PayoutMethod {
+	VIRTUAL_CREDIT_CARD_MULTIPLE,
+	VIRTUAL_CREDIT_CARD_SINGLE,
+	BANK_TRANSFER_30_DAYS,
+	FASTEST_PAYOUT
+}
+

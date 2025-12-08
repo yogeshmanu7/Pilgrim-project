@@ -1,0 +1,20 @@
+package com.pilgrim.enums;
+
+public enum HotelType {
+	HOTEL,
+	GUEST_HOUSE,
+	SERVICED_APARTMENT,
+	RESORT,
+	HOSTEL,
+	BED_BREAKFAST,
+	CAPSULE_HOTEL,
+	CRUISE,
+	INN,
+	LODGE,
+	LOVE_HOTEL,
+	MOTEL,
+	RYOKAN,
+	RIAD,
+	CUSTOM
+}
+

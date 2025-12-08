@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Hindu/Jain: "Edit Daily Ritual" -->
+<head th:replace="~{fragments/layout :: head(${templeReligion != null && (templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN')} ? 'Edit Daily Ritual' : (${templeReligion != null && templeReligion.name() == 'CHRISTIAN'} ? 'Edit Daily Service' : (${templeReligion != null && templeReligion.name() == 'MUSLIM'} ? 'Edit Daily Prayer' : 'Edit Daily Practice')))}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <!-- Hindu/Jain: "Edit Daily Ritual" -->
+                    <h2 th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                        Edit Daily Ritual - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <!-- Christian: "Edit Daily Service" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">
+                        Edit Daily Service - <span th:text="${temple.name}">Church</span>
+                    </h2>
+                    <!-- Muslim: "Edit Daily Prayer" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">
+                        Edit Daily Prayer - <span th:text="${temple.name}">Mosque</span>
+                    </h2>
+                    <!-- Buddhism: "Edit Daily Practice" -->
+                    <h2 th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">
+                        Edit Daily Practice - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <a th:href="@{/temple-admin/temple/{id}/rituals(id=${temple.id})}" class="text-muted">← Back to Rituals</a>
+                </div>
+            </div>
+            
+            <!-- Edit Form -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <form th:action="@{/temple-admin/temple/{templeId}/rituals/{ritualId}/edit(templeId=${temple.id}, ritualId=${ritual.id})}" method="post">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <!-- Hindu/Jain: "Ritual Name" -->
+                                <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Ritual Name *</label>
+                                <!-- Christian: "Service Name" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">Service Name *</label>
+                                <!-- Muslim: "Prayer Name" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">Prayer Name *</label>
+                                <!-- Buddhism: "Practice Name" -->
+                                <label class="form-label" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">Practice Name *</label>
+                                <input type="text" name="name" class="form-control" th:value="${ritual.name}" required>
+                            </div>
+                            <!-- Show Hindi field only for Hindu and Jain -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <label class="form-label">Name (Hindi)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${ritual.nameHindi}">
+                            </div>
+                            <div class="form-group" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                                <label class="form-label">Name (Local Language)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${ritual.nameHindi}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Frequency *</label>
+                                <select name="frequency" class="form-control">
+                                    <option th:each="freq : ${frequencies}" th:value="${freq}" th:text="${freq.displayName}" th:selected="${ritual.frequency == freq}">Frequency</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="2" th:text="${ritual.description}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Significance" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Significance</label>
+                            <!-- Christian/Muslim/Buddhism: "Religious Significance" -->
+                            <label class="form-label" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">Religious Significance</label>
+                            <textarea name="significance" class="form-control" rows="2" th:text="${ritual.significance}"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Time</label>
+                                <input type="time" name="time" class="form-control" th:value="${ritual.time != null ? #temporals.format(ritual.time, 'HH:mm') : ''}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Duration (minutes)</label>
+                                <input type="number" name="durationMinutes" class="form-control" th:value="${ritual.durationMinutes}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Display Order</label>
+                                <input type="number" name="displayOrder" class="form-control" th:value="${ritual.displayOrder != null ? ritual.displayOrder : 1}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Procedure" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Procedure</label>
+                            <!-- Christian/Muslim/Buddhism: "Procedure" -->
+                            <label class="form-label" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">Procedure</label>
+                            <textarea name="procedure" class="form-control" rows="2" placeholder="Steps/procedure of the ritual" th:text="${ritual.ritualProcedure}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Public can witness this ritual" -->
+                            <label th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <input type="checkbox" name="isPublicAllowed" value="true" th:checked="${ritual.isPublicAllowed}"> Public can witness this ritual
+                            </label>
+                            <!-- Christian: "Public can attend this service" -->
+                            <label th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">
+                                <input type="checkbox" name="isPublicAllowed" value="true" th:checked="${ritual.isPublicAllowed}"> Public can attend this service
+                            </label>
+                            <!-- Muslim: "Public can attend this prayer" -->
+                            <label th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">
+                                <input type="checkbox" name="isPublicAllowed" value="true" th:checked="${ritual.isPublicAllowed}"> Public can attend this prayer
+                            </label>
+                            <!-- Buddhism: "Public can participate in this practice" -->
+                            <label th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">
+                                <input type="checkbox" name="isPublicAllowed" value="true" th:checked="${ritual.isPublicAllowed}"> Public can participate in this practice
+                            </label>
+                        </div>
+                        <div class="form-group pt-4">
+                            <label>
+                                <input type="checkbox" name="isActive" value="true" th:checked="${ritual.isActive}"> Active
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <a th:href="@{/temple-admin/temple/{id}/rituals(id=${temple.id})}" class="btn btn-outline">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

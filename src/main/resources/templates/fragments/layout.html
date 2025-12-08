@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title th:text="${title} + ' | Temple Management System'">Temple Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+<!-- Navbar Fragment -->
+<nav th:fragment="navbar" class="navbar">
+    <div class="container navbar-container">
+        <a th:href="@{/}" class="navbar-brand">
+            <span class="om-symbol">🙏</span>
+            <span>Temple Darshan</span>
+        </a>
+        
+        <ul class="navbar-nav">
+            <li><a th:href="@{/}" class="nav-link">Home</a></li>
+            <li><a th:href="@{/temples}" class="nav-link">Temples</a></li>
+            <li><a th:href="@{/search}" class="nav-link">Search</a></li>
+            
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/login}" class="nav-link">Login</a>
+            </li>
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/register}" class="btn btn-secondary btn-sm">Register</a>
+            </li>
+            
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/dashboard}" class="nav-link">Dashboard</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/user/bookings}" class="nav-link">My Bookings</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/auth/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-outline btn-sm">Logout</button>
+                </form>
+            </li>
+        </ul>
+        
+        <button class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Footer Fragment -->
+<footer th:fragment="footer" class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <h4>🙏 Temple Darshan</h4>
+                <p>Your gateway to divine experiences. Book darshans, poojas, and explore sacred temples across India.</p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a th:href="@{/temples}">All Temples</a></li>
+                    <li><a th:href="@{/search}">Search</a></li>
+                    <li><a th:href="@{/auth/register}">Register</a></li>
+                    <li><a th:href="@{/auth/login}">Login</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Services</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Darshan Booking</a></li>
+                    <li><a href="#">Pooja Booking</a></li>
+                    <li><a href="#">Prasadham Order</a></li>
+                    <li><a href="#">Donations</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <ul class="footer-links">
+                    <li><i class="fas fa-phone"></i> +91 1234567890</li>
+                    <li><i class="fas fa-envelope"></i> info@templedarshan.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> India</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Temple Darshan. All rights reserved. | Made with 🙏 in India</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts Fragment -->
+<div th:fragment="scripts">
+    <script th:src="@{/js/main.js}"></script>
+</div>
+
+<!-- Alert Fragment -->
+<div th:fragment="alerts">
+    <div th:if="${success}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${success}"></span>
+    </div>
+    <div th:if="${error}" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${error}"></span>
+    </div>
+    <div th:if="${message}" class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <span th:text="${message}"></span>
+    </div>
+</div>
+
+</body>
+</html>
+

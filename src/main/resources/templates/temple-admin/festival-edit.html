@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Hindu/Jain: "Edit Festival" -->
+<head th:replace="~{fragments/layout :: head(${templeReligion != null && (templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN')} ? 'Edit Festival' : 'Edit Religious Event')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="d-flex justify-between align-center mb-4">
+                <div>
+                    <!-- Hindu/Jain: "Edit Festival" -->
+                    <h2 th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                        Edit Festival - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <!-- Christian/Muslim/Buddhism: "Edit Religious Event" -->
+                    <h2 th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                        Edit Religious Event - <span th:text="${temple.name}">Temple</span>
+                    </h2>
+                    <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="text-muted">← Back to Festivals</a>
+                </div>
+            </div>
+            
+            <!-- Edit Form -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <form th:action="@{/temple-admin/temple/{templeId}/festivals/{festivalId}/edit(templeId=${temple.id}, festivalId=${festival.id})}" method="post">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <!-- Hindu/Jain: "Festival Name" -->
+                                <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Festival Name *</label>
+                                <!-- Christian/Muslim/Buddhism: "Event Name" -->
+                                <label class="form-label" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">Event Name *</label>
+                                <input type="text" name="name" class="form-control" th:value="${festival.name}" required>
+                            </div>
+                            <!-- Show Hindi field only for Hindu and Jain -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <label class="form-label">Name (Hindi)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${festival.nameHindi}">
+                            </div>
+                            <div class="form-group" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                                <label class="form-label">Name (Local Language)</label>
+                                <input type="text" name="nameHindi" class="form-control" th:value="${festival.nameHindi}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="3" th:text="${festival.description}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "Significance" -->
+                            <label class="form-label" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">Significance</label>
+                            <!-- Christian/Muslim/Buddhism: "Religious Significance" -->
+                            <label class="form-label" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">Religious Significance</label>
+                            <textarea name="significance" class="form-control" rows="2" th:text="${festival.significance}"></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Start Date *</label>
+                                <input type="date" name="startDate" class="form-control" th:value="${festival.startDate != null ? #temporals.format(festival.startDate, 'yyyy-MM-dd') : ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Date</label>
+                                <input type="date" name="endDate" class="form-control" th:value="${festival.endDate != null ? #temporals.format(festival.endDate, 'yyyy-MM-dd') : ''}">
+                            </div>
+                            <!-- Show Hindu Calendar Date only for Hindu -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU'}">
+                                <label class="form-label">Hindu Calendar Date</label>
+                                <input type="text" name="lunarDate" class="form-control" placeholder="e.g., Kartik Purnima" th:value="${festival.lunarDate}">
+                            </div>
+                            <!-- Show Religious Calendar Date for others -->
+                            <div class="form-group" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'JAIN' || templeReligion.name() == 'BUDDHISM')}">
+                                <label class="form-label">Religious Calendar Date</label>
+                                <input type="text" name="lunarDate" class="form-control" placeholder="Religious calendar date" th:value="${festival.lunarDate}">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <!-- Hindu/Jain: "Special Poojas during festival" -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <label class="form-label">Special Poojas during festival</label>
+                                <textarea name="specialPoojas" class="form-control" rows="2" th:text="${festival.specialPoojas}"></textarea>
+                            </div>
+                            <!-- Christian: "Special Services during event" -->
+                            <div class="form-group" th:if="${templeReligion != null && templeReligion.name() == 'CHRISTIAN'}">
+                                <label class="form-label">Special Services during event</label>
+                                <textarea name="specialPoojas" class="form-control" rows="2" th:text="${festival.specialPoojas}"></textarea>
+                            </div>
+                            <!-- Muslim: "Special Prayers during event" -->
+                            <div class="form-group" th:if="${templeReligion != null && templeReligion.name() == 'MUSLIM'}">
+                                <label class="form-label">Special Prayers during event</label>
+                                <textarea name="specialPoojas" class="form-control" rows="2" th:text="${festival.specialPoojas}"></textarea>
+                            </div>
+                            <!-- Buddhism: "Special Ceremonies during event" -->
+                            <div class="form-group" th:if="${templeReligion != null && templeReligion.name() == 'BUDDHISM'}">
+                                <label class="form-label">Special Ceremonies during event</label>
+                                <textarea name="specialPoojas" class="form-control" rows="2" th:text="${festival.specialPoojas}"></textarea>
+                            </div>
+                            <!-- Hindu/Jain: "Special Rituals" -->
+                            <div class="form-group" th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <label class="form-label">Special Rituals</label>
+                                <textarea name="specialRituals" class="form-control" rows="2" th:text="${festival.specialRituals}"></textarea>
+                            </div>
+                            <!-- Christian/Muslim/Buddhism: "Special Rituals" -->
+                            <div class="form-group" th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                                <label class="form-label">Special Rituals</label>
+                                <textarea name="specialRituals" class="form-control" rows="2" th:text="${festival.specialRituals}"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Daily Schedule</label>
+                            <textarea name="schedule" class="form-control" rows="2" placeholder="Schedule for each day of the festival" th:text="${festival.schedule}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!-- Hindu/Jain: "This is an annual festival" -->
+                            <label th:if="${templeReligion == null || templeReligion.name() == 'HINDU' || templeReligion.name() == 'JAIN'}">
+                                <input type="checkbox" name="isAnnual" value="true" th:checked="${festival.isAnnual}"> This is an annual festival
+                            </label>
+                            <!-- Christian/Muslim/Buddhism: "This is an annual event" -->
+                            <label th:if="${templeReligion != null && (templeReligion.name() == 'CHRISTIAN' || templeReligion.name() == 'MUSLIM' || templeReligion.name() == 'BUDDHISM')}">
+                                <input type="checkbox" name="isAnnual" value="true" th:checked="${festival.isAnnual}"> This is an annual event
+                            </label>
+                        </div>
+                        <div class="form-group pt-4">
+                            <label>
+                                <input type="checkbox" name="isActive" value="true" th:checked="${festival.isActive}"> Active
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update
+                        </button>
+                        <a th:href="@{/temple-admin/temple/{id}/festivals(id=${temple.id})}" class="btn btn-outline">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

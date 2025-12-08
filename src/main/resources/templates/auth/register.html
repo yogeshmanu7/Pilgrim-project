@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Register')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="booking-form" style="max-width: 550px;">
+                <div class="text-center mb-4">
+                    <i class="fas fa-user-plus fa-3x text-saffron mb-3"></i>
+                    <h2>Create Account</h2>
+                    <p class="text-muted">Join us for divine experiences</p>
+                </div>
+                
+                <div th:replace="~{fragments/layout :: alerts}"></div>
+                
+                <form th:action="@{/auth/register}" method="post" th:object="${user}" data-validate>
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" th:field="*{fullName}" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <input type="password" th:field="*{password}" class="form-control" placeholder="Create a password" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" th:field="*{phone}" class="form-control" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <textarea th:field="*{address}" class="form-control" rows="2" placeholder="Enter your address"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Country *</label>
+                        <select id="country" class="form-control" required>
+                            <option value="">Select Country</option>
+                        </select>
+                        <input type="hidden" th:field="*{country}" id="countryValue">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">State *</label>
+                            <div class="searchable-select-wrapper">
+                                <input type="text" id="stateSearch" class="form-control" placeholder="Search state..." disabled style="margin-bottom: 5px;">
+                                <select id="state" class="form-control" required disabled size="8" style="display: none;">
+                                    <option value="">Select State First</option>
+                                </select>
+                                <div id="stateDropdown" class="searchable-dropdown" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;"></div>
+                            </div>
+                            <input type="hidden" th:field="*{state}" id="stateValue">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">District *</label>
+                            <div class="searchable-select-wrapper">
+                                <input type="text" id="districtSearch" class="form-control" placeholder="Search district..." disabled style="margin-bottom: 5px;">
+                                <select id="district" class="form-control" required disabled size="8" style="display: none;">
+                                    <option value="">Select State First</option>
+                                </select>
+                                <div id="districtDropdown" class="searchable-dropdown" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;"></div>
+                            </div>
+                            <input type="hidden" th:field="*{city}" id="districtValue">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Pincode *</label>
+                        <div class="searchable-select-wrapper">
+                            <input type="text" id="pincodeSearch" class="form-control" placeholder="Search pincode..." disabled style="margin-bottom: 5px;">
+                            <select id="pincode" class="form-control" required disabled size="8" style="display: none;">
+                                <option value="">Select District First</option>
+                            </select>
+                            <div id="pincodeDropdown" class="searchable-dropdown" style="display: none; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;"></div>
+                        </div>
+                        <input type="hidden" th:field="*{pincode}" id="pincodeValue">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Account Type *</label>
+                        <select id="accountType" class="form-control" required onchange="toggleTempleAdminFields()">
+                            <option value="USER">Regular User</option>
+                            <option value="TEMPLE_ADMIN">Temple Administrator</option>
+                        </select>
+                        <input type="hidden" th:field="*{role}" id="roleValue">
+                    </div>
+                    
+                    <!-- Temple Admin Specific Fields -->
+                    <div id="templeAdminFields" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Religion *</label>
+                            <select id="religion" class="form-control" th:field="*{religion}">
+                                <option value="">Select Religion</option>
+                                <option value="HINDU">Hindu</option>
+                                <option value="CHRISTIAN">Christian</option>
+                                <option value="MUSLIM">Muslim</option>
+                                <option value="JAIN">Jain</option>
+                                <option value="BUDDHISM">Buddhism</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preferred Language</label>
+                        <select th:field="*{preferredLanguage}" class="form-control">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="ta">Tamil</option>
+                            <option value="te">Telugu</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" required> I agree to the <a href="#" class="text-saffron">Terms & Conditions</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p>Already have an account? <a th:href="@{/auth/login}" class="text-saffron">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <style>
+        .searchable-dropdown {
+            position: relative;
+            z-index: 1000;
+        }
+        .searchable-dropdown-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .searchable-dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+        .searchable-dropdown-item.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        .searchable-dropdown-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var BASE_URL = /*[[@{/}]]*/ '';
+        // Remove trailing slash if present, but keep the context path
+        
+        // Function to toggle temple admin fields
+        function toggleTempleAdminFields() {
+            const accountType = document.getElementById('accountType');
+            const templeAdminFields = document.getElementById('templeAdminFields');
+            const religionSelect = document.getElementById('religion');
+            const roleValue = document.getElementById('roleValue');
+            
+            if (accountType.value === 'TEMPLE_ADMIN') {
+                templeAdminFields.style.display = 'block';
+                religionSelect.setAttribute('required', 'required');
+                roleValue.value = 'TEMPLE_ADMIN';
+            } else {
+                templeAdminFields.style.display = 'none';
+                religionSelect.removeAttribute('required');
+                religionSelect.value = '';
+                roleValue.value = 'USER';
+            }
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleTempleAdminFields();
+        });
+        if (BASE_URL && BASE_URL.endsWith('/') && BASE_URL.length > 1) {
+            BASE_URL = BASE_URL.substring(0, BASE_URL.length - 1);
+        }
+        // If BASE_URL is just '/', set it to empty string for relative paths
+        if (BASE_URL === '/') {
+            BASE_URL = '';
+        }
+        console.log('BASE_URL set to:', BASE_URL || '(empty - using relative paths)');
+        /*]]>*/
+    </script>
+    
+    <script>
+        // Function to create searchable dropdown
+        function createSearchableDropdown(selectId, searchId, dropdownId, hiddenInputId, placeholder) {
+            const select = document.getElementById(selectId);
+            const searchInput = document.getElementById(searchId);
+            const dropdown = document.getElementById(dropdownId);
+            const hiddenInput = document.getElementById(hiddenInputId);
+            let allOptions = [];
+            
+            function populateDropdown(options, searchTerm = '') {
+                allOptions = options;
+                const filtered = searchTerm 
+                    ? options.filter(opt => opt.toLowerCase().includes(searchTerm.toLowerCase()))
+                    : options;
+                
+                dropdown.innerHTML = '';
+                if (filtered.length === 0) {
+                    dropdown.innerHTML = '<div class="searchable-dropdown-item" style="color: #999;">No results found</div>';
+                    return;
+                }
+                
+                filtered.forEach(option => {
+                    const item = document.createElement('div');
+                    item.className = 'searchable-dropdown-item';
+                    item.textContent = option;
+                    item.addEventListener('click', function() {
+                        select.value = option;
+                        hiddenInput.value = option;
+                        searchInput.value = option;
+                        dropdown.style.display = 'none';
+                        // Trigger change event
+                        select.dispatchEvent(new Event('change'));
+                    });
+                    dropdown.appendChild(item);
+                });
+            }
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value;
+                populateDropdown(allOptions, searchTerm);
+                dropdown.style.display = 'block';
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (allOptions.length > 0) {
+                    dropdown.style.display = 'block';
+                }
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            
+            // Update search input when select changes
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    searchInput.value = this.value;
+                    hiddenInput.value = this.value;
+                }
+            });
+            
+            return {
+                populate: populateDropdown,
+                enable: function() {
+                    searchInput.disabled = false;
+                    select.disabled = false;
+                },
+                disable: function() {
+                    searchInput.disabled = true;
+                    select.disabled = true;
+                    searchInput.value = '';
+                    dropdown.style.display = 'none';
+                },
+                setOptions: function(options) {
+                    populateDropdown(options);
+                }
+            };
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const countrySelect = document.getElementById('country');
+            const stateSelect = document.getElementById('state');
+            const districtSelect = document.getElementById('district');
+            const pincodeSelect = document.getElementById('pincode');
+            const stateValue = document.getElementById('stateValue');
+            const districtValue = document.getElementById('districtValue');
+            const pincodeValue = document.getElementById('pincodeValue');
+            
+            // Create searchable dropdowns
+            const stateSearchable = createSearchableDropdown('state', 'stateSearch', 'stateDropdown', 'stateValue', 'Search state...');
+            const districtSearchable = createSearchableDropdown('district', 'districtSearch', 'districtDropdown', 'districtValue', 'Search district...');
+            const pincodeSearchable = createSearchableDropdown('pincode', 'pincodeSearch', 'pincodeDropdown', 'pincodeValue', 'Search pincode...');
+            
+            // Load countries on page load
+            const countriesUrl = BASE_URL + '/api/location/countries';
+            console.log('Fetching countries from:', countriesUrl);
+            
+            fetch(countriesUrl)
+                .then(response => {
+                    console.log('Countries response status:', response.status, response.statusText);
+                    console.log('Countries response headers:', response.headers.get('content-type'));
+                    
+                    if (!response.ok) {
+                        // Try to get error message from response
+                        return response.text().then(text => {
+                            console.error('Error response body:', text.substring(0, 200));
+                            throw new Error('Failed to load countries: ' + response.status + ' - ' + text.substring(0, 100));
+                        });
+                    }
+                    
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        return response.text().then(text => {
+                            console.error('Expected JSON but got:', contentType);
+                            console.error('Response body:', text.substring(0, 500));
+                            throw new Error('Server returned HTML instead of JSON. Check if the API endpoint exists.');
+                        });
+                    }
+                    
+                    return response.json();
+                })
+                .then(countries => {
+                    console.log('Countries loaded successfully:', countries);
+                    countrySelect.innerHTML = '<option value="">Select Country</option>';
+                    if (countries && countries.length > 0) {
+                        countries.forEach(country => {
+                            const option = document.createElement('option');
+                            option.value = country;
+                            option.textContent = country;
+                            countrySelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading countries:', error);
+                    countrySelect.innerHTML = '<option value="">Error loading countries</option>';
+                    alert('Error loading countries. Please check the console for details. Error: ' + error.message);
+                });
+            
+            // Country change handler
+            countrySelect.addEventListener('change', function() {
+                const selectedCountry = this.value;
+                countryValue.value = selectedCountry; // Set hidden field
+                
+                // Reset state, district, and pincode
+                stateSelect.innerHTML = '<option value="">Select State</option>';
+                stateValue.value = '';
+                document.getElementById('stateSearch').value = '';
+                stateSearchable.disable();
+                
+                districtSelect.innerHTML = '<option value="">Select State First</option>';
+                districtValue.value = '';
+                document.getElementById('districtSearch').value = '';
+                districtSearchable.disable();
+                
+                pincodeSelect.innerHTML = '<option value="">Select District First</option>';
+                pincodeValue.value = '';
+                document.getElementById('pincodeSearch').value = '';
+                pincodeSearchable.disable();
+                
+                if (selectedCountry) {
+                    // Load states for selected country
+                    document.getElementById('stateSearch').placeholder = 'Loading states...';
+                    
+                    const statesUrl = BASE_URL + '/api/location/states?country=' + encodeURIComponent(selectedCountry);
+                    console.log('Fetching states from:', statesUrl);
+                    
+                    fetch(statesUrl)
+                        .then(response => {
+                            console.log('States response status:', response.status, response.statusText);
+                            console.log('States response headers:', response.headers.get('content-type'));
+                            
+                            if (!response.ok) {
+                                return response.text().then(text => {
+                                    console.error('Error response body:', text.substring(0, 200));
+                                    throw new Error('Failed to load states: ' + response.status + ' - ' + text.substring(0, 100));
+                                });
+                            }
+                            
+                            const contentType = response.headers.get('content-type');
+                            if (!contentType || !contentType.includes('application/json')) {
+                                return response.text().then(text => {
+                                    console.error('Expected JSON but got:', contentType);
+                                    console.error('Response body:', text.substring(0, 500));
+                                    throw new Error('Server returned HTML instead of JSON. Check if the API endpoint exists.');
+                                });
+                            }
+                            
+                            return response.json();
+                        })
+                        .then(states => {
+                            console.log('States loaded successfully:', states);
+                            stateSelect.innerHTML = '<option value="">Select State</option>';
+                            if (states && states.length > 0) {
+                                states.forEach(state => {
+                                    const option = document.createElement('option');
+                                    option.value = state;
+                                    option.textContent = state;
+                                    stateSelect.appendChild(option);
+                                });
+                                stateSearchable.setOptions(states);
+                                stateSearchable.enable();
+                                document.getElementById('stateSearch').placeholder = 'Search state...';
+                            } else {
+                                stateSelect.innerHTML = '<option value="">No states available</option>';
+                                document.getElementById('stateSearch').placeholder = 'No states available';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading states:', error);
+                            stateSelect.innerHTML = '<option value="">Error loading states</option>';
+                            document.getElementById('stateSearch').placeholder = 'Error loading states';
+                            alert('Error loading states. Please check the console for details. Error: ' + error.message);
+                        });
+                }
+            });
+            
+            // State change handler
+            stateSelect.addEventListener('change', function() {
+                const selectedState = this.value;
+                stateValue.value = selectedState;
+                
+                // Reset district and pincode
+                districtSelect.innerHTML = '<option value="">Select District</option>';
+                districtValue.value = '';
+                document.getElementById('districtSearch').value = '';
+                districtSearchable.disable();
+                
+                pincodeSelect.innerHTML = '<option value="">Select District First</option>';
+                pincodeValue.value = '';
+                document.getElementById('pincodeSearch').value = '';
+                pincodeSearchable.disable();
+                
+                if (selectedState) {
+                    // Load districts for selected state
+                    document.getElementById('districtSearch').placeholder = 'Loading districts...';
+                    
+                    const districtsUrl = BASE_URL + '/api/location/districts?state=' + encodeURIComponent(selectedState);
+                    console.log('Fetching districts from:', districtsUrl);
+                    
+                    fetch(districtsUrl)
+                        .then(response => {
+                            console.log('Districts response status:', response.status, response.statusText);
+                            console.log('Districts response headers:', response.headers.get('content-type'));
+                            
+                            if (!response.ok) {
+                                return response.text().then(text => {
+                                    console.error('Error response body:', text.substring(0, 200));
+                                    throw new Error('Failed to load districts: ' + response.status + ' - ' + text.substring(0, 100));
+                                });
+                            }
+                            
+                            const contentType = response.headers.get('content-type');
+                            if (!contentType || !contentType.includes('application/json')) {
+                                return response.text().then(text => {
+                                    console.error('Expected JSON but got:', contentType);
+                                    console.error('Response body:', text.substring(0, 500));
+                                    throw new Error('Server returned HTML instead of JSON. Check if the API endpoint exists.');
+                                });
+                            }
+                            
+                            return response.json();
+                        })
+                        .then(districts => {
+                            console.log('Districts loaded successfully:', districts);
+                            districtSelect.innerHTML = '<option value="">Select District</option>';
+                            if (districts && districts.length > 0) {
+                                districts.forEach(district => {
+                                    const option = document.createElement('option');
+                                    option.value = district;
+                                    option.textContent = district;
+                                    districtSelect.appendChild(option);
+                                });
+                                districtSearchable.setOptions(districts);
+                                districtSearchable.enable();
+                                document.getElementById('districtSearch').placeholder = 'Search district...';
+                            } else {
+                                districtSelect.innerHTML = '<option value="">No districts available</option>';
+                                document.getElementById('districtSearch').placeholder = 'No districts available';
+                                districtSearchable.disable();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading districts:', error);
+                            districtSelect.innerHTML = '<option value="">Error loading districts</option>';
+                            document.getElementById('districtSearch').placeholder = 'Error loading districts';
+                            districtSearchable.disable();
+                            alert('Error loading districts. Please check the console for details. Error: ' + error.message);
+                        });
+                }
+            });
+            
+            // District change handler
+            districtSelect.addEventListener('change', function() {
+                const selectedDistrict = this.value;
+                districtValue.value = selectedDistrict;
+                
+                // Reset pincode
+                pincodeSelect.innerHTML = '<option value="">Select Pincode</option>';
+                pincodeValue.value = '';
+                document.getElementById('pincodeSearch').value = '';
+                pincodeSearchable.disable();
+                
+                if (selectedDistrict) {
+                    // Show loading
+                    document.getElementById('pincodeSearch').placeholder = 'Loading pincodes...';
+                    
+                    // Load pincodes for selected district
+                    const pincodesUrl = BASE_URL + '/api/location/pincodes?district=' + encodeURIComponent(selectedDistrict);
+                    console.log('Fetching pincodes from:', pincodesUrl);
+                    
+                    fetch(pincodesUrl)
+                        .then(response => {
+                            console.log('Pincodes response status:', response.status, response.statusText);
+                            console.log('Pincodes response headers:', response.headers.get('content-type'));
+                            
+                            if (!response.ok) {
+                                return response.text().then(text => {
+                                    console.error('Error response body:', text.substring(0, 200));
+                                    throw new Error('Failed to load pincodes: ' + response.status + ' - ' + text.substring(0, 100));
+                                });
+                            }
+                            
+                            const contentType = response.headers.get('content-type');
+                            if (!contentType || !contentType.includes('application/json')) {
+                                return response.text().then(text => {
+                                    console.error('Expected JSON but got:', contentType);
+                                    console.error('Response body:', text.substring(0, 500));
+                                    throw new Error('Server returned HTML instead of JSON. Check if the API endpoint exists.');
+                                });
+                            }
+                            
+                            return response.json();
+                        })
+                        .then(pincodes => {
+                            console.log('Pincodes loaded successfully:', pincodes);
+                            pincodeSelect.innerHTML = '<option value="">Select Pincode</option>';
+                            if (pincodes.length > 0) {
+                                pincodes.forEach(pincode => {
+                                    const option = document.createElement('option');
+                                    option.value = pincode;
+                                    option.textContent = pincode;
+                                    pincodeSelect.appendChild(option);
+                                });
+                                pincodeSearchable.setOptions(pincodes);
+                                pincodeSearchable.enable();
+                                document.getElementById('pincodeSearch').placeholder = 'Search pincode...';
+                            } else {
+                                pincodeSelect.innerHTML = '<option value="">No pincodes found</option>';
+                                document.getElementById('pincodeSearch').placeholder = 'No pincodes found';
+                                pincodeSearchable.disable();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading pincodes:', error);
+                            pincodeSelect.innerHTML = '<option value="">Error loading pincodes</option>';
+                            document.getElementById('pincodeSearch').placeholder = 'Error loading pincodes';
+                            pincodeSearchable.disable();
+                            alert('Error loading pincodes. Please check the console for details. Error: ' + error.message);
+                        });
+                }
+            });
+            
+            // Pincode change handler
+            pincodeSelect.addEventListener('change', function() {
+                pincodeValue.value = this.value;
+            });
+            
+            // Form submission - ensure hidden fields are set
+            document.querySelector('form').addEventListener('submit', function(e) {
+                const accountType = document.getElementById('accountType').value;
+                const religionSelect = document.getElementById('religion');
+                
+                // Validate location fields
+                if (!countrySelect.value || !stateSelect.value || !districtSelect.value || !pincodeSelect.value) {
+                    e.preventDefault();
+                    alert('Please select Country, State, District, and Pincode');
+                    return false;
+                }
+                
+                // Validate religion for temple admin
+                if (accountType === 'TEMPLE_ADMIN' && !religionSelect.value) {
+                    e.preventDefault();
+                    alert('Please select a Religion for Temple Administrator account');
+                    return false;
+                }
+                
+                // Ensure role is set
+                document.getElementById('roleValue').value = accountType;
+            });
+        });
+    </script>
+</body>
+</html>

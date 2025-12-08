@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Donation Successful')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="booking-form text-center">
+                <i class="fas fa-check-circle fa-5x text-success mb-4" style="color: #2E7D32;"></i>
+                <h2>Thank You for Your Donation! 🙏</h2>
+                <p class="text-muted">Your generosity helps preserve and maintain this sacred temple.</p>
+                
+                <div class="booking-summary text-left mt-4">
+                    <h5>Donation Details</h5>
+                    <div class="summary-row">
+                        <span>Reference Number:</span>
+                        <strong th:text="${donation.donationNumber}">DON123456</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${donation.temple.name}">Temple Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Donation Type:</span>
+                        <span th:text="${donation.donationType.displayName}">Type</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Amount:</span>
+                        <strong th:text="'₹' + ${donation.amount}">Amount</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Donor Name:</span>
+                        <span th:text="${donation.isAnonymous ? 'Anonymous' : donation.donorName}">Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Date:</span>
+                        <span th:text="${donation.createdAt}">Date</span>
+                    </div>
+                    <div class="summary-row" th:if="${donation.receiptNumber != null}">
+                        <span>Receipt Number:</span>
+                        <span th:text="${donation.receiptNumber}">Receipt</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <button onclick="printBooking()" class="btn btn-outline">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                    <a th:href="@{/temples/{id}(id=${donation.temple.id})}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Back to Temple
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Order Details')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="booking-form">
+                <div class="d-flex justify-between align-center mb-4">
+                    <h3>🎁 Prasadham Order Details</h3>
+                    <span class="status-badge" 
+                          th:classappend="'status-' + ${order.status?.name()?.toLowerCase() ?: 'pending'}"
+                          th:text="${order.status ?: 'PENDING'}">Status</span>
+                </div>
+                
+                <div class="booking-summary">
+                    <div class="summary-row">
+                        <span>Order Number:</span>
+                        <strong th:text="${order.orderNumber}">Order#</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${order.prasadham.temple.name}">Temple</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Prasadham:</span>
+                        <span th:text="${order.prasadham.name}">Prasadham</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Quantity:</span>
+                        <span th:text="${order.quantity}">Qty</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Unit Price:</span>
+                        <span th:text="'₹' + ${order.unitPrice}">Price</span>
+                    </div>
+                    <div class="summary-row" th:if="${order.forDelivery}">
+                        <span>Delivery Charge:</span>
+                        <span th:text="'₹' + ${order.deliveryCharge}">Delivery</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total Amount:</span>
+                        <span th:text="'₹' + ${order.totalAmount}">Total</span>
+                    </div>
+                </div>
+                
+                <div th:if="${order.forDelivery}" class="booking-summary mt-4">
+                    <h5>Delivery Details</h5>
+                    <div class="summary-row">
+                        <span>Recipient:</span>
+                        <span th:text="${order.recipientName}">Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Phone:</span>
+                        <span th:text="${order.recipientPhone}">Phone</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Address:</span>
+                        <span th:text="${order.deliveryAddress}">Address</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>City:</span>
+                        <span th:text="${order.city + ', ' + order.state + ' - ' + order.pincode}">City</span>
+                    </div>
+                    <div class="summary-row" th:if="${order.trackingNumber != null}">
+                        <span>Tracking Number:</span>
+                        <span th:text="${order.trackingNumber}">Tracking</span>
+                    </div>
+                </div>
+                
+                <div class="booking-summary mt-4">
+                    <div class="summary-row">
+                        <span>Payment Status:</span>
+                        <span class="status-badge" 
+                              th:classappend="'status-' + ${order.paymentStatus?.name()?.toLowerCase() ?: 'pending'}"
+                              th:text="${order.paymentStatus ?: 'PENDING'}">Status</span>
+                    </div>
+                    <div class="summary-row" th:if="${order.paymentTransactionId != null}">
+                        <span>Transaction ID:</span>
+                        <span th:text="${order.paymentTransactionId}">Transaction ID</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Order Date:</span>
+                        <span th:text="${order.createdAt}">Date</span>
+                    </div>
+                </div>
+                
+                <!-- Payment Button -->
+                <div class="mt-4" th:if="${order.paymentStatus != null && order.paymentStatus.name() == 'PENDING' && order.totalAmount != null && order.totalAmount.compareTo(0) > 0}">
+                    <button id="payButton" class="btn btn-primary btn-lg" onclick="initiatePayment()">
+                        <i class="fas fa-credit-card"></i> Pay Now - ₹<span th:text="${order.totalAmount}">Amount</span>
+                    </button>
+                    <div id="paymentError" class="alert alert-danger mt-2" style="display: none;"></div>
+                </div>
+                
+                <div class="mt-4">
+                    <button onclick="printBooking()" class="btn btn-outline">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <a th:href="@{/user/orders}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Back to Orders
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const orderId = /*[[${order.id}]]*/ 0;
+        const orderAmount = /*[[${order.totalAmount != null ? order.totalAmount : 0}]]*/ 0;
+        const paymentStatus = /*[[${order.paymentStatus != null ? order.paymentStatus.name() : 'PENDING'}]]*/ 'PENDING';
+        
+        function initiatePayment() {
+            if (paymentStatus !== 'PENDING' || orderAmount <= 0) {
+                document.getElementById('paymentError').textContent = 'Payment not required or already processed.';
+                document.getElementById('paymentError').style.display = 'block';
+                return;
+            }
+            
+            const payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            document.getElementById('paymentError').style.display = 'none';
+            
+            // Get CSRF token
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+            const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+            const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : 'X-CSRF-TOKEN';
+            
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            if (csrfToken) {
+                headers[csrfHeader] = csrfToken;
+            }
+            
+            // Get context path from current URL (everything before /user/ or /payment/)
+            let contextPath = '';
+            const pathname = window.location.pathname;
+            const userIndex = pathname.indexOf('/user/');
+            const paymentIndex = pathname.indexOf('/payment/');
+            if (userIndex > 0) {
+                contextPath = pathname.substring(0, userIndex);
+            } else if (paymentIndex > 0) {
+                contextPath = pathname.substring(0, paymentIndex);
+            }
+            const paymentUrl = contextPath + '/payment/prasadham/' + orderId + '/create-order';
+            
+            fetch(paymentUrl, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP ${response.status}: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.orderId) {
+                    const options = {
+                        key: data.key,
+                        amount: data.amount,
+                        currency: data.currency,
+                        name: 'Temple Management System',
+                        description: 'Prasadham Order Payment',
+                        order_id: data.orderId,
+                        handler: function(response) {
+                            verifyPayment(response);
+                        },
+                        prefill: {
+                            name: /*[[${order.recipientName != null ? order.recipientName : order.user.name}]]*/ '',
+                            contact: /*[[${order.recipientPhone != null ? order.recipientPhone : order.user.phone}]]*/ '',
+                            email: /*[[${#authentication.principal.username}]]*/ ''
+                        },
+                        theme: {
+                            color: '#3399cc'
+                        },
+                        modal: {
+                            ondismiss: function() {
+                                payButton.disabled = false;
+                                payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + orderAmount;
+                            }
+                        }
+                    };
+                    
+                    const razorpay = new Razorpay(options);
+                    razorpay.open();
+                } else {
+                    if (data.message) {
+                        window.location.reload();
+                    } else {
+                        document.getElementById('paymentError').textContent = data.error || 'Failed to initialize payment';
+                        document.getElementById('paymentError').style.display = 'block';
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + orderAmount;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                document.getElementById('paymentError').textContent = 'An error occurred. Please try again.';
+                document.getElementById('paymentError').style.display = 'block';
+                payButton.disabled = false;
+                payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + orderAmount;
+            });
+        }
+        
+        function verifyPayment(response) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            // Get context path from current URL
+            let contextPath = '';
+            const pathname = window.location.pathname;
+            const userIndex = pathname.indexOf('/user/');
+            const paymentIndex = pathname.indexOf('/payment/');
+            if (userIndex > 0) {
+                contextPath = pathname.substring(0, userIndex);
+            } else if (paymentIndex > 0) {
+                contextPath = pathname.substring(0, paymentIndex);
+            }
+            form.action = contextPath + '/payment/prasadham/' + orderId + '/verify';
+            
+            const orderIdInput = document.createElement('input');
+            orderIdInput.type = 'hidden';
+            orderIdInput.name = 'razorpay_order_id';
+            orderIdInput.value = response.razorpay_order_id;
+            
+            const paymentIdInput = document.createElement('input');
+            paymentIdInput.type = 'hidden';
+            paymentIdInput.name = 'razorpay_payment_id';
+            paymentIdInput.value = response.razorpay_payment_id;
+            
+            const signatureInput = document.createElement('input');
+            signatureInput.type = 'hidden';
+            signatureInput.name = 'razorpay_signature';
+            signatureInput.value = response.razorpay_signature;
+            
+            form.appendChild(orderIdInput);
+            form.appendChild(paymentIdInput);
+            form.appendChild(signatureInput);
+            
+            // Add CSRF token
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
+            if (csrfTokenMeta) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrfTokenMeta.getAttribute('content');
+                form.appendChild(csrfInput);
+            } else if (csrfTokenInput) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrfTokenInput.value;
+                form.appendChild(csrfInput);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        function printBooking() {
+            window.print();
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
+

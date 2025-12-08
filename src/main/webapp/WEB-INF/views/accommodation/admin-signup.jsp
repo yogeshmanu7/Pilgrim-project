@@ -1,0 +1,197 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Registration - GlobalPiligrim Accommodation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .signup-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .admin-badge {
+            background: #ff9800;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background: #5568d3;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .signin-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        .signin-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .info-box p {
+            color: #1976d2;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2><i class="fas fa-user-shield"></i> Admin Registration</h2>
+        
+        <div class="admin-badge">
+            <i class="fas fa-shield-alt"></i> Administrator Account
+        </div>
+        
+        <div class="info-box">
+            <p><i class="fas fa-info-circle"></i> Admin accounts require a special key for registration. Contact system administrator for access.</p>
+        </div>
+        
+        <c:if test="${not empty error}">
+            <div class="error">
+                <i class="fas fa-exclamation-circle"></i> ${error}
+            </div>
+        </c:if>
+        
+        <c:if test="${not empty success}">
+            <div class="success">
+                <i class="fas fa-check-circle"></i> ${success}
+            </div>
+        </c:if>
+        
+        <form method="post" action="/pilgrim/accommodation/admin/signup">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" name="fullName" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-at"></i> Username</label>
+                <input type="text" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="text" name="phoneNumber" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Confirm Password</label>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-key"></i> Admin Key <span style="color: #999; font-size: 0.85rem;">(Required for admin registration)</span></label>
+                <input type="password" name="adminKey" required placeholder="Enter admin registration key">
+            </div>
+            
+            <button type="submit" class="btn-submit">Create Admin Account</button>
+        </form>
+        
+        <div class="signin-link">
+            Already have an account? <a href="/pilgrim/accommodation/signin">Sign In</a>
+        </div>
+    </div>
+</body>
+</html>
+

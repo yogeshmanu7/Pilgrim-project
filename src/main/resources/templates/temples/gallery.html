@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gallery - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>📷 Photo Gallery - <span th:text="${temple.name}">Temple</span></h1>
+            <p>Explore the divine beauty of this sacred place</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <a th:href="@{/temples/{id}(id=${temple.id})}" class="gallery-tab">Overview</a>
+                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="gallery-tab">Darshan</a>
+                <a th:href="@{/temples/{id}/poojas(id=${temple.id})}" class="gallery-tab">Poojas</a>
+                <a th:href="@{/temples/{id}/prasadhams(id=${temple.id})}" class="gallery-tab">Prasadham</a>
+                <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" class="gallery-tab active">Gallery</a>
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="gallery-category-tabs">
+                <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" 
+                   class="gallery-tab" th:classappend="${selectedCategory == null or selectedCategory == ''} ? 'active'">All Photos</a>
+                <a th:each="cat : ${categories}" 
+                   th:href="@{/temples/{id}/gallery(id=${temple.id}, category=${cat.name()})}"
+                   class="gallery-tab" 
+                   th:classappend="${selectedCategory != null and selectedCategory == cat.name()} ? 'active'"
+                   th:text="${cat.name()}">Category</a>
+            </div>
+            
+            <div th:if="${photos != null && !photos.isEmpty()}" class="gallery-grid">
+                <div th:each="photo, iterStat : ${photos}" class="gallery-item clickable-photo">
+                    <img th:src="${contextPath} + ${photo.photoUrl}" th:alt="${photo.title ?: 'Temple Photo'}" th:id="'photo-img-' + ${iterStat.index}">
+                    <span th:id="'photo-title-' + ${iterStat.index}" style="display:none;" th:text="${photo.title ?: 'Temple Photo'}"></span>
+                    <div class="overlay">
+                        <div>
+                            <strong th:text="${photo.title ?: 'Temple Photo'}">Photo Title</strong>
+                            <br>
+                            <small th:text="${photo.category != null ? photo.category.name() : 'OTHER'}">Category</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${photos == null || photos.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-images fa-4x text-muted mb-3"></i>
+                <h3>No photos available</h3>
+                <p class="text-muted">Photos will be added soon</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="">
+        <div id="lightbox-title" class="lightbox-title"></div>
+    </div>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <script>
+        // Attach click handlers via JavaScript (not inline)
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.clickable-photo').forEach(function(item, index) {
+                item.addEventListener('click', function() {
+                    var img = document.getElementById('photo-img-' + index);
+                    var titleEl = document.getElementById('photo-title-' + index);
+                    if (img && titleEl) {
+                        openLightbox(img.src, titleEl.textContent);
+                    }
+                });
+            });
+            
+            document.getElementById('lightbox').addEventListener('click', closeLightbox);
+        });
+        
+        function openLightbox(url, title) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox-title').textContent = title;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+        
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+    
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .gallery-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 8px;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        .lightbox-title {
+            color: white;
+            margin-top: 15px;
+            font-size: 1.2rem;
+        }
+        .gallery-category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+    </style>
+</body>
+</html>

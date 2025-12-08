@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Book Pooja')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="booking-form">
+                <h3>🔥 Book Pooja - <span th:text="${pooja.name}">Pooja</span></h3>
+                
+                <div class="booking-summary">
+                    <h5>Pooja Details</h5>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${temple.name}">Temple Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Pooja:</span>
+                        <span th:text="${pooja.name}">Pooja Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Category:</span>
+                        <span th:text="${pooja.category.displayName}">Category</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Price:</span>
+                        <span th:text="'₹' + ${pooja.price}">Price</span>
+                    </div>
+                    <div class="summary-row" th:if="${pooja.durationMinutes != null}">
+                        <span>Duration:</span>
+                        <span th:text="${pooja.durationMinutes + ' minutes'}">Duration</span>
+                    </div>
+                </div>
+                
+                <form th:action="@{/booking/pooja/{id}(id=${pooja.id})}" method="post" data-validate>
+                    <div class="form-group">
+                        <label class="form-label">Booking Date *</label>
+                        <input type="date" name="bookingDate" class="form-control" 
+                               th:min="${minDate}" th:max="${maxDate}" required>
+                    </div>
+                    
+                    <div class="form-group" th:if="${pooja.defaultTime != null}">
+                        <label class="form-label">Preferred Time</label>
+                        <input type="time" name="preferredTime" class="form-control" th:value="${pooja.defaultTime}">
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Devotee Details</h5>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Devotee Name *</label>
+                        <input type="text" name="devoteeName" class="form-control" 
+                               placeholder="Enter devotee name" required>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Gotra</label>
+                            <input type="text" name="gotra" class="form-control" placeholder="Enter gotra">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nakshatra</label>
+                            <input type="text" name="nakshatra" class="form-control" placeholder="Enter nakshatra">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Rashi (Zodiac Sign)</label>
+                        <select name="rashi" class="form-control">
+                            <option value="">Select Rashi</option>
+                            <option value="Mesha">Mesha (Aries)</option>
+                            <option value="Vrishabha">Vrishabha (Taurus)</option>
+                            <option value="Mithuna">Mithuna (Gemini)</option>
+                            <option value="Karka">Karka (Cancer)</option>
+                            <option value="Simha">Simha (Leo)</option>
+                            <option value="Kanya">Kanya (Virgo)</option>
+                            <option value="Tula">Tula (Libra)</option>
+                            <option value="Vrischika">Vrischika (Scorpio)</option>
+                            <option value="Dhanu">Dhanu (Sagittarius)</option>
+                            <option value="Makara">Makara (Capricorn)</option>
+                            <option value="Kumbha">Kumbha (Aquarius)</option>
+                            <option value="Meena">Meena (Pisces)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Family Member Names (for Sankalp)</label>
+                        <textarea name="familyMemberNames" class="form-control" rows="3"
+                                  placeholder="Enter family member names (one per line)"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Special Requests</label>
+                        <textarea name="specialRequests" class="form-control" rows="2"
+                                  placeholder="Any special requests for the pooja"></textarea>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Prasadham Options</h5>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="prasadhamRequired" value="true" checked> 
+                            I want to receive prasadham after pooja
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Delivery Address (if prasadham required)</label>
+                        <textarea name="deliveryAddress" class="form-control" rows="2"
+                                  placeholder="Enter delivery address for prasadham"></textarea>
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <div class="summary-row summary-total">
+                            <span>Total Amount:</span>
+                            <span th:text="'₹' + ${pooja.price}">₹0</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-check-circle"></i> Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

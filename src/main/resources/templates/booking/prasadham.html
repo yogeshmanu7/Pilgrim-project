@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Order Prasadham')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div th:replace="~{fragments/layout :: alerts}"></div>
+            
+            <div class="booking-form">
+                <h3>🎁 Order Prasadham - <span th:text="${prasadham.name}">Prasadham</span></h3>
+                
+                <div class="booking-summary">
+                    <h5>Prasadham Details</h5>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${temple.name}">Temple Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Prasadham:</span>
+                        <span th:text="${prasadham.name}">Prasadham Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Price:</span>
+                        <span th:text="'₹' + ${prasadham.price}">Price</span>
+                    </div>
+                    <div class="summary-row" th:if="${prasadham.weight != null}">
+                        <span>Weight:</span>
+                        <span th:text="${prasadham.weight}">Weight</span>
+                    </div>
+                    <div class="summary-row" th:if="${prasadham.deliveryCharge != null}">
+                        <span>Delivery Charge:</span>
+                        <span th:text="'₹' + ${prasadham.deliveryCharge}">Delivery</span>
+                    </div>
+                </div>
+                
+                <form th:action="@{/booking/prasadham/{id}(id=${prasadham.id})}" method="post" data-validate>
+                    <div class="form-group">
+                        <label class="form-label">Quantity *</label>
+                        <input type="number" name="quantity" class="form-control" 
+                               min="1" max="10" value="1" required>
+                    </div>
+                    
+                    <div class="form-group" th:if="${prasadham.canBeDelivered}">
+                        <label>
+                            <input type="checkbox" name="forDelivery" value="true" id="forDeliveryCheck"
+                                   onchange="toggleDeliveryFields()"> 
+                            I want home delivery
+                        </label>
+                    </div>
+                    
+                    <div id="deliveryFields" style="display: none;">
+                        <h5 class="mt-4 mb-3">Delivery Details</h5>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Recipient Name *</label>
+                            <input type="text" name="recipientName" class="form-control" 
+                                   placeholder="Enter recipient name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Recipient Phone *</label>
+                            <input type="tel" name="recipientPhone" class="form-control" 
+                                   placeholder="Enter phone number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Delivery Address *</label>
+                            <textarea name="deliveryAddress" class="form-control" rows="2"
+                                      placeholder="Enter complete delivery address"></textarea>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">City *</label>
+                                <input type="text" name="city" class="form-control" placeholder="City">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">State *</label>
+                                <input type="text" name="state" class="form-control" placeholder="State">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Pincode *</label>
+                                <input type="text" name="pincode" class="form-control" placeholder="Pincode">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea name="notes" class="form-control" rows="2"
+                                  placeholder="Any special instructions"></textarea>
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <div class="summary-row summary-total">
+                            <span>Total Amount:</span>
+                            <span th:text="'₹' + ${prasadham.price}">₹0</span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-shopping-cart"></i> Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        function toggleDeliveryFields() {
+            const checkbox = document.getElementById('forDeliveryCheck');
+            const fields = document.getElementById('deliveryFields');
+            fields.style.display = checkbox.checked ? 'block' : 'none';
+        }
+    </script>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

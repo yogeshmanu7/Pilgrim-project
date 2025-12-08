@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Darshan Booking Details')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="booking-form">
+                <div class="d-flex justify-between align-center mb-4">
+                    <h3>🙏 Darshan Booking Details</h3>
+                    <span class="status-badge" 
+                          th:classappend="'status-' + ${booking.status?.name()?.toLowerCase() ?: 'pending'}"
+                          th:text="${booking.status ?: 'PENDING'}">Status</span>
+                </div>
+                
+                <div class="booking-summary">
+                    <div class="summary-row">
+                        <span>Booking Number:</span>
+                        <strong th:text="${booking.bookingNumber}">Booking#</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Temple:</span>
+                        <span th:text="${booking.darshan.temple.name}">Temple</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Darshan Type:</span>
+                        <span th:text="${booking.darshan.darshanType.displayName}">Type</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Darshan:</span>
+                        <span th:text="${booking.darshan.name}">Darshan</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Booking Date:</span>
+                        <span th:text="${booking.bookingDate}">Date</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.slotTime != null}">
+                        <span>Slot Time:</span>
+                        <span th:text="${booking.slotTime}">Time</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Number of Persons:</span>
+                        <span th:text="${booking.numberOfPersons}">Persons</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Primary Devotee:</span>
+                        <span th:text="${booking.primaryDevoteeName}">Name</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Phone:</span>
+                        <span th:text="${booking.primaryDevoteePhone}">Phone</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.additionalDevoteeNames != null}">
+                        <span>Additional Devotees:</span>
+                        <span th:text="${booking.additionalDevoteeNames}">Names</span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total Amount:</span>
+                        <span th:text="${booking.totalAmount != null ? '₹' + booking.totalAmount : 'FREE'}">Amount</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Payment Status:</span>
+                        <span class="status-badge" 
+                              th:classappend="'status-' + ${booking.paymentStatus?.name()?.toLowerCase() ?: 'pending'}"
+                              th:text="${booking.paymentStatus ?: 'PENDING'}">Status</span>
+                    </div>
+                    <div class="summary-row" th:if="${booking.paymentTransactionId != null}">
+                        <span>Transaction ID:</span>
+                        <span th:text="${booking.paymentTransactionId}">Transaction ID</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Booked On:</span>
+                        <span th:text="${booking.createdAt}">Date</span>
+                    </div>
+                </div>
+                
+                <!-- Payment Button -->
+                <div class="mt-4" th:if="${booking.paymentStatus != null && booking.paymentStatus.name() == 'PENDING' && booking.totalAmount != null && booking.totalAmount.compareTo(0) > 0}">
+                    <button id="payButton" class="btn btn-primary btn-lg" onclick="initiatePayment()">
+                        <i class="fas fa-credit-card"></i> Pay Now - ₹<span th:text="${booking.totalAmount}">Amount</span>
+                    </button>
+                    <div id="paymentError" class="alert alert-danger mt-2" style="display: none;"></div>
+                </div>
+                
+                <div class="mt-4">
+                    <button onclick="printBooking()" class="btn btn-outline">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <a th:href="@{/user/bookings}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Back to Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+    
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const bookingId = /*[[${booking.id}]]*/ 0;
+        const bookingAmount = /*[[${booking.totalAmount != null ? booking.totalAmount : 0}]]*/ 0;
+        const paymentStatus = /*[[${booking.paymentStatus != null ? booking.paymentStatus.name() : 'PENDING'}]]*/ 'PENDING';
+        
+        function initiatePayment() {
+            if (paymentStatus !== 'PENDING' || bookingAmount <= 0) {
+                document.getElementById('paymentError').textContent = 'Payment not required or already processed.';
+                document.getElementById('paymentError').style.display = 'block';
+                return;
+            }
+            
+            // Disable button
+            const payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            // Hide previous errors
+            document.getElementById('paymentError').style.display = 'none';
+            
+            // Get CSRF token
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+            const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+            const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute('content') : 'X-CSRF-TOKEN';
+            
+            // Create payment order
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            // Add CSRF token if available
+            if (csrfToken) {
+                headers[csrfHeader] = csrfToken;
+            }
+            
+            // Get context path from current URL (everything before /user/ or /payment/)
+            let contextPath = '';
+            const pathname = window.location.pathname;
+            const userIndex = pathname.indexOf('/user/');
+            const paymentIndex = pathname.indexOf('/payment/');
+            if (userIndex > 0) {
+                contextPath = pathname.substring(0, userIndex);
+            } else if (paymentIndex > 0) {
+                contextPath = pathname.substring(0, paymentIndex);
+            }
+            const paymentUrl = contextPath + '/payment/darshan/' + bookingId + '/create-order';
+            
+            fetch(paymentUrl, {
+                method: 'POST',
+                headers: headers,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP ${response.status}: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Payment order response:', data);
+                if (data.success && data.orderId) {
+                    // Check if Razorpay is loaded
+                    if (typeof Razorpay === 'undefined') {
+                        document.getElementById('paymentError').textContent = 'Razorpay SDK not loaded. Please refresh the page.';
+                        document.getElementById('paymentError').style.display = 'block';
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                        return;
+                    }
+                    
+                    // Initialize Razorpay checkout
+                    const options = {
+                        key: data.key,
+                        amount: data.amount,
+                        currency: data.currency,
+                        name: 'Temple Management System',
+                        description: 'Darshan Booking Payment',
+                        order_id: data.orderId,
+                        handler: function(response) {
+                            console.log('Payment successful:', response);
+                            // Payment successful, verify on server
+                            verifyPayment(response);
+                        },
+                        prefill: {
+                            name: /*[[${booking.primaryDevoteeName}]]*/ '',
+                            contact: /*[[${booking.primaryDevoteePhone}]]*/ '',
+                            email: /*[[${#authentication.principal.username}]]*/ ''
+                        },
+                        theme: {
+                            color: '#3399cc'
+                        },
+                        modal: {
+                            ondismiss: function() {
+                                payButton.disabled = false;
+                                payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                            }
+                        }
+                    };
+                    
+                    try {
+                        const razorpay = new Razorpay(options);
+                        razorpay.on('payment.failed', function(response) {
+                            console.error('Payment failed:', response);
+                            document.getElementById('paymentError').textContent = 'Payment failed: ' + (response.error ? response.error.description : 'Unknown error');
+                            document.getElementById('paymentError').style.display = 'block';
+                            payButton.disabled = false;
+                            payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                        });
+                        razorpay.open();
+                    } catch (error) {
+                        console.error('Error opening Razorpay:', error);
+                        document.getElementById('paymentError').textContent = 'Error opening payment gateway: ' + error.message;
+                        document.getElementById('paymentError').style.display = 'block';
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                    }
+                } else {
+                    // Handle free booking or error
+                    if (data.message) {
+                        // Free booking confirmed
+                        window.location.reload();
+                    } else {
+                        const errorMsg = data.error || 'Failed to initialize payment';
+                        console.error('Payment order creation failed:', errorMsg);
+                        document.getElementById('paymentError').textContent = errorMsg;
+                        document.getElementById('paymentError').style.display = 'block';
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                const errorMsg = error.message || 'An error occurred. Please try again.';
+                document.getElementById('paymentError').textContent = errorMsg;
+                document.getElementById('paymentError').style.display = 'block';
+                payButton.disabled = false;
+                payButton.innerHTML = '<i class="fas fa-credit-card"></i> Pay Now - ₹' + bookingAmount;
+            });
+        }
+        
+        function verifyPayment(response) {
+            // Create form and submit to verify payment
+            const form = document.createElement('form');
+            form.method = 'POST';
+            // Get context path from current URL
+            let contextPath = '';
+            const pathname = window.location.pathname;
+            const userIndex = pathname.indexOf('/user/');
+            const paymentIndex = pathname.indexOf('/payment/');
+            if (userIndex > 0) {
+                contextPath = pathname.substring(0, userIndex);
+            } else if (paymentIndex > 0) {
+                contextPath = pathname.substring(0, paymentIndex);
+            }
+            form.action = contextPath + '/payment/darshan/' + bookingId + '/verify';
+            
+            const orderIdInput = document.createElement('input');
+            orderIdInput.type = 'hidden';
+            orderIdInput.name = 'razorpay_order_id';
+            orderIdInput.value = response.razorpay_order_id;
+            
+            const paymentIdInput = document.createElement('input');
+            paymentIdInput.type = 'hidden';
+            paymentIdInput.name = 'razorpay_payment_id';
+            paymentIdInput.value = response.razorpay_payment_id;
+            
+            const signatureInput = document.createElement('input');
+            signatureInput.type = 'hidden';
+            signatureInput.name = 'razorpay_signature';
+            signatureInput.value = response.razorpay_signature;
+            
+            form.appendChild(orderIdInput);
+            form.appendChild(paymentIdInput);
+            form.appendChild(signatureInput);
+            
+            // Add CSRF token
+            // Add CSRF token - get from existing form or meta tag
+            const csrfTokenMeta = document.querySelector('meta[name="_csrf"]');
+            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
+            if (csrfTokenMeta) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrfTokenMeta.getAttribute('content');
+                form.appendChild(csrfInput);
+            } else if (csrfTokenInput) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_csrf';
+                csrfInput.value = csrfTokenInput.value;
+                form.appendChild(csrfInput);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        function printBooking() {
+            window.print();
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
+

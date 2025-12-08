@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Poojas - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>🔥 Poojas at <span th:text="${temple.name}">Temple</span></h1>
+            <p>Book sacred poojas for divine blessings</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div class="d-flex gap-2 flex-wrap mb-5">
+                <a th:href="@{/temples/{id}(id=${temple.id})}" class="gallery-tab">Overview</a>
+                <a th:href="@{/temples/{id}/darshans(id=${temple.id})}" class="gallery-tab">Darshan</a>
+                <a th:href="@{/temples/{id}/poojas(id=${temple.id})}" class="gallery-tab active">Poojas</a>
+                <a th:href="@{/temples/{id}/prasadhams(id=${temple.id})}" class="gallery-tab">Prasadham</a>
+                <a th:href="@{/temples/{id}/gallery(id=${temple.id})}" class="gallery-tab">Gallery</a>
+            </div>
+            
+            <!-- Filter by Category -->
+            <div class="d-flex gap-2 flex-wrap mb-4">
+                <span class="text-muted">Filter:</span>
+                <button class="gallery-tab active" data-category="all">All Poojas</button>
+                <button th:each="cat : ${categories}" class="gallery-tab" 
+                        th:data-category="${cat.name()}" th:text="${cat.displayName}">Category</button>
+            </div>
+            
+            <div th:if="${poojas != null && !poojas.isEmpty()}" class="pooja-grid">
+                <div th:each="pooja : ${poojas}" class="pooja-card" th:data-category="${pooja.category}">
+                    <div class="pooja-card-header">
+                        <span class="darshan-type special" th:text="${pooja.category.displayName}">Category</span>
+                        <h4 th:text="${pooja.name}">Pooja Name</h4>
+                        <p th:if="${pooja.nameHindi != null}" th:text="${pooja.nameHindi}">Hindi Name</p>
+                    </div>
+                    <div class="pooja-card-body">
+                        <p th:text="${#strings.abbreviate(pooja.description, 100)}">Description...</p>
+                        
+                        <div class="pooja-info">
+                            <i class="fas fa-rupee-sign"></i>
+                            <strong class="text-maroon" th:text="'₹' + ${pooja.price}">Price</strong>
+                        </div>
+                        
+                        <div class="pooja-info" th:if="${pooja.durationMinutes != null}">
+                            <i class="fas fa-clock"></i>
+                            <span th:text="${pooja.durationMinutes + ' minutes'}">Duration</span>
+                        </div>
+                        
+                        <div class="pooja-info" th:if="${pooja.defaultTime != null}">
+                            <i class="fas fa-hourglass"></i>
+                            <span th:text="${pooja.defaultTime}">Default Time</span>
+                        </div>
+                        
+                        <div th:if="${pooja.significance != null}" class="mt-3">
+                            <small class="text-muted" th:text="${#strings.abbreviate(pooja.significance, 80)}">Significance...</small>
+                        </div>
+                        
+                        <div th:if="${pooja.benefits != null}" class="mt-2">
+                            <small><strong>Benefits:</strong> <span class="text-muted" th:text="${#strings.abbreviate(pooja.benefits, 60)}">Benefits...</span></small>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a sec:authorize="isAuthenticated()" 
+                               th:href="@{/booking/pooja/{id}(id=${pooja.id})}" 
+                               class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-calendar-check"></i> Book Pooja
+                            </a>
+                            <a sec:authorize="isAnonymous()" 
+                               th:href="@{/auth/login}" 
+                               class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-sign-in-alt"></i> Login to Book
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${poojas == null || poojas.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-fire fa-4x text-muted mb-3"></i>
+                <h3>No poojas available</h3>
+                <p class="text-muted">Please check back later</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

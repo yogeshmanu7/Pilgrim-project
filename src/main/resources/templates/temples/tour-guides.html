@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Tour Guides - ' + ${temple.name})}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container hero-content">
+            <h1>👤 Tour Guides at <span th:text="${temple.name}">Temple</span></h1>
+            <p>Book experienced guides for an enriching temple tour</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <div class="container">
+            <div th:if="${tourGuides != null && !tourGuides.isEmpty()}" class="temple-grid">
+                <div th:each="guide : ${tourGuides}" class="guide-card">
+                    <img th:src="${guide.photoUrl != null} ? (${contextPath} + ${guide.photoUrl}) : (${contextPath} + '/images/guide-default.jpg')" 
+                         th:alt="${guide.name}" class="guide-avatar">
+                    
+                    <h4 th:text="${guide.name}">Guide Name</h4>
+                    
+                    <div class="guide-rating" th:if="${guide.rating != null}">
+                        <i class="fas fa-star"></i>
+                        <span th:text="${#numbers.formatDecimal(guide.rating, 1, 1)}">4.5</span>
+                        <small class="text-muted" th:text="'(' + ${guide.totalTours} + ' tours)'"></small>
+                    </div>
+                    
+                    <p class="text-muted" th:if="${guide.experienceYears != null}">
+                        <i class="fas fa-briefcase"></i>
+                        <span th:text="${guide.experienceYears + ' years experience'}">Experience</span>
+                    </p>
+                    
+                    <div class="guide-languages" th:if="${guide.languages != null}">
+                        <span th:each="lang : ${#strings.arraySplit(guide.languages, ',')}" class="language-tag" th:text="${lang}">Language</span>
+                    </div>
+                    
+                    <p class="text-muted" th:if="${guide.bio != null}" th:text="${#strings.abbreviate(guide.bio, 100)}">Bio...</p>
+                    
+                    <div class="d-flex justify-between align-center mt-3">
+                        <div>
+                            <small class="text-muted">From</small>
+                            <div class="prasadham-price" th:text="'₹' + ${guide.hourlyRate} + '/hr'">Rate</div>
+                        </div>
+                        <div th:if="${guide.fullDayRate != null}">
+                            <small class="text-muted">Full Day</small>
+                            <div class="text-maroon" th:text="'₹' + ${guide.fullDayRate}">Full Day Rate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <span th:if="${guide.isVerified}" class="language-tag" style="background: #E8F5E9; color: #2E7D32;">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </span>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <a sec:authorize="isAuthenticated()" 
+                           th:href="@{/booking/tour-guide/{id}(id=${guide.id})}" 
+                           class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-calendar-check"></i> Book Guide
+                        </a>
+                        <a sec:authorize="isAnonymous()" 
+                           th:href="@{/auth/login}" 
+                           class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Login to Book
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${tourGuides == null || tourGuides.isEmpty()}" class="text-center py-5">
+                <i class="fas fa-user-tie fa-4x text-muted mb-3"></i>
+                <h3>No tour guides available</h3>
+                <p class="text-muted">Check back later for available guides</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Home')}"></head>
+<body>
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>🙏 Welcome to Temple Darshan</h1>
+            <p>Experience divine blessings from sacred temples across India. Book darshans, poojas, and receive prasadham at your doorstep.</p>
+            
+            <!-- Search Box -->
+            <div class="search-box">
+                <form th:action="@{/search}" method="get" class="search-form">
+                    <input type="text" name="keyword" class="form-control" placeholder="Search temples, deities, cities...">
+                    <select name="city" class="form-control">
+                        <option value="">All Cities</option>
+                        <option th:each="city : ${cities}" th:value="${city}" th:text="${city}"></option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Featured Temples -->
+    <section class="section">
+        <div class="container">
+            <h2 class="text-center mb-5">🛕 Featured Temples</h2>
+            
+            <div class="temple-grid">
+                <div th:each="temple : ${temples}" class="card temple-card animate-on-scroll">
+                    <img th:src="${temple.photos != null && !temple.photos.isEmpty()} ? (${contextPath} + ${temple.photos[0].photoUrl}) : (${contextPath} + '/images/temple-default.jpg')" 
+                         th:alt="${temple.name}" class="card-img">
+                    <div class="card-body">
+                        <h4 class="card-title" th:text="${temple.name}">Temple Name</h4>
+                        <p class="card-text">
+                            <i class="fas fa-map-marker-alt text-saffron"></i>
+                            <span th:text="${temple.city + ', ' + temple.state}">City, State</span>
+                        </p>
+                        <p class="card-text" th:text="${temple.mainDeity != null} ? 'Main Deity: ' + ${temple.mainDeity} : ''"></p>
+                        <p class="card-text text-muted" th:text="${#strings.abbreviate(temple.description, 100)}">Description...</p>
+                    </div>
+                    <div class="card-footer d-flex justify-between align-center">
+                        <span class="text-muted">
+                            <i class="fas fa-clock"></i>
+                            <span th:text="${temple.morningOpenTime} + ' - ' + ${temple.eveningCloseTime}">6:00 AM - 9:00 PM</span>
+                        </span>
+                        <a th:href="@{/temples/{id}(id=${temple.id})}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a th:href="@{/temples}" class="btn btn-outline btn-lg">View All Temples</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section class="section" style="background: var(--cream);">
+        <div class="container">
+            <h2 class="text-center mb-5">Our Services</h2>
+            
+            <div class="temple-grid">
+                <div class="card text-center animate-on-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-om fa-3x text-saffron mb-3"></i>
+                        <h4>Darshan Booking</h4>
+                        <p class="text-muted">Book VIP, Special, or Free darshan at various temples with priority access.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center animate-on-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-fire fa-3x text-saffron mb-3"></i>
+                        <h4>Pooja Booking</h4>
+                        <p class="text-muted">Book various poojas like Archana, Abhishekam, Homam and more.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center animate-on-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-gift fa-3x text-saffron mb-3"></i>
+                        <h4>Prasadham Delivery</h4>
+                        <p class="text-muted">Receive sacred prasadham delivered to your home.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center animate-on-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-hand-holding-heart fa-3x text-saffron mb-3"></i>
+                        <h4>Donations</h4>
+                        <p class="text-muted">Support temples through various donation options with 80G benefits.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center animate-on-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-user-tie fa-3x text-saffron mb-3"></i>
+                        <h4>Tour Guides</h4>
+                        <p class="text-muted">Book experienced guides for temple tours in multiple languages.</p>
+                    </div>
+                </div>
+                
+                <div class="card text-center animate-on-scroll">
+                    <div class="card-body">
+                        <i class="fas fa-calendar-alt fa-3x text-saffron mb-3"></i>
+                        <h4>Festival Calendar</h4>
+                        <p class="text-muted">Stay updated with upcoming festivals and special events.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Upcoming Festivals -->
+    <section class="section" th:if="${upcomingFestivals != null && !upcomingFestivals.isEmpty()}">
+        <div class="container">
+            <h2 class="text-center mb-5">🎉 Upcoming Festivals</h2>
+            
+            <div class="temple-grid">
+                <div th:each="festival : ${upcomingFestivals}" class="festival-card animate-on-scroll">
+                    <div class="festival-date">
+                        <div class="day" th:text="${festival.startDate.dayOfMonth}">15</div>
+                        <div class="month" th:text="${festival.startDate.month}">Jan</div>
+                    </div>
+                    <div class="festival-body">
+                        <h4 th:text="${festival.name}">Festival Name</h4>
+                        <p class="text-muted" th:text="${festival.temple.name}">Temple Name</p>
+                        <p th:text="${#strings.abbreviate(festival.description, 100)}">Description...</p>
+                        <a th:href="@{/temples/{id}/festivals(id=${festival.temple.id})}" class="btn btn-outline btn-sm">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Upcoming Events -->
+    <section class="section" style="background: var(--cream);" th:if="${upcomingEvents != null && !upcomingEvents.isEmpty()}">
+        <div class="container">
+            <h2 class="text-center mb-5">📅 Upcoming Events</h2>
+            
+            <div class="event-timeline">
+                <div th:each="event : ${upcomingEvents}" class="timeline-item animate-on-scroll">
+                    <div class="card">
+                        <div class="card-body">
+                            <span class="darshan-type special" th:text="${event.eventType.displayName}">Event Type</span>
+                            <h4 th:text="${event.title}">Event Title</h4>
+                            <p class="text-muted">
+                                <i class="fas fa-calendar"></i> <span th:text="${event.eventDate}">Date</span> |
+                                <i class="fas fa-clock"></i> <span th:text="${event.startTime}">Time</span> |
+                                <i class="fas fa-map-marker-alt"></i> <span th:text="${event.temple.name}">Temple</span>
+                            </p>
+                            <p th:text="${#strings.abbreviate(event.description, 150)}">Description...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Call to Action -->
+    <section class="donation-section">
+        <div class="container">
+            <h2>🙏 Support Sacred Temples</h2>
+            <p>Your donations help maintain and preserve these sacred places for future generations.</p>
+            <a th:href="@{/temples}" class="btn btn-secondary btn-lg">Donate Now</a>
+        </div>
+    </section>
+    
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
+
