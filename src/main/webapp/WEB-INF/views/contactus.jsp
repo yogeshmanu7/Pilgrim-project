@@ -818,7 +818,6 @@ footer a:hover {
 </section>
 
 <!-- FOOTER -->
-<footer>
     <div class="footer-wrap">
         <div>
             <h4>Pilgrim Project</h4>
@@ -863,6 +862,8 @@ footer a:hover {
         � 2024 Pilgrim Project. All Rights Reserved. | Serving pilgrims across all faiths
     </div>
 </footer>
+
+<%@ include file="includes/footer.jsp" %>
 
 <script>
 // Form Submission
