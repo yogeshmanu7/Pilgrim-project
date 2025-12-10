@@ -71,7 +71,7 @@ public class ScholarService {
     }
     
     public Scholar findByUserId(Long userId) {
-        return scholarRepository.findByUserId(userId);
+        return scholarRepository.findByUser_Id(userId);
     }
     
     public Scholar updateStatus(Long scholarId, ScholarRegistrationStatus status, String rejectionReason) {

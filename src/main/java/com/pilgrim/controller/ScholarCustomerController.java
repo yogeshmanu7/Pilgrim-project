@@ -10,6 +10,7 @@ import com.pilgrim.enums.ScholarServiceType;
 import com.pilgrim.service.ScholarBookingService;
 import com.pilgrim.service.ScholarChatService;
 import com.pilgrim.service.ScholarService;
+import com.pilgrim.service.ScholarServiceService;
 import com.pilgrim.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,123 @@ public class ScholarCustomerController {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private ScholarServiceService scholarServiceService;
+    
+    @RequestMapping(value = "/booking-details", method = RequestMethod.GET)
+    public String showBookingDetails(@RequestParam Long scholarId, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/customer/login";
+        }
+        
+        Scholar scholar = scholarService.findById(scholarId).orElse(null);
+        if (scholar == null) {
+            return "redirect:/";
+        }
+        
+        List<com.pilgrim.entity.ScholarService> services = scholarServiceService.findActiveByScholar(scholar);
+        model.addAttribute("scholar", scholar);
+        model.addAttribute("services", services);
+        model.addAttribute("user", user);
+        
+        // Get pending booking details from session
+        String serviceTypeStr = (String) session.getAttribute("pendingBooking_serviceType");
+        LocalDateTime serviceDate = (LocalDateTime) session.getAttribute("pendingBooking_serviceDate");
+        String serviceLocation = (String) session.getAttribute("pendingBooking_serviceLocation");
+        String serviceDescription = (String) session.getAttribute("pendingBooking_serviceDescription");
+        
+        if (serviceTypeStr != null) {
+            try {
+                ScholarServiceType serviceType = ScholarServiceType.valueOf(serviceTypeStr);
+                model.addAttribute("pendingServiceType", serviceType);
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+        model.addAttribute("pendingServiceDate", serviceDate);
+        model.addAttribute("pendingServiceLocation", serviceLocation);
+        model.addAttribute("pendingServiceDescription", serviceDescription);
+        
+        return "customer/scholars/booking-details";
+    }
+    
+    @RequestMapping(value = "/create-booking", method = RequestMethod.POST)
+    @org.springframework.web.bind.annotation.ResponseBody
+    public java.util.Map<String, Object> createBookingFromService(
+            @org.springframework.web.bind.annotation.RequestBody java.util.Map<String, Object> requestData,
+            HttpSession session) {
+        
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+        
+        try {
+            User user = (User) session.getAttribute("userSession");
+            if (user == null) {
+                response.put("error", "Please login to continue");
+                return response;
+            }
+            
+            Long scholarId = Long.parseLong(requestData.get("scholarId").toString());
+            Long serviceId = Long.parseLong(requestData.get("serviceId").toString());
+            Double amount = Double.parseDouble(requestData.get("amount").toString());
+            
+            // Get pending booking details from session
+            String serviceTypeStr = (String) session.getAttribute("pendingBooking_serviceType");
+            LocalDateTime serviceDate = (LocalDateTime) session.getAttribute("pendingBooking_serviceDate");
+            String serviceLocation = (String) session.getAttribute("pendingBooking_serviceLocation");
+            String serviceDescription = (String) session.getAttribute("pendingBooking_serviceDescription");
+            
+            Scholar scholar = scholarService.findById(scholarId).orElse(null);
+            if (scholar == null) {
+                response.put("error", "Scholar not found");
+                return response;
+            }
+            
+            com.pilgrim.entity.ScholarService service = scholarServiceService.findById(serviceId).orElse(null);
+            if (service == null) {
+                response.put("error", "Service not found");
+                return response;
+            }
+            
+            // Use pending booking details or defaults
+            ScholarServiceType serviceType = ScholarServiceType.ONSITE;
+            if (serviceTypeStr != null) {
+                try {
+                    serviceType = ScholarServiceType.valueOf(serviceTypeStr);
+                } catch (Exception e) {
+                    // Use default
+                }
+            }
+            
+            LocalDateTime finalServiceDate = serviceDate != null ? serviceDate : LocalDateTime.now().plusDays(1);
+            String finalDescription = (serviceDescription != null && !serviceDescription.isEmpty()) 
+                    ? serviceDescription + " | Service Package: " + service.getName()
+                    : "Service Package: " + service.getName();
+            
+            BigDecimal totalAmount = BigDecimal.valueOf(amount);
+            ScholarBooking booking = bookingService.createBooking(
+                user, scholar, serviceType, 
+                finalServiceDate, serviceLocation, 
+                finalDescription, totalAmount);
+            
+            // Clear pending booking details from session
+            session.removeAttribute("pendingBooking_scholarId");
+            session.removeAttribute("pendingBooking_serviceType");
+            session.removeAttribute("pendingBooking_serviceDate");
+            session.removeAttribute("pendingBooking_serviceLocation");
+            session.removeAttribute("pendingBooking_serviceDescription");
+            
+            response.put("success", true);
+            response.put("bookingId", booking.getId());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("error", "Error creating booking: " + e.getMessage());
+        }
+        
+        return response;
+    }
     
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(HttpSession session, Model model) {
@@ -80,7 +198,23 @@ public class ScholarCustomerController {
             return "redirect:/";
         }
         
+        // Get all unique locations from scholar's services
+        List<com.pilgrim.entity.ScholarService> services = scholarServiceService.findActiveByScholar(scholar);
+        List<String> uniqueLocations = new ArrayList<>();
+        for (com.pilgrim.entity.ScholarService service : services) {
+            if (service.getLocations() != null) {
+                for (String location : service.getLocations()) {
+                    if (location != null && !location.trim().isEmpty() && !uniqueLocations.contains(location.trim())) {
+                        uniqueLocations.add(location.trim());
+                    }
+                }
+            }
+        }
+        // Sort locations alphabetically
+        uniqueLocations.sort(String::compareToIgnoreCase);
+        
         model.addAttribute("scholar", scholar);
+        model.addAttribute("availableLocations", uniqueLocations);
         return "customer/scholars/booking-form";
     }
     
@@ -106,13 +240,15 @@ public class ScholarCustomerController {
             return "customer/scholars/booking-form";
         }
         
-        BigDecimal totalAmount = scholar.getBasePrice();
-        ScholarBooking booking = bookingService.createBooking(
-            user, scholar, serviceType, serviceDate, serviceLocation, 
-            serviceDescription, totalAmount);
+        // Store booking details in session to use later in booking-details page
+        session.setAttribute("pendingBooking_scholarId", scholarId);
+        session.setAttribute("pendingBooking_serviceType", serviceType.name());
+        session.setAttribute("pendingBooking_serviceDate", serviceDate);
+        session.setAttribute("pendingBooking_serviceLocation", serviceLocation);
+        session.setAttribute("pendingBooking_serviceDescription", serviceDescription);
         
-        // Redirect to payment page instead of dashboard
-        return "redirect:/customer/scholar/payment/initiate?bookingId=" + booking.getId();
+        // Redirect to booking-details page for package selection
+        return "redirect:/customer/scholar/booking-details?scholarId=" + scholarId;
     }
     
     @RequestMapping(value = "/chat", method = RequestMethod.GET)

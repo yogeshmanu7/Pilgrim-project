@@ -25,10 +25,17 @@ public class ScholarLoginController {
     
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String showLogin(HttpSession session) {
-        if (session.getAttribute("userId") != null) {
-            Scholar scholar = scholarService.findByUserId((Long) session.getAttribute("userId"));
-            if (scholar != null) {
-                return "redirect:/scholar/dashboard";
+        // Check if user is already logged in
+        User user = (User) session.getAttribute("userSession");
+        if (user != null) {
+            try {
+                Scholar scholar = scholarService.findByUserId(user.getId());
+                if (scholar != null) {
+                    return "redirect:/scholar/dashboard";
+                }
+            } catch (Exception e) {
+                // If there's an error finding scholar, clear session and show login
+                session.invalidate();
             }
         }
         return "scholar/ScholarLogin";

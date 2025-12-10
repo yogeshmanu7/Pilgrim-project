@@ -7,10 +7,11 @@
         
         <div>
             <h4>Quick Links</h4>
-            <a href="<%=request.getContextPath()%>/">Home</a>
-            <a href="<%=request.getContextPath()%>/services">Services</a>
-            <a href="<%=request.getContextPath()%>/aboutus">About Us</a>
-            <a href="<%=request.getContextPath()%>/contactus">Contact Us</a>
+            <a href="<%=request.getContextPath()%>/">Temple</a>
+            <a href="<%=request.getContextPath()%>/services">Accomadation</a>
+            <a href="<%=request.getContextPath()%>/aboutus">Travel</a>
+            <a href="<%=request.getContextPath()%>/contactus">Scholar</a>
+            <a href="<%=request.getContextPath()%>/contactus">Pooja Items</a>
         </div>
         
         <div>

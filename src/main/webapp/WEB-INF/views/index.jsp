@@ -34,81 +34,743 @@
         }
         
         /* ===== HEADER ===== */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            text-decoration: none;
-        }
-        
-        .logo i {
-            font-size: 28px;
-            color: #d4af37;
-        }
-        
-        .logo h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            margin: 0;
-        }
-        
-        .logo span {
-            color: #d4af37;
-        }
-        
-        .navbar-nav .nav-link {
-            color: #ddd;
-            margin-left: 20px;
-            font-weight: 500;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-        
-        .navbar-nav .nav-link:hover {
-            color: #fff;
-        }
-        
-        .navbar-nav .nav-link.active {
-            color: #d4af37;
-        }
-        
-        .navbar-nav .nav-link::after {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: #d4af37;
-            left: 0;
-            bottom: 0;
-            transition: width 0.3s ease;
-        }
-        
-        .navbar-nav .nav-link:hover::after,
-        .navbar-nav .nav-link.active::after {
-            width: 100%;
-        }
-        
-        .navbar-toggler {
-            border: none;
-            padding: 0;
-        }
-        
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-        
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(20, 20, 20, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-wrap {
+    max-width: 1300px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 30px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.logo i {
+    font-size: 28px;
+    color: #d4af37;
+}
+
+.logo h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.logo span {
+    color: #d4af37;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: #ddd;
+    margin-left: 32px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+nav a:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #d4af37;
+    left: 0;
+    bottom: -6px;
+    transition: width 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff;
+}
+
+nav a:hover:after {
+    width: 100%;
+}
+
+nav a.active {
+    color: #d4af37;
+}
+
+nav a.active:after {
+    width: 100%;
+    background: #d4af37;
+}
+
+/* ===== JOIN US BUTTON ===== */
+.join-us-btn {
+    background: linear-gradient(135deg, #d4af37, #c19b2e);
+    color: #000;
+    padding: 10px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    margin-left: 32px;
+    transition: all 0.3s ease;
+    border: 2px solid #d4af37;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.join-us-btn:hover {
+    background: transparent;
+    color: #d4af37;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.join-us-btn i {
+    font-size: 0.9rem;
+}
+
+/* ===== SERVICES DROPDOWN ===== */
+.nav-services {
+    position: relative;
+}
+
+.nav-services > a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-services > a .dropdown-icon {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-services:hover > a .dropdown-icon,
+.nav-services.active > a .dropdown-icon {
+    transform: rotate(180deg);
+}
+
+.services-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(20, 20, 20, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 300px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.nav-services:hover .services-dropdown,
+.nav-services.active .services-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-header {
+    color: #d4af37;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-header i {
+    font-size: 1rem;
+}
+
+.dropdown-services {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.dropdown-service-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #ddd;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dropdown-service-item:hover {
+    background: rgba(212, 175, 55, 0.1);
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.dropdown-service-item i {
+    color: #d4af37;
+    font-size: 1rem;
+    width: 24px;
+}
+
+.dropdown-service-item span {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Mobile dropdown */
+@media (max-width: 768px) {
+    .nav-services {
+        position: static;
+    }
+    
+    .services-dropdown {
+        position: fixed;
+        top: 70px;
+        left: 20px;
+        right: 20px;
+        transform: translateX(0) translateY(-20px);
+        max-width: 100%;
+        min-width: auto;
+        background: rgba(20, 20, 20, 0.98);
+    }
+    
+    .nav-services.active .services-dropdown {
+        transform: translateX(0) translateY(0);
+    }
+    
+    .dropdown-services {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .dropdown-services {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Touch device support */
+.touch-device .services-dropdown {
+    display: none;
+}
+
+.touch-device .nav-services.active .services-dropdown {
+    display: block;
+}
+
+/* ===== SERVICES HERO ===== */
+.services-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('<%=request.getContextPath()%>/views/images/chri2.jpg') center center / cover no-repeat;
+    height: 100vh;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 80px;
+    position: relative;
+}
+
+.services-hero-content {
+    max-width: 800px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.services-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.services-hero p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    max-width: 700px;
+    margin: 0 auto;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== SERVICES INTRO ===== */
+.services-intro {
+    padding: 60px 0;
+    text-align: center;
+    background: #fff;
+    border-radius: 40px;
+    margin-bottom: 60px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+.services-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.services-intro h2 span {
+    color: #d4af37;
+}
+
+.services-intro p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+}
+
+/* ===== BACKGROUND IMAGE FOR SERVICES SECTION ===== */
+.services-section-with-bg {
+    position: relative;
+    padding: 60px 20px;
+    border-radius: 20px;
+    margin: 40px auto;
+    overflow: hidden;
+}
+
+.services-section-with-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('<%=request.getContextPath()%>/views/images/chri2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: -2;
+    filter: brightness(0.6) contrast(1.2);
+}
+
+.services-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.92) 50%,
+        rgba(249, 247, 242, 0.97) 100%);
+    z-index: -1;
+    border-radius: 20px;
+}
+
+/* ===== COMPACT SERVICES STYLING ===== */
+.section-title {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #555;
+    margin-bottom: 60px;
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    z-index: 1;
+    font-weight: 400;
+}
+
+.services-grid-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.service-card-compact {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.service-card-compact:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.98);
+}
+
+.service-card-header {
+    padding: 25px 25px 15px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 69, 19, 0.05));
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.service-icon-compact {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #d4af37, #c19b2e);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    transition: all 0.3s ease;
+}
+
+.service-card-compact:hover .service-icon-compact {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+
+.service-card-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #2c3e50;
+    margin: 0;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+.service-card-body {
+    padding: 25px;
+    flex-grow: 1;
+}
+
+.service-card-body p {
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    min-height: 70px;
+}
+
+.service-features-compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.service-features-compact span {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 8px 15px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    color: #5a4a1f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    font-weight: 500;
+}
+
+.service-features-compact i {
+    color: #d4af37;
+    font-size: 0.85rem;
+}
+
+.read-more-content {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.extra-info h4 {
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.extra-info h4:before {
+    content: '';
+    width: 5px;
+    height: 18px;
+    background: #d4af37;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.extra-info ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+.extra-info li {
+    padding: 8px 0;
+    color: #555;
+    font-size: 0.95rem;
+    position: relative;
+    padding-left: 25px;
+    line-height: 1.5;
+}
+
+.extra-info li:before {
+    content: "✓";
+    color: #d4af37;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.pricing-info {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 69, 19, 0.05));
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.pricing-info strong {
+    color: #2c3e50;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.pricing-info span {
+    color: #777;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.service-card-footer {
+    padding: 20px 25px;
+    background: rgba(249, 249, 249, 0.8);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.service-button-compact {
+    background: linear-gradient(135deg, #d4af37, #c19b2e);
+    color: #000;
+    padding: 10px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border: 2px solid #d4af37;
+    flex-grow: 1;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.service-button-compact:hover {
+    background: transparent;
+    color: #d4af37;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.read-more-btn {
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #5a4a1f;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.read-more-btn:hover {
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.1);
+    color: #d4af37;
+    transform: translateY(-2px);
+}
+
+.read-more-btn i {
+    transition: transform 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.read-more-btn.active i {
+    transform: rotate(180deg);
+}
+
+/* ===== RELIGION SPECIFIC ===== */
+.religion-services {
+    padding: 80px 0;
+    background: #f7f3e9;
+    border-radius: 40px;
+    margin-bottom: 80px;
+}
+
+.religion-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.religion-tab {
+    padding: 12px 30px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.religion-tab:hover {
+    border-color: #d4af37;
+    color: #d4af37;
+}
+
+.religion-tab.active {
+    background: #d4af37;
+    color: #000;
+    border-color: #d4af37;
+}
+
+.religion-content {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.religion-item {
+    display: none;
+}
+
+.religion-item.active {
+    display: block;
+}
+
+.religion-item h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.religion-item p {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.religion-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.feature i {
+    color: #d4af37;
+    font-size: 1.5rem;
+    margin-top: 5px;
+}
+
+.feature h4 {
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.feature p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
         
         /* ===== HERO ===== */
         .hero {
@@ -754,6 +1416,30 @@ html {
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
+            .header-wrap {
+                flex-wrap: wrap;
+                padding: 15px 20px;
+            }
+            
+            nav {
+                width: 100%;
+                margin-top: 15px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            nav a {
+                margin-left: 0;
+                margin-right: 15px;
+            }
+            
+            .join-us-btn {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+            
             .hero h2 {
                 font-size: 2.5rem;
             }
@@ -805,47 +1491,67 @@ html {
 
 <body>
     <!-- HEADER WITH BOOTSTRAP NAVBAR -->
-    <header>
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a href="<%=request.getContextPath()%>/" class="logo">
-                    <i class="fa-solid fa-hands-praying"></i>
-                    <h1>Pilgrim<span>Project</span></h1>
+    <!-- HEADER -->
+<header>
+    <div class="header-wrap">
+        <a href="<%=request.getContextPath()%>/" class="logo">
+            <i class="fa-solid fa-hands-praying"></i>
+            <h1>Pilgrim<span>Project</span></h1>
+        </a>
+        <nav>
+            <a href="<%=request.getContextPath()%>/">Home</a>
+            <a href="<%=request.getContextPath()%>/aboutus">About Us</a>
+            <a href="<%=request.getContextPath()%>/services">services</a>
+            
+            <!-- Services with Dropdown -->
+            <div class="nav-services">
+                <a href="<%=request.getContextPath()%>/services" class="active">
+                    Online Booking <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
-                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="<%=request.getContextPath()%>/">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<%=request.getContextPath()%>/aboutus">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<%=request.getContextPath()%>/services">Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<%=request.getContextPath()%>/contactus">Contact Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<%=request.getContextPath()%>/login">
-                                <i class="fa-solid fa-user"></i> Login
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-primary text-white ms-2" href="<%=request.getContextPath()%>/register" style="border-radius: 5px; padding: 5px 15px;">
-                                <i class="fa-solid fa-user-plus"></i> Register
-                            </a>
-                        </li>
-                    </ul>
+                <div class="services-dropdown">
+                    <div class="dropdown-header">
+                        <i class="fa-solid fa-list-check"></i> Our Services
+                    </div>
+                    <div class="dropdown-services">
+                        <div class="dropdown-service-item" onclick="scrollToService('sacred-journey')">
+                            <i class="fa-solid fa-plane-departure"></i>
+                            <span>Sacred Journey Planning</span>
+                        </div>
+                        <div class="dropdown-service-item" onclick="scrollToService('spiritual-guidance')">
+                            <i class="fa-solid fa-hands-praying"></i>
+                            <span>Spiritual Guidance</span>
+                        </div>
+                        <div class="dropdown-service-item" onclick="scrollToService('spiritual-resources')">
+                            <i class="fa-solid fa-book-quran"></i>
+                            <span>Spiritual Resources</span>
+                        </div>
+                        <div class="dropdown-service-item" onclick="scrollToService('blessed-offerings')">
+                            <i class="fa-solid fa-hand-holding-heart"></i>
+                            <span>Blessed Offerings</span>
+                        </div>
+                        <div class="dropdown-service-item" onclick="scrollToService('sacred-information')">
+                            <i class="fa-solid fa-landmark"></i>
+                            <span>Sacred Information</span>
+                        </div>
+                        <div class="dropdown-service-item" onclick="scrollToService('religion-specific')">
+                            <i class="fa-solid fa-hands-praying"></i>
+                            <span>Religion Specific</span>
+                        </div>
+                        <div class="dropdown-service-item" onclick="scrollToService('how-it-works')">
+                            <i class="fa-solid fa-gears"></i>
+                            <span>How It Works</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <a href="<%=request.getContextPath()%>/contactus">Contact Us</a>
+            <a href="<%=request.getContextPath()%>/customer/register/step1" class="join-us-btn">
+                <i class="fa-solid fa-user-plus"></i> Join Us
+            </a>
         </nav>
-    </header>
+    </div>
+</header>
 
     <!-- HERO SECTION -->
     <section class="hero">

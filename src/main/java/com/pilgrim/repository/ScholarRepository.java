@@ -16,6 +16,6 @@ public interface ScholarRepository extends JpaRepository<Scholar, Long> {
     List<Scholar> findByTypeAndStatus(ScholarType type, ScholarRegistrationStatus status);
     List<Scholar> findByTypeAndStatusAndIsAvailable(ScholarType type, ScholarRegistrationStatus status, Boolean isAvailable);
     List<Scholar> findBySpecializationsContaining(ScholarSpecialization specialization);
-    Scholar findByUserId(Long userId);
+    Scholar findByUser_Id(Long userId);
 }
 

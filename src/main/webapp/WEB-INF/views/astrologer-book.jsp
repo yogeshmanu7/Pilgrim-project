@@ -30,7 +30,7 @@
                                     <p class="mb-1"><strong>Price:</strong> ₹<fmt:formatNumber value="${scholar.basePrice != null ? scholar.basePrice : 0}" pattern="#,##,##0.00"/></p>
                                     <p class="mb-1"><strong>Rating:</strong> ${scholar.rating != null ? scholar.rating : 0} ⭐</p>
                                     <p class="mb-3"><strong>Reviews:</strong> ${scholar.totalReviews != null ? scholar.totalReviews : 0}</p>
-                                    <a href="${pageContext.request.contextPath}/customer/scholar/booking-details?scholarId=${scholar.id}" 
+                                    <a href="${pageContext.request.contextPath}/customer/scholar/book?scholarId=${scholar.id}" 
                                        class="btn btn-secondary w-100">Book Now</a>
                                 </div>
                             </div>

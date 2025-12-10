@@ -64,6 +64,9 @@ public class SecurityConfig {
                 // Public authentication pages
                 .requestMatchers("/register", "/login", "/otp-verify", "/save-user", "/verify-otp", "/login-user", "/logout").permitAll()
                 
+                // Scholar authentication pages
+                .requestMatchers("/scholar/login", "/scholar/register/**", "/scholar/logout").permitAll()
+                
                 // Pooja Module paths
                 .requestMatchers("/pooja/**").permitAll()
                 

@@ -69,8 +69,11 @@
         
         <!-- Services Section -->
         <div class="card astrologer-card" style="margin-bottom: 30px;">
-            <div class="card-header" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
-                <h2 class="card-title">My Astrology Services</h2>
+            <div class="card-header" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="card-title mb-0">My Astrology Services</h2>
+                <a href="${pageContext.request.contextPath}/scholar/service/list" class="btn btn-light btn-sm">
+                    <i class="fas fa-cog me-1"></i>Manage Services
+                </a>
             </div>
             <div class="card-body">
                 <h3>Specializations:</h3>
@@ -88,6 +91,10 @@
                 </div>
                 
                 <p style="margin-top: 20px;"><strong>Service Areas:</strong> ${scholar.serviceAreas != null ? scholar.serviceAreas : 'Not specified'}</p>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <p class="mb-2"><strong>💡 Tip:</strong> Add service packages to allow customers to book your services. Click "Manage Services" above to get started.</p>
+                </div>
             </div>
         </div>
         
@@ -130,6 +137,15 @@
                         <h3 style="color: #f5576c;">⭐ Reviews</h3>
                         <p>View customer reviews</p>
                         <a href="${pageContext.request.contextPath}/scholar/reviews" class="btn astrologer-btn">View Reviews</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card astrologer-card text-center">
+                    <div class="card-body">
+                        <h3 style="color: #f5576c;">📦 Services</h3>
+                        <p>Manage your service packages</p>
+                        <a href="${pageContext.request.contextPath}/scholar/service/list" class="btn astrologer-btn">Manage Services</a>
                     </div>
                 </div>
             </div>

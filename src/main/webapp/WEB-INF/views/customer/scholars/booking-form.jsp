@@ -36,7 +36,21 @@
                     
                     <div class="mb-3">
                         <label class="form-label">Service Location</label>
+                        <c:choose>
+                            <c:when test="${not empty availableLocations && availableLocations.size() > 0}">
+                                <select name="serviceLocation" class="form-select">
+                                    <option value="">-- Select Location --</option>
+                                    <c:forEach var="location" items="${availableLocations}">
+                                        <option value="${location}">${location}</option>
+                                    </c:forEach>
+                                </select>
+                                <small class="text-muted">Select from available service locations</small>
+                            </c:when>
+                            <c:otherwise>
                         <input type="text" name="serviceLocation" placeholder="Enter service location" class="form-control">
+                                <small class="text-muted">No predefined locations available. Please enter manually.</small>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     
                     <div class="mb-3">
@@ -44,14 +58,7 @@
                         <textarea name="serviceDescription" rows="5" required placeholder="Describe your service requirements" class="form-control"></textarea>
                     </div>
                     
-                    <div class="card bg-light mb-3">
-                        <div class="card-body">
-                            <p class="mb-1"><strong>Scholar:</strong> ${scholar.user.name}</p>
-                            <p class="mb-0"><strong>Base Price:</strong> ₹<fmt:formatNumber value="${scholar.basePrice}" pattern="#,##,##0.00"/></p>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary w-100">Book Now</button>
+                    <button type="submit" class="btn btn-primary w-100">Next</button>
                 </form>
             </div>
         </div>
