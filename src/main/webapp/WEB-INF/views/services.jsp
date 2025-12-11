@@ -1525,10 +1525,10 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="service-card-footer" style="flex-direction: column; gap: 10px;">
                 <div style="display: flex; gap: 10px; width: 100%;">
-                    <a href="<%=request.getContextPath()%>/pooja/customer/register" class="service-button-compact" style="flex: 1; text-align: center;">
+                    <a href="<%=request.getContextPath()%>/register" class="service-button-compact" style="flex: 1; text-align: center;">
                         <i class="fa-solid fa-user-plus"></i> Customer Register
                     </a>
-                    <a href="<%=request.getContextPath()%>/pooja/customer/login" class="read-more-btn" style="flex: 1; text-align: center; text-decoration: none;">
+                    <a href="<%=request.getContextPath()%>/login" class="read-more-btn" style="flex: 1; text-align: center; text-decoration: none;">
                         <i class="fa-solid fa-sign-in-alt"></i> Customer Login
                     </a>
                 </div>

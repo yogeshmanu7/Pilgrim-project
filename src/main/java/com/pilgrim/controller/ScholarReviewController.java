@@ -48,7 +48,7 @@ public class ScholarReviewController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         ScholarBooking booking = bookingService.findById(bookingId).orElse(null);

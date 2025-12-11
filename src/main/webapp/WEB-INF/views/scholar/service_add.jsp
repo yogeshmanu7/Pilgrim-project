@@ -8,51 +8,94 @@
     
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --dutch-white: #EFDFBB;
+            --wine: #722F37;
+            --wine-dark: #5A242B;
+            --wine-light: rgba(114, 47, 55, 0.8);
+            --wine-transparent: rgba(114, 47, 55, 0.1);
+            --text-wine: #722F37;
+            --text-cream: #EFDFBB;
+            --border-wine: #722F37;
+            --shadow-wine: 0 10px 30px rgba(114, 47, 55, 0.2);
+        }
+        
         body {
-            background: #f4f7fc;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: var(--dutch-white);
             padding: 20px;
+            position: relative;
+        }
+        
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, 
+                    transparent, 
+                    transparent 20px, 
+                    rgba(114, 47, 55, 0.02) 20px, 
+                    rgba(114, 47, 55, 0.02) 40px);
+            z-index: 0;
         }
         
         .form-container {
             max-width: 700px;
             margin: 0 auto;
-            background: #fff;
+            background: white;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-wine);
+            border: 2px solid var(--border-wine);
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: var(--text-wine);
         }
         
         .form-title {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 25px;
-            color: #333;
+            color: var(--text-wine);
             text-align: center;
         }
         
         .form-label {
             font-weight: 600;
-            color: #333;
+            color: var(--text-wine);
             margin-bottom: 8px;
         }
         
         .form-control {
             border-radius: 6px;
-            border: 1px solid #ddd;
+            border: 2px solid var(--border-wine);
             padding: 10px 15px;
+            color: var(--text-wine);
         }
         
         .form-control:focus {
-            border-color: #ff7f27;
-            box-shadow: 0 0 0 0.2rem rgba(255, 127, 39, 0.25);
+            border-color: var(--wine);
+            box-shadow: 0 0 0 3px var(--wine-transparent);
+            color: var(--text-wine);
         }
         
         .btn-submit {
-            background: #ff7f27;
-            color: white;
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+            color: var(--text-cream);
             border: none;
             padding: 12px 30px;
             border-radius: 6px;
@@ -60,37 +103,101 @@
             font-weight: 600;
             width: 100%;
             margin-top: 10px;
+            transition: all 0.3s ease;
         }
         
         .btn-submit:hover {
-            background: #e86e20;
-            color: white;
+            background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine) 100%);
+            color: var(--text-cream);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-wine);
         }
         
         .btn-back {
-            background: #6c757d;
-            color: white;
+            background: var(--wine);
+            color: var(--text-cream);
             border: none;
             padding: 10px 20px;
             border-radius: 6px;
             text-decoration: none;
             display: inline-block;
             margin-top: 15px;
+            transition: all 0.3s ease;
         }
         
         .btn-back:hover {
-            background: #5a6268;
-            color: white;
+            background: var(--wine-dark);
+            color: var(--text-cream);
+            text-decoration: none;
+            transform: translateY(-1px);
         }
         
         .alert {
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
+            border: 2px solid;
+        }
+        
+        .alert-success {
+            background: rgba(25, 135, 84, 0.1);
+            border-color: #198754;
+            color: #0f5132;
+        }
+        
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.1);
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .text-muted {
+            color: var(--wine-light) !important;
+        }
+        
+        select.form-control {
+            background: white;
+            color: var(--text-wine);
+        }
+        
+        optgroup {
+            color: var(--text-wine);
+        }
+        
+        .location-tag {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+            color: var(--text-cream);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 2px;
+        }
+        
+        .location-tag .remove-btn {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1;
+        }
+        
+        .location-tag .remove-btn:hover {
+            color: var(--dutch-white);
+            opacity: 0.8;
+        }
+        
+        #selectedLocationsDisplay {
+            background: rgba(114, 47, 55, 0.05);
+            border: 2px solid var(--border-wine);
         }
     </style>
 </head>
 <body>
+
+<!-- Background Pattern -->
+<div class="bg-pattern"></div>
 
 <div class="form-container">
     
@@ -153,8 +260,8 @@
             <label class="form-label">Service Locations *</label>
             
             <!-- Selected Locations Display (Text Field with Tags) -->
-            <div class="form-control" id="selectedLocationsDisplay" style="min-height: 50px; padding: 8px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; background: #f8f9fa; border: 1px solid #ddd; border-radius: 6px;">
-                <span class="text-muted" id="noLocationsText" style="color: #999;">No locations selected. Select from dropdown below.</span>
+            <div class="form-control" id="selectedLocationsDisplay" style="min-height: 50px; padding: 8px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; border: 2px solid var(--border-wine); border-radius: 6px;">
+                <span class="text-muted" id="noLocationsText" style="color: var(--wine-light);">No locations selected. Select from dropdown below.</span>
             </div>
             
             <!-- Hidden input to store selected locations for form submission -->
@@ -262,95 +369,6 @@
             <small class="text-muted">Select locations from the dropdown above. Selected locations will appear as tags above.</small>
         </div>
         
-        <style>
-            .location-tag {
-                display: inline-flex;
-                align-items: center;
-                background: #667eea;
-                color: white;
-                padding: 5px 12px;
-                border-radius: 20px;
-                font-size: 14px;
-                margin: 2px;
-            }
-            .location-tag .remove-btn {
-                margin-left: 8px;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 16px;
-                line-height: 1;
-            }
-            .location-tag .remove-btn:hover {
-                color: #ffcccc;
-            }
-        </style>
-        
-        <script>
-            let selectedLocations = [];
-            
-            document.getElementById('locationsSelect').addEventListener('change', function() {
-                const selectedValue = this.value;
-                if (selectedValue && !selectedLocations.includes(selectedValue)) {
-                    selectedLocations.push(selectedValue);
-                    updateLocationsDisplay();
-                    updateHiddenInput();
-                }
-                // Reset dropdown
-                this.value = '';
-            });
-            
-            function removeLocation(location) {
-                selectedLocations = selectedLocations.filter(loc => loc !== location);
-                updateLocationsDisplay();
-                updateHiddenInput();
-            }
-            
-            function updateLocationsDisplay() {
-                const displayDiv = document.getElementById('selectedLocationsDisplay');
-                const noLocationsText = document.getElementById('noLocationsText');
-                
-                displayDiv.innerHTML = '';
-                
-                if (selectedLocations.length === 0) {
-                    const noText = document.createElement('span');
-                    noText.className = 'text-muted';
-                    noText.id = 'noLocationsText';
-                    noText.style.color = '#999';
-                    noText.textContent = 'No locations selected. Select from dropdown below.';
-                    displayDiv.appendChild(noText);
-                } else {
-                    selectedLocations.forEach(location => {
-                        const tag = document.createElement('span');
-                        tag.className = 'location-tag';
-                        tag.innerHTML = location + '<span class="remove-btn" onclick="removeLocation(\'' + location.replace(/'/g, "\\'") + '\')">×</span>';
-                        displayDiv.appendChild(tag);
-                    });
-                }
-            }
-            
-            function updateHiddenInput() {
-                // Remove all existing location inputs except the main hidden input
-                const existingInputs = document.querySelectorAll('input[name="locations"]');
-                existingInputs.forEach(input => {
-                    if (input.id !== 'locationsHiddenInput') {
-                        input.remove();
-                    }
-                });
-                
-                // Create hidden inputs for each selected location
-                selectedLocations.forEach(location => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'locations';
-                    input.value = location;
-                    document.getElementById('locationsHiddenInput').parentNode.appendChild(input);
-                });
-            }
-            
-            // Initialize display
-            updateLocationsDisplay();
-        </script>
-        
         <!-- Hidden fields for form submission -->
         <input type="hidden" name="name" id="hiddenNameInput">
         <input type="hidden" name="priceWithItems" id="hiddenPriceWithInput">
@@ -364,6 +382,72 @@
     <a href="${pageContext.request.contextPath}/scholar/dashboard" class="btn-back" style="margin-left: 10px;">🏠 Dashboard</a>
     
 </div>
+
+<script>
+    let selectedLocations = [];
+    
+    document.getElementById('locationsSelect').addEventListener('change', function() {
+        const selectedValue = this.value;
+        if (selectedValue && !selectedLocations.includes(selectedValue)) {
+            selectedLocations.push(selectedValue);
+            updateLocationsDisplay();
+            updateHiddenInput();
+        }
+        // Reset dropdown
+        this.value = '';
+    });
+    
+    function removeLocation(location) {
+        selectedLocations = selectedLocations.filter(loc => loc !== location);
+        updateLocationsDisplay();
+        updateHiddenInput();
+    }
+    
+    function updateLocationsDisplay() {
+        const displayDiv = document.getElementById('selectedLocationsDisplay');
+        const noLocationsText = document.getElementById('noLocationsText');
+        
+        displayDiv.innerHTML = '';
+        
+        if (selectedLocations.length === 0) {
+            const noText = document.createElement('span');
+            noText.className = 'text-muted';
+            noText.id = 'noLocationsText';
+            noText.style.color = 'var(--wine-light)';
+            noText.textContent = 'No locations selected. Select from dropdown below.';
+            displayDiv.appendChild(noText);
+        } else {
+            selectedLocations.forEach(location => {
+                const tag = document.createElement('span');
+                tag.className = 'location-tag';
+                tag.innerHTML = location + '<span class="remove-btn" onclick="removeLocation(\'' + location.replace(/'/g, "\\'") + '\')">×</span>';
+                displayDiv.appendChild(tag);
+            });
+        }
+    }
+    
+    function updateHiddenInput() {
+        // Remove all existing location inputs except the main hidden input
+        const existingInputs = document.querySelectorAll('input[name="locations"]');
+        existingInputs.forEach(input => {
+            if (input.id !== 'locationsHiddenInput') {
+                input.remove();
+            }
+        });
+        
+        // Create hidden inputs for each selected location
+        selectedLocations.forEach(location => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'locations';
+            input.value = location;
+            document.getElementById('locationsHiddenInput').parentNode.appendChild(input);
+        });
+    }
+    
+    // Initialize display
+    updateLocationsDisplay();
+</script>
 
 <script>
     // Package templates with name, description, and price

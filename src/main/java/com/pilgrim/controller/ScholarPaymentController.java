@@ -54,7 +54,7 @@ public class ScholarPaymentController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         ScholarBooking booking = bookingService.findById(bookingId).orElse(null);
@@ -154,7 +154,7 @@ public class ScholarPaymentController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         // Get payments for user's bookings

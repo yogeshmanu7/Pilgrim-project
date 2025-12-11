@@ -95,12 +95,6 @@ public class AuthController {
         return "redirect:/otp-verify";
     }
 
-    // ===== LOGIN PAGE =====
-    @GetMapping("/login")
-    public String login() {
-        return "user-login";
-    }
-
     // ===== LOGIN USER =====
     @PostMapping("/login-user")
     public String loginUser(@RequestParam String email,
@@ -113,8 +107,11 @@ public class AuthController {
             if (user != null) {
                 session.setAttribute("user", user);
                 session.setAttribute("userSession", user);
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("userName", user.getName());
+                session.setAttribute("userEmail", user.getEmail());
                 redirectAttributes.addFlashAttribute("message", "Login successful!");
-                return "redirect:/home";
+                return "redirect:/customer/scholar/dashboard";
             }
 
             redirectAttributes.addFlashAttribute("error", "Invalid credentials!");
@@ -123,6 +120,15 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/login";
         }
+    }
+    
+    // ===== LOGIN PAGE (GET) - Check if already logged in =====
+    @GetMapping("/login")
+    public String login(HttpSession session) {
+        if (session.getAttribute("userSession") != null) {
+            return "redirect:/customer/scholar/dashboard";
+        }
+        return "user-login";
     }
 
     // ===== LOGOUT =====

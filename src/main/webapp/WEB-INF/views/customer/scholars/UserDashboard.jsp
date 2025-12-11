@@ -167,6 +167,33 @@
             font-size: 0.95rem;
             margin-bottom: 0;
         }
+        
+        .btn-logout-header {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-logout-header:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-logout-header i {
+            font-size: 0.9rem;
+        }
 
         .btn-gold {
             background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
@@ -1099,7 +1126,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="${pageContext.request.contextPath}/customer/logout" class="logout">
+                        <a href="${pageContext.request.contextPath}/logout" class="logout">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>Logout</span>
                         </a>
@@ -1113,9 +1140,14 @@
                 <div class="welcome-banner">
                     <div class="content">
                         <div class="row align-items-center">
-                            <div class="col-lg-12">
+                            <div class="col-lg-10">
                                 <h2>Welcome back, ${not empty user ? user.name : 'Guest'}! 👋</h2>
                                 <p>Discover experienced spiritual scholars and book your religious ceremonies. Your path to divine blessings starts here.</p>
+                            </div>
+                            <div class="col-lg-2 text-end">
+                                <a href="${pageContext.request.contextPath}/logout" class="btn-logout-header">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
                             </div>
                         </div>
                     </div>

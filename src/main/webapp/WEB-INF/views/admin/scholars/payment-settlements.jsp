@@ -5,6 +5,101 @@
 <c:set var="currentPage" value="scholar_payments" scope="request"/>
 <%@ include file="../common/header.jsp" %>
 
+<style>
+    :root {
+        --dutch-white: #EFDFBB;
+        --wine: #722F37;
+        --wine-dark: #5A242B;
+        --wine-light: rgba(114, 47, 55, 0.8);
+        --wine-transparent: rgba(114, 47, 55, 0.1);
+        --text-wine: #722F37;
+        --text-cream: #EFDFBB;
+        --border-wine: #722F37;
+        --shadow-wine: 0 10px 30px rgba(114, 47, 55, 0.2);
+    }
+    
+    /* Background Pattern */
+    .bg-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 90% 80%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+            repeating-linear-gradient(45deg, 
+                transparent, 
+                transparent 20px, 
+                rgba(114, 47, 55, 0.02) 20px, 
+                rgba(114, 47, 55, 0.02) 40px);
+        z-index: 0;
+    }
+    
+    body {
+        position: relative;
+    }
+    
+    body > *:not(.bg-pattern) {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card {
+        border: 2px solid var(--border-wine);
+        border-radius: 12px;
+        box-shadow: var(--shadow-wine);
+        background: white;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%) !important;
+        color: var(--text-cream) !important;
+        border-bottom: 2px solid var(--border-wine);
+    }
+    
+    .card-title {
+        color: var(--text-cream) !important;
+    }
+    
+    .text-purple {
+        color: var(--text-cream) !important;
+    }
+    
+    .text-primary {
+        color: var(--text-wine) !important;
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+        border: none;
+        color: var(--text-cream);
+        font-weight: 600;
+        border-radius: 8px;
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine) 100%);
+        color: var(--text-cream);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-wine);
+    }
+    
+    .alert-info {
+        background: rgba(114, 47, 55, 0.05);
+        border: 2px solid var(--border-wine);
+        color: var(--text-wine);
+        border-radius: 8px;
+    }
+    
+    .alert-info i {
+        color: var(--text-wine);
+    }
+</style>
+
+<!-- Background Pattern -->
+<div class="bg-pattern"></div>
+
 <div class="container-fluid mt-4">
     <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -52,4 +147,3 @@
 </div>
 
 <%@ include file="../common/footer.jsp" %>
-

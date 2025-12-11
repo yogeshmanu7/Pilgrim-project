@@ -5,6 +5,227 @@
 <c:set var="currentPage" value="scholars" scope="request"/>
 <%@ include file="../common/header.jsp" %>
 
+<style>
+    :root {
+        --dutch-white: #EFDFBB;
+        --wine: #722F37;
+        --wine-dark: #5A242B;
+        --wine-light: rgba(114, 47, 55, 0.8);
+        --wine-transparent: rgba(114, 47, 55, 0.1);
+        --text-wine: #722F37;
+        --text-cream: #EFDFBB;
+        --border-wine: #722F37;
+        --shadow-wine: 0 10px 30px rgba(114, 47, 55, 0.2);
+    }
+    
+    /* Background Pattern */
+    .bg-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 90% 80%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+            repeating-linear-gradient(45deg, 
+                transparent, 
+                transparent 20px, 
+                rgba(114, 47, 55, 0.02) 20px, 
+                rgba(114, 47, 55, 0.02) 40px);
+        z-index: 0;
+    }
+    
+    body {
+        position: relative;
+    }
+    
+    body > *:not(.bg-pattern) {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card {
+        border: 2px solid var(--border-wine);
+        border-radius: 12px;
+        box-shadow: var(--shadow-wine);
+        background: white;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%) !important;
+        color: var(--text-cream) !important;
+        border-bottom: 2px solid var(--border-wine);
+    }
+    
+    .card-title {
+        color: var(--text-cream) !important;
+    }
+    
+    .text-teal {
+        color: var(--text-cream) !important;
+    }
+    
+    .table {
+        border: 2px solid var(--border-wine);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(114, 47, 55, 0.1);
+    }
+    
+    thead {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%) !important;
+        color: var(--text-cream) !important;
+    }
+    
+    /* Button Styling */
+    .btn-outline-primary, .btn-outline-success, .btn-outline-warning, .btn-outline-info {
+        border: 2px solid var(--border-wine);
+        color: var(--text-wine);
+        border-radius: 6px;
+    }
+    
+    .btn-outline-primary:hover, .btn-outline-success:hover, .btn-outline-warning:hover, .btn-outline-info:hover {
+        background: var(--wine);
+        color: var(--text-cream);
+        border-color: var(--wine);
+    }
+    
+    .btn-info {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+        border: none;
+        color: var(--text-cream);
+        border-radius: 6px;
+    }
+    
+    .btn-info:hover {
+        background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine) 100%);
+        color: var(--text-cream);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(114, 47, 55, 0.3);
+    }
+    
+    .btn-primary {
+        background: var(--wine);
+        border: none;
+        color: var(--text-cream);
+        border-radius: 6px;
+    }
+    
+    .btn-primary:hover {
+        background: var(--wine-dark);
+        color: var(--text-cream);
+    }
+    
+    .btn-success {
+        background: #198754;
+        border: none;
+        color: white;
+        border-radius: 6px;
+    }
+    
+    .btn-success:hover {
+        background: #157347;
+        color: white;
+    }
+    
+    .btn-warning {
+        background: #ffc107;
+        border: none;
+        color: #212529;
+        border-radius: 6px;
+    }
+    
+    .btn-warning:hover {
+        background: #ffca2c;
+        color: #212529;
+    }
+    
+    .btn-danger {
+        background: #dc3545;
+        border: none;
+        color: white;
+        border-radius: 6px;
+    }
+    
+    .btn-danger:hover {
+        background: #bb2d3b;
+        color: white;
+    }
+    
+    /* Badge Styling */
+    .badge.bg-info, .badge.bg-purple {
+        background: var(--wine) !important;
+        color: var(--text-cream);
+    }
+    
+    .badge.bg-approved {
+        background: #198754 !important;
+        color: white;
+    }
+    
+    .badge.bg-rejected {
+        background: #dc3545 !important;
+        color: white;
+    }
+    
+    .badge.bg-pending {
+        background: #ffc107 !important;
+        color: #212529;
+    }
+    
+    .text-muted {
+        color: var(--wine-light) !important;
+    }
+    
+    .bg-secondary {
+        background: var(--wine) !important;
+    }
+    
+    .text-warning {
+        color: #ffc107 !important;
+    }
+    
+    /* Modal Styling */
+    .modal-content {
+        border: 2px solid var(--border-wine);
+        border-radius: 12px;
+        box-shadow: var(--shadow-wine);
+    }
+    
+    .modal-header {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+        color: var(--text-cream);
+        border-bottom: 2px solid var(--border-wine);
+    }
+    
+    .modal-title {
+        color: var(--text-cream) !important;
+    }
+    
+    .form-control {
+        border: 2px solid var(--border-wine);
+        border-radius: 6px;
+        color: var(--text-wine);
+    }
+    
+    .form-control:focus {
+        border-color: var(--wine);
+        box-shadow: 0 0 0 3px var(--wine-transparent);
+        color: var(--text-wine);
+    }
+    
+    h2 {
+        color: var(--text-wine);
+    }
+</style>
+
+<!-- Background Pattern -->
+<div class="bg-pattern"></div>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0"><i class="fas fa-user-graduate me-2 text-teal"></i>Scholars & Astrologers</h2>
     <div>
@@ -53,11 +274,11 @@
                                 <c:if test="${not empty scholar.profilePhotoPath}">
                                     <img src="${pageContext.request.contextPath}/uploads/${scholar.profilePhotoPath}" 
                                          alt="${scholar.user.name}" 
-                                         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                                         style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-wine);">
                                 </c:if>
                                 <c:if test="${empty scholar.profilePhotoPath}">
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center" 
-                                         style="width: 40px; height: 40px;">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                         style="width: 40px; height: 40px; background: var(--wine);">
                                         <i class="fas fa-user text-white"></i>
                                     </div>
                                 </c:if>
@@ -158,4 +379,3 @@
 </div>
 
 <%@ include file="../common/footer.jsp" %>
-

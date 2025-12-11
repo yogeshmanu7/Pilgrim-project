@@ -10,20 +10,11 @@
         <div class="alert alert-error">${error}</div>
     </c:if>
     
-    <form action="${pageContext.request.contextPath}/pooja/customer/login" method="post">
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email" required>
-        </div>
-        
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" required>
-        </div>
-        
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
-        <a href="${pageContext.request.contextPath}/pooja/customer/register" class="btn" style="width: 100%; text-align: center; display: block; margin-top: 1rem;">New Customer? Register</a>
-    </form>
+    <div style="text-align: center; padding: 2rem;">
+        <p>Please use the main login page to access pooja services.</p>
+        <a href="${pageContext.request.contextPath}/login" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Go to Login</a>
+        <a href="${pageContext.request.contextPath}/register" class="btn" style="width: 100%; text-align: center; display: block; margin-top: 1rem;">New Customer? Register</a>
+    </div>
 </div>
 
 <%@ include file="../common/footer.jsp" %>
