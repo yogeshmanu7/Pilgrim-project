@@ -86,7 +86,7 @@
               
                <div class="text-center">
                    <p class="mb-2 text-muted">Not an admin?</p>
-                   <a href="${pageContext.request.contextPath}/customer/login" class="btn btn-outline-primary btn-sm me-2">
+                   <a href="${pageContext.request.contextPath}/login" class="btn btn-outline-primary btn-sm me-2">
                        <i class="fas fa-user me-1"></i>Customer Login
                    </a>
                    <a href="${pageContext.request.contextPath}/scholar/login" class="btn btn-outline-secondary btn-sm">

@@ -18,8 +18,8 @@
         <div class="card">
             <h3>Customer Portal</h3>
             <p>Browse and purchase pooja items</p>
-            <a href="${pageContext.request.contextPath}/pooja/customer/register" class="btn btn-primary">Customer Registration</a>
-            <a href="${pageContext.request.contextPath}/pooja/customer/login" class="btn" style="margin-top: 0.5rem;">Customer Login</a>
+            <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Register</a>
+            <a href="${pageContext.request.contextPath}/login" class="btn" style="margin-top: 0.5rem;">Login</a>
         </div>
         
         <div class="card">

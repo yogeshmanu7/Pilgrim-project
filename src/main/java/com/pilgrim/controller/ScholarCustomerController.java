@@ -49,7 +49,7 @@ public class ScholarCustomerController {
     public String showBookingDetails(@RequestParam Long scholarId, HttpSession session, Model model) {
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         Scholar scholar = scholarService.findById(scholarId).orElse(null);
@@ -163,7 +163,7 @@ public class ScholarCustomerController {
     public String dashboard(HttpSession session, Model model) {
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         List<ScholarBooking> bookings = bookingService.findByCustomer(user);
@@ -190,7 +190,7 @@ public class ScholarCustomerController {
     public String showBookingForm(@RequestParam Long scholarId, HttpSession session, Model model) {
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         Scholar scholar = scholarService.findById(scholarId).orElse(null);
@@ -230,7 +230,7 @@ public class ScholarCustomerController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         Scholar scholar = scholarService.findById(scholarId).orElse(null);
@@ -256,7 +256,7 @@ public class ScholarCustomerController {
             HttpSession session, Model model) {
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         Scholar scholar = scholarService.findById(scholarId).orElse(null);
@@ -306,7 +306,7 @@ public class ScholarCustomerController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         Scholar scholar = scholarService.findById(scholarId).orElse(null);
@@ -346,7 +346,7 @@ public class ScholarCustomerController {
     public String videoCall(@RequestParam Long bookingId, HttpSession session, Model model) {
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         ScholarBooking booking = bookingService.findById(bookingId).orElse(null);
@@ -380,7 +380,7 @@ public class ScholarCustomerController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         ScholarBooking booking = bookingService.findById(bookingId).orElse(null);
@@ -400,7 +400,7 @@ public class ScholarCustomerController {
         
         User user = (User) session.getAttribute("userSession");
         if (user == null) {
-            return "redirect:/customer/login";
+            return "redirect:/login";
         }
         
         ScholarBooking booking = bookingService.findById(bookingId).orElse(null);

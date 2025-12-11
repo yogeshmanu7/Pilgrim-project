@@ -60,5 +60,13 @@ public class PoojaCustomerService {
         customer.setPassword(PasswordUtil.encode(newPassword));
         return customerRepository.save(customer);
     }
+    
+    public Optional<PoojaCustomer> getCustomerByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
+    
+    public PoojaCustomer saveCustomer(PoojaCustomer customer) {
+        return customerRepository.save(customer);
+    }
 }
 

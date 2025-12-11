@@ -264,7 +264,15 @@ public class AccommodationPropertyController {
 	}
 	
 	@GetMapping("/listing/step5")
-	public String step5Photos() {
+	public String step5Photos(HttpSession session) {
+		Long userId = (Long) session.getAttribute("accommodationUserId");
+		if (userId == null) {
+			return "redirect:/accommodation/signin";
+		}
+		Long propertyId = (Long) session.getAttribute("currentPropertyId");
+		if (propertyId == null) {
+			return "redirect:/accommodation/property/type-selection";
+		}
 		return "accommodation/listing-step5-photos";
 	}
 	

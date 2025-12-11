@@ -1546,7 +1546,7 @@ html {
             </div>
             
             <a href="<%=request.getContextPath()%>/contactus">Contact Us</a>
-            <a href="<%=request.getContextPath()%>/customer/register/step1" class="join-us-btn">
+            <a href="<%=request.getContextPath()%>/register" class="join-us-btn">
                 <i class="fa-solid fa-user-plus"></i> Join Us
             </a>
         </nav>

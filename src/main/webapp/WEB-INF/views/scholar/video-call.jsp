@@ -9,11 +9,127 @@
     <title>Video Call - GlobalPiligrim</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dutch-white: #EFDFBB;
+            --wine: #722F37;
+            --wine-dark: #5A242B;
+            --wine-light: rgba(114, 47, 55, 0.8);
+            --wine-transparent: rgba(114, 47, 55, 0.1);
+            --text-wine: #722F37;
+            --text-cream: #EFDFBB;
+            --border-wine: #722F37;
+            --shadow-wine: 0 10px 30px rgba(114, 47, 55, 0.2);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dutch-white);
+            padding: 20px 0;
+            position: relative;
+        }
+        
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, 
+                    transparent, 
+                    transparent 20px, 
+                    rgba(114, 47, 55, 0.02) 20px, 
+                    rgba(114, 47, 55, 0.02) 40px);
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: var(--text-wine);
+        }
+        
+        .card {
+            border: 2px solid var(--border-wine);
+            border-radius: 12px;
+            box-shadow: var(--shadow-wine);
+        }
+        
+        .bg-primary {
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%) !important;
+            color: var(--text-cream) !important;
+        }
+        
+        .card-title {
+            color: var(--text-cream) !important;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+            border: none;
+            color: var(--text-cream);
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine) 100%);
+            color: var(--text-cream);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-wine);
+        }
+        
+        .btn-secondary {
+            background: var(--wine);
+            border: none;
+            color: var(--text-cream);
+            border-radius: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--wine-dark);
+            color: var(--text-cream);
+        }
+        
+        .btn-outline-secondary {
+            border: 2px solid var(--border-wine);
+            color: var(--text-wine);
+            border-radius: 8px;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: var(--wine);
+            color: var(--text-cream);
+            border-color: var(--wine);
+        }
+        
+        .bg-light {
+            background: rgba(114, 47, 55, 0.05) !important;
+            border: 2px solid var(--wine-transparent);
+        }
+        
+        .text-success {
+            color: var(--wine) !important;
+        }
+    </style>
 </head>
 <body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+    
     <div class="container mt-5">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-primary">
                 <h2 class="card-title mb-0">Video Call</h2>
             </div>
             <div class="card-body text-center p-5">
@@ -76,4 +192,3 @@
     </script>
 </body>
 </html>
-

@@ -14,7 +14,7 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #EFDFBB; /* Dutch White */
             padding: 40px 20px;
         }
         .container {
@@ -26,32 +26,42 @@
             margin-bottom: 30px;
         }
         .step-indicator {
-            color: #667eea;
+            color: #722F37; /* Wine */
             font-weight: bold;
             margin-bottom: 10px;
         }
         .form-container {
-            background: white;
+            background: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity */
         }
         .upload-area {
-            border: 3px dashed #667eea;
+            border: 3px dashed #722F37; /* Wine */
             border-radius: 15px;
             padding: 60px;
             text-align: center;
             margin-bottom: 30px;
             cursor: pointer;
             transition: all 0.3s;
+            background: rgba(239, 223, 187, 0.5); /* Dutch White with opacity */
         }
         .upload-area:hover {
-            background: #f0f4ff;
+            background: rgba(114, 47, 55, 0.05); /* Wine with opacity */
         }
         .upload-area i {
             font-size: 4rem;
-            color: #667eea;
+            color: #722F37; /* Wine */
             margin-bottom: 20px;
+        }
+        .upload-area h3 {
+            color: #722F37; /* Wine */
+            margin-bottom: 10px;
+        }
+        .upload-area p {
+            color: #722F37; /* Wine */
+            opacity: 0.8;
         }
         .photo-categories {
             display: grid;
@@ -61,17 +71,33 @@
         }
         .category-item {
             padding: 20px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #722F37; /* Wine */
             border-radius: 8px;
             text-align: center;
+            background: #EFDFBB; /* Dutch White */
+            transition: all 0.3s ease;
+        }
+        .category-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity */
         }
         .category-item label {
             display: block;
             margin-bottom: 10px;
             font-weight: 500;
+            color: #722F37; /* Wine */
+        }
+        .category-item label i {
+            color: #722F37; /* Wine */
+            margin-right: 8px;
         }
         .category-item input[type="file"] {
             width: 100%;
+            padding: 8px;
+            border: 1px solid #722F37; /* Wine */
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
         }
         .preview-grid {
             display: grid;
@@ -83,6 +109,7 @@
             position: relative;
             border-radius: 8px;
             overflow: hidden;
+            border: 2px solid #722F37; /* Wine */
         }
         .preview-item img {
             width: 100%;
@@ -93,13 +120,19 @@
             position: absolute;
             top: 5px;
             right: 5px;
-            background: red;
-            color: white;
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
             border: none;
             border-radius: 50%;
             width: 25px;
             height: 25px;
             cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .preview-item .remove:hover {
+            background: #5a2530; /* Darker Wine */
+            transform: scale(1.1);
         }
         .btn-group {
             display: flex;
@@ -112,23 +145,112 @@
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
+        }
+        .btn-primary:hover {
+            background: #5a2530; /* Darker Wine */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity */
         }
         .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+            background: #EFDFBB; /* Dutch White */
+            color: #722F37; /* Wine */
+            border: 2px solid #722F37; /* Wine */
+        }
+        .btn-secondary:hover {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity */
+        }
+        
+        /* Progress Indicator */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        .step {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
+            color: #722F37; /* Wine */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            transform: scale(1.1);
+        }
+        .step.completed {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+        }
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: #722F37; /* Wine */
+            opacity: 0.3;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        /* Minimum photo requirement note */
+        .min-requirement {
+            color: #722F37; /* Wine */
+            margin-top: 10px;
+            font-style: italic;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="step-line"></div>
+            <div class="progress-steps">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step completed">4</div>
+                <div class="step active">5</div>
+                <div class="step">6</div>
+                <div class="step">7</div>
+                <div class="step">8</div>
+            </div>
+        </div>
+        
         <div class="step-header">
             <div class="step-indicator">📸 STEP 5/8 — ADD PHOTOS</div>
             <h1><i class="fas fa-camera"></i> Add Photos</h1>
-            <p style="color: #666; margin-top: 10px;">Minimum required: 3 photos</p>
+            <p class="min-requirement">Minimum required: 3 photos</p>
         </div>
         
         <form method="post" action="/pilgrim/accommodation/property/listing/step5" enctype="multipart/form-data" class="form-container">
@@ -174,8 +296,12 @@
             <div class="preview-grid" id="previewGrid"></div>
             
             <div class="btn-group">
-                <a href="/pilgrim/accommodation/property/listing/step4" class="btn btn-secondary">Back</a>
-                <button type="submit" class="btn btn-primary">Next Step <i class="fas fa-arrow-right"></i></button>
+                <a href="/pilgrim/accommodation/property/listing/step4" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Next Step <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </form>
     </div>
@@ -206,4 +332,3 @@
     </script>
 </body>
 </html>
-

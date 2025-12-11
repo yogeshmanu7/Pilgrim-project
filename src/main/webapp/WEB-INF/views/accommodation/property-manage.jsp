@@ -16,19 +16,23 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #EFDFBB; /* Dutch White - CHANGED */
         }
         .header {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             padding: 20px 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid #722F37; /* Wine - CHANGED */
         }
         .header h1 {
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .nav-links {
             display: flex;
@@ -36,20 +40,31 @@
             align-items: center;
         }
         .nav-links a {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.3s ease;
         }
         .nav-links a:hover {
-            color: #667eea;
+            color: #5a2530; /* Darker Wine - CHANGED */
         }
         .btn-signin {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .btn-signin:hover {
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .container {
             max-width: 1200px;
@@ -64,11 +79,14 @@
         }
         .page-title {
             font-size: 2rem;
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 12px 24px;
             border-radius: 8px;
             text-decoration: none;
@@ -76,9 +94,13 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-primary:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
         }
         .properties-grid {
             display: grid;
@@ -86,24 +108,25 @@
             gap: 25px;
         }
         .property-card {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .property-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .property-image {
             width: 100%;
             height: 200px;
-            background: #e0e0e0;
+            background: rgba(114, 47, 55, 0.05); /* Wine with low opacity - CHANGED */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
+            color: #722F37; /* Wine - CHANGED */
             position: relative;
         }
         .property-image img {
@@ -119,30 +142,31 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 500;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .status-badge.DRAFT {
-            background: #e0e0e0;
-            color: #666;
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
         }
         .status-badge.PENDING_REVIEW {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
         }
         .status-badge.APPROVED {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
         }
         .status-badge.ACTIVE {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: rgba(114, 47, 55, 0.4); /* Wine with opacity - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
         }
         .status-badge.REJECTED {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(114, 47, 55, 0.6); /* Wine with more opacity - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
         }
         .status-badge.ON_HOLD {
-            background: #ffeaa7;
-            color: #d63031;
+            background: rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
         }
         .property-content {
             padding: 20px;
@@ -150,28 +174,36 @@
         .property-title {
             font-size: 1.2rem;
             font-weight: 600;
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 10px;
         }
         .property-location {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 0.9rem;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            opacity: 0.8;
+        }
+        .property-location i {
+            color: #722F37; /* Wine - CHANGED */
         }
         .property-info {
             display: flex;
             gap: 15px;
             margin-bottom: 15px;
             font-size: 0.85rem;
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
+            opacity: 0.8;
         }
         .property-info-item {
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+        .property-info-item i {
+            color: #722F37; /* Wine - CHANGED */
         }
         .property-actions {
             display: flex;
@@ -186,46 +218,64 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 2px solid transparent;
         }
         .btn-view {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            border-color: #722F37; /* Wine - CHANGED */
         }
         .btn-view:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(114, 47, 55, 0.2);
         }
         .btn-edit {
-            background: #e0e0e0;
-            color: #333;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
+            border-color: #722F37; /* Wine - CHANGED */
         }
         .btn-edit:hover {
-            background: #d0d0d0;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(114, 47, 55, 0.2);
         }
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .empty-state i {
             font-size: 4rem;
-            color: #ccc;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 20px;
         }
         .empty-state h3 {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 10px;
         }
         .empty-state p {
-            color: #999;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 30px;
+            opacity: 0.8;
         }
         .reference-id {
             font-size: 0.85rem;
-            color: #999;
+            color: #722F37; /* Wine - CHANGED */
             margin-top: 5px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .reference-id i {
+            color: #722F37; /* Wine - CHANGED */
         }
     </style>
 </head>
@@ -342,4 +392,3 @@
     </div>
 </body>
 </html>
-

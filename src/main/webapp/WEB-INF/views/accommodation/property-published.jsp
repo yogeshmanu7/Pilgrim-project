@@ -15,7 +15,7 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #EFDFBB; /* Dutch White - CHANGED */
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,44 +23,56 @@
             padding: 20px;
         }
         .success-container {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            border: 3px solid #722F37; /* Wine - CHANGED */
             border-radius: 20px;
             padding: 60px;
             max-width: 700px;
             width: 100%;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
             text-align: center;
         }
         .success-icon {
             font-size: 5rem;
-            color: #4caf50;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 30px;
         }
         h1 {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 20px;
             font-size: 2.5rem;
         }
         .status-message {
-            background: #e8f5e9;
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             padding: 20px;
             border-radius: 10px;
             margin: 30px 0;
-            color: #2e7d32;
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .status-message i {
+            color: #722F37; /* Wine - CHANGED */
+            margin-right: 10px;
         }
         .reference-id {
-            background: #f5f5f5;
+            background: rgba(114, 47, 55, 0.05); /* Wine with very low opacity - CHANGED */
             padding: 15px;
             border-radius: 8px;
             margin: 20px 0;
             font-size: 1.2rem;
             font-weight: bold;
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px dashed #722F37; /* Wine - CHANGED */
+        }
+        .reference-id i {
+            color: #722F37; /* Wine - CHANGED */
+            margin-right: 10px;
         }
         .info-message {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             margin: 20px 0;
             line-height: 1.6;
+            opacity: 0.9;
         }
         .action-buttons {
             display: grid;
@@ -76,21 +88,33 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-primary:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
         }
         .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-secondary:hover {
-            background: #d0d0d0;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
     </style>
 </head>
@@ -131,4 +155,3 @@
     </div>
 </body>
 </html>
-

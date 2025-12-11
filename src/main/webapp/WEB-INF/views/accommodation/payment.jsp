@@ -16,19 +16,23 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #EFDFBB; /* Dutch White - CHANGED */
         }
         .header {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             padding: 20px 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid #722F37; /* Wine - CHANGED */
         }
         .header h1 {
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .nav-links {
             display: flex;
@@ -36,13 +40,18 @@
             align-items: center;
         }
         .nav-links a {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             text-decoration: none;
             font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-1px);
         }
         .container {
-            max-width: 900px;
-            margin: 30px auto;
+            max-width: 1000px;
+            margin: 40px auto;
             padding: 0 20px;
         }
         .payment-container {
@@ -51,174 +60,332 @@
             gap: 30px;
         }
         .payment-form-section {
-            background: white;
-            border-radius: 12px;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .booking-summary {
-            background: white;
-            border-radius: 12px;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             height: fit-content;
             position: sticky;
             top: 20px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .section-title {
             font-size: 1.5rem;
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid #722F37; /* Wine - CHANGED */
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .form-group label {
             display: block;
-            color: #666;
-            font-weight: 500;
-            margin-bottom: 8px;
+            color: #722F37; /* Wine - CHANGED */
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
         }
         .form-group select,
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
+            padding: 14px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
             border-radius: 8px;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #722F37; /* Wine - CHANGED */
+            transition: all 0.3s ease;
         }
         .form-group select:focus,
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            box-shadow: 0 0 0 3px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            transform: translateY(-2px);
         }
         .payment-method-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             margin-top: 10px;
         }
         .payment-method-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
+            border-radius: 10px;
+            padding: 20px 15px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
         }
         .payment-method-card:hover {
-            border-color: #667eea;
-            background: #f5f5ff;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            background: rgba(114, 47, 55, 0.05); /* Wine with opacity - CHANGED */
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
         }
         .payment-method-card input[type="radio"] {
             display: none;
         }
-        .payment-method-card input[type="radio"]:checked + label {
-            color: #667eea;
-            font-weight: 600;
-        }
-        .payment-method-card input[type="radio"]:checked ~ .method-icon {
-            color: #667eea;
-        }
         .payment-method-card.selected {
-            border-color: #667eea;
-            background: #f5f5ff;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(114, 47, 55, 0.15); /* Wine with opacity - CHANGED */
         }
         .method-icon {
-            font-size: 2rem;
-            color: #999;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            color: #722F37; /* Wine - CHANGED */
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        .payment-method-card.selected .method-icon {
+            color: #5a2530; /* Darker Wine - CHANGED */
+            transform: scale(1.1);
         }
         .method-label {
             font-size: 0.9rem;
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             display: block;
+            font-weight: 500;
+            text-transform: capitalize;
         }
         .summary-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .summary-item:last-child {
             border-bottom: none;
         }
         .summary-label {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
+            font-weight: 500;
         }
         .summary-value {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             font-weight: 600;
         }
         .summary-total {
             font-size: 1.3rem;
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
             font-weight: 700;
         }
         .btn {
-            padding: 15px 30px;
+            padding: 16px 30px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
             width: 100%;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
-            font-weight: 600;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-primary:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
         }
         .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
-            margin-top: 10px;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+            margin-top: 15px;
         }
         .btn-secondary:hover {
-            background: #d0d0d0;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .property-info {
-            background: #f9f9f9;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+            background: rgba(114, 47, 55, 0.05); /* Wine with opacity - CHANGED */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .property-info h4 {
-            color: #333;
-            margin-bottom: 10px;
+            color: #722F37; /* Wine - CHANGED */
+            margin-bottom: 12px;
+            font-size: 1.2rem;
         }
         .property-info p {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            color: #722F37; /* Wine - CHANGED */
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .property-info i {
+            color: #722F37; /* Wine - CHANGED */
         }
         .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
         }
         .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .alert i {
+            color: #722F37; /* Wine - CHANGED */
+            font-size: 1.2rem;
+        }
+        .security-badge {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
+            text-align: center;
+        }
+        .security-badge p {
+            color: #722F37; /* Wine - CHANGED */
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            opacity: 0.8;
+        }
+        .security-badge i {
+            color: #722F37; /* Wine - CHANGED */
+        }
+        
+        /* Payment method specific styling */
+        .payment-method-card[data-method="CREDIT_CARD"] .method-icon,
+        .payment-method-card[data-method="DEBIT_CARD"] .method-icon {
+            color: #722F37; /* Wine - CHANGED */
+        }
+        .payment-method-card[data-method="UPI"] .method-icon {
+            color: #722F37; /* Wine - CHANGED */
+        }
+        .payment-method-card[data-method="NET_BANKING"] .method-icon {
+            color: #722F37; /* Wine - CHANGED */
+        }
+        .payment-method-card[data-method="WALLET"] .method-icon {
+            color: #722F37; /* Wine - CHANGED */
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .payment-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .booking-summary {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .payment-method-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .payment-method-options {
+                grid-template-columns: 1fr;
+            }
+            .payment-form-section,
+            .booking-summary {
+                padding: 20px;
+            }
+            .btn {
+                padding: 14px 20px;
+            }
+        }
+        
+        /* Animation for payment processing */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .processing {
+            animation: pulse 1.5s infinite;
         }
     </style>
     <script>
-        function selectPaymentMethod(method) {
+        function selectPaymentMethod(method, element) {
             document.querySelectorAll('.payment-method-card').forEach(card => {
                 card.classList.remove('selected');
             });
-            event.currentTarget.classList.add('selected');
+            element.classList.add('selected');
             document.getElementById('paymentMethod').value = method;
+            
+            // Add subtle animation
+            element.style.animation = 'none';
+            setTimeout(() => {
+                element.style.animation = 'pulse 0.5s ease';
+            }, 10);
         }
+        
+        function handlePaymentSubmit(event) {
+            const selectedMethod = document.getElementById('paymentMethod').value;
+            if (!selectedMethod) {
+                event.preventDefault();
+                alert('Please select a payment method');
+                return false;
+            }
+            
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
+                submitBtn.disabled = true;
+                submitBtn.classList.add('processing');
+            }
+            
+            return true;
+        }
+        
+        // Auto-select first payment method
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstCard = document.querySelector('.payment-method-card');
+            if (firstCard) {
+                const method = firstCard.dataset.method;
+                selectPaymentMethod(method, firstCard);
+            }
+        });
     </script>
 </head>
 <body>
@@ -241,14 +408,15 @@
                         <i class="fas fa-info-circle"></i> This is a demo payment. Your booking will be confirmed after payment.
                     </div>
                     
-                    <form method="post" action="/pilgrim/accommodation/user/payment/process">
+                    <form method="post" action="/pilgrim/accommodation/user/payment/process" onsubmit="return handlePaymentSubmit(event)">
                         <input type="hidden" name="bookingId" value="${booking.id}">
+                        <input type="hidden" id="paymentMethod" name="paymentMethod" value="">
                         
                         <div class="form-group">
                             <label>Select Payment Method</label>
                             <div class="payment-method-options">
                                 <c:forEach var="method" items="${paymentMethods}">
-                                    <div class="payment-method-card" onclick="selectPaymentMethod('${method}')">
+                                    <div class="payment-method-card" data-method="${method}" onclick="selectPaymentMethod('${method}', this)">
                                         <input type="radio" name="paymentMethod" value="${method}" id="method_${method}" required>
                                         <div class="method-icon">
                                             <c:choose>
@@ -271,11 +439,15 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-lock"></i> Pay ₹${booking.totalAmount}
                         </button>
+                        
+                        <a href="/pilgrim/accommodation/user/bookings" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Bookings
+                        </a>
                     </form>
                 </div>
                 
                 <div class="booking-summary">
-                    <h3 class="section-title">Booking Summary</h3>
+                    <h3 class="section-title"><i class="fas fa-receipt"></i> Booking Summary</h3>
                     
                     <div class="property-info">
                         <h4>
@@ -323,14 +495,14 @@
                         <span class="summary-value">${booking.referenceNumber}</span>
                     </div>
                     
-                    <div class="summary-item" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+                    <div class="summary-item" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(114, 47, 55, 0.3);">
                         <span class="summary-label summary-total">Total Amount</span>
                         <span class="summary-value summary-total">₹${booking.totalAmount}</span>
                     </div>
                     
-                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
-                        <p style="color: #666; font-size: 0.85rem; text-align: center;">
-                            <i class="fas fa-shield-alt"></i> Secure Payment
+                    <div class="security-badge">
+                        <p>
+                            <i class="fas fa-shield-alt"></i> Secure & Encrypted Payment
                         </p>
                     </div>
                 </div>
@@ -339,4 +511,3 @@
     </div>
 </body>
 </html>
-

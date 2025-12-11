@@ -5,6 +5,139 @@
 <c:set var="currentPage" value="scholars" scope="request"/>
 <%@ include file="../common/header.jsp" %>
 
+<style>
+    :root {
+        --dutch-white: #EFDFBB;
+        --wine: #722F37;
+        --wine-dark: #5A242B;
+        --wine-light: rgba(114, 47, 55, 0.8);
+        --wine-transparent: rgba(114, 47, 55, 0.1);
+        --text-wine: #722F37;
+        --text-cream: #EFDFBB;
+        --border-wine: #722F37;
+        --shadow-wine: 0 10px 30px rgba(114, 47, 55, 0.2);
+    }
+    
+    /* Background Pattern */
+    .bg-pattern {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 90% 80%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+            repeating-linear-gradient(45deg, 
+                transparent, 
+                transparent 20px, 
+                rgba(114, 47, 55, 0.02) 20px, 
+                rgba(114, 47, 55, 0.02) 40px);
+        z-index: 0;
+    }
+    
+    body {
+        position: relative;
+    }
+    
+    body > *:not(.bg-pattern) {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card {
+        border: 2px solid var(--border-wine);
+        border-radius: 12px;
+        box-shadow: var(--shadow-wine);
+        background: white;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%) !important;
+        color: var(--text-cream) !important;
+        border-bottom: 2px solid var(--border-wine);
+    }
+    
+    .card-title {
+        color: var(--text-cream) !important;
+    }
+    
+    .text-teal {
+        color: var(--text-cream) !important;
+    }
+    
+    .text-primary {
+        color: var(--text-wine) !important;
+    }
+    
+    .btn-secondary {
+        background: var(--wine);
+        border: none;
+        color: var(--text-cream);
+        border-radius: 6px;
+    }
+    
+    .btn-secondary:hover {
+        background: var(--wine-dark);
+        color: var(--text-cream);
+    }
+    
+    .btn-outline-secondary {
+        border: 2px solid var(--border-wine);
+        color: var(--text-wine);
+        border-radius: 6px;
+    }
+    
+    .btn-outline-secondary:hover {
+        background: var(--wine);
+        color: var(--text-cream);
+        border-color: var(--wine);
+    }
+    
+    .btn-info {
+        background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+        border: none;
+        color: var(--text-cream);
+        border-radius: 6px;
+    }
+    
+    .btn-info:hover {
+        background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine) 100%);
+        color: var(--text-cream);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(114, 47, 55, 0.3);
+    }
+    
+    /* Badge Styling */
+    .badge.bg-info, .badge.bg-purple {
+        background: var(--wine) !important;
+        color: var(--text-cream);
+    }
+    
+    .text-muted {
+        color: var(--wine-light) !important;
+    }
+    
+    .text-warning {
+        color: #ffc107 !important;
+    }
+    
+    .card-text.text-muted {
+        color: var(--wine-light) !important;
+    }
+    
+    .float-end {
+        color: var(--text-cream);
+    }
+    
+    h2 {
+        color: var(--text-wine);
+    }
+</style>
+
+<!-- Background Pattern -->
+<div class="bg-pattern"></div>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0">
         <i class="fas fa-star me-2 text-teal"></i>
@@ -106,4 +239,3 @@
 </div>
 
 <%@ include file="../common/footer.jsp" %>
-

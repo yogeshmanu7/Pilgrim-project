@@ -4,6 +4,7 @@ import com.pilgrim.entity.PoojaCart;
 import com.pilgrim.entity.PoojaCustomer;
 import com.pilgrim.entity.PoojaOrder;
 import com.pilgrim.entity.PoojaItem;
+import com.pilgrim.entity.User;
 import com.pilgrim.service.PoojaCartService;
 import com.pilgrim.service.PoojaCustomerService;
 import com.pilgrim.service.PoojaOrderService;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/pooja/customer")
@@ -33,54 +35,33 @@ public class PoojaCustomerController {
 
     @Autowired
     private PoojaOrderService orderService;
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("customer", new PoojaCustomer());
-        return "pooja/customer/register";
-    }
-
-    @PostMapping("/register")
-    public String register(@ModelAttribute PoojaCustomer customer, Model model) {
-        try {
-            customerService.registerCustomer(customer);
-            model.addAttribute("success", "Registration successful! Please login.");
-            return "pooja/customer/register";
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "pooja/customer/register";
+    
+    // Helper method to get or create PoojaCustomer from User session
+    private PoojaCustomer getOrCreatePoojaCustomer(User user) {
+        if (user == null) {
+            return null;
         }
-    }
-
-    @GetMapping("/login")
-    public String showLoginForm() {
-        return "pooja/customer/login";
-    }
-
-    @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String password,
-                       HttpSession session, Model model) {
-        try {
-            var customerOpt = customerService.login(email, password);
-            if (customerOpt.isPresent()) {
-                session.setAttribute("poojaCustomer", customerOpt.get());
-                return "redirect:/pooja/customer/dashboard";
-            } else {
-                model.addAttribute("error", "Invalid credentials");
-                return "pooja/customer/login";
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "pooja/customer/login";
+        Optional<PoojaCustomer> existingCustomer = customerService.getCustomerByEmail(user.getEmail());
+        if (existingCustomer.isPresent()) {
+            return existingCustomer.get();
         }
+        // Create a new PoojaCustomer from User data
+        PoojaCustomer poojaCustomer = new PoojaCustomer();
+        poojaCustomer.setName(user.getName());
+        poojaCustomer.setEmail(user.getEmail());
+        poojaCustomer.setPhone(user.getPhone() != null ? user.getPhone() : "");
+        poojaCustomer.setAddress(user.getAddress() != null ? user.getAddress() : "");
+        poojaCustomer.setPassword(""); // Not needed as we use User authentication
+        return customerService.saveCustomer(poojaCustomer);
     }
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         List<PoojaItem> items = poojaItemService.getAllActiveItems();
         model.addAttribute("items", items);
         model.addAttribute("customer", customer);
@@ -94,10 +75,11 @@ public class PoojaCustomerController {
                               @RequestParam(required = false) String sort,
                               Model model) {
 
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
 
         List<PoojaItem> items = poojaItemService.advancedSearch(search, category, sort);
         List<String> categories = poojaItemService.getAllCategories();
@@ -113,10 +95,11 @@ public class PoojaCustomerController {
 
     @GetMapping("/items/{id}")
     public String viewItem(@PathVariable Long id, HttpSession session, Model model) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         var itemOpt = poojaItemService.getItemById(id);
         if (itemOpt.isPresent()) {
             model.addAttribute("item", itemOpt.get());
@@ -128,10 +111,11 @@ public class PoojaCustomerController {
     @PostMapping("/cart/add")
     public String addToCart(@RequestParam Long itemId, @RequestParam Integer quantity,
                            HttpSession session, Model model) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         try {
             cartService.addToCart(customer.getId(), itemId, quantity);
             return "redirect:/pooja/customer/cart";
@@ -143,10 +127,11 @@ public class PoojaCustomerController {
 
     @GetMapping("/cart")
     public String viewCart(HttpSession session, Model model) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         List<PoojaCart> cartItems = cartService.getCustomerCart(customer.getId());
         model.addAttribute("cartItems", cartItems);
         return "pooja/customer/cart";
@@ -155,10 +140,11 @@ public class PoojaCustomerController {
     @PostMapping("/cart/update/{id}")
     public String updateCartQuantity(@PathVariable Long id, @RequestParam Integer quantity,
                                      HttpSession session) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         try {
             cartService.updateCartQuantity(id, quantity);
         } catch (Exception e) {
@@ -169,20 +155,22 @@ public class PoojaCustomerController {
 
     @PostMapping("/cart/remove/{id}")
     public String removeFromCart(@PathVariable Long id, HttpSession session) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         cartService.removeFromCart(id);
         return "redirect:/pooja/customer/cart";
     }
 
     @GetMapping("/checkout")
     public String showCheckout(HttpSession session, Model model) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
 
         List<PoojaCart> cartItems = cartService.getCustomerCart(customer.getId());
         if (cartItems.isEmpty()) {
@@ -209,8 +197,11 @@ public class PoojaCustomerController {
                              @RequestParam String paymentMethod,
                              HttpSession session, Model model) {
 
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
 
         List<PoojaCart> cartItems = cartService.getCustomerCart(customer.getId());
 
@@ -316,10 +307,11 @@ public class PoojaCustomerController {
 
     @GetMapping("/orders")
     public String viewOrders(HttpSession session, Model model) {
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
         List<PoojaOrder> orders = orderService.getCustomerOrders(customer.getId());
         model.addAttribute("orders", orders);
         return "pooja/customer/orders";
@@ -353,10 +345,11 @@ public class PoojaCustomerController {
                               @RequestParam("reason") String reason,
                               HttpSession session) {
 
-        PoojaCustomer customer = (PoojaCustomer) session.getAttribute("poojaCustomer");
-        if (customer == null) {
-            return "redirect:/pooja/customer/login";
+        User user = (User) session.getAttribute("userSession");
+        if (user == null) {
+            return "redirect:/login";
         }
+        PoojaCustomer customer = getOrCreatePoojaCustomer(user);
 
         PoojaOrder order = orderService.getOrderByOrderNumber(orderNumber);
 
@@ -375,7 +368,7 @@ public class PoojaCustomerController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/pooja/customer/login";
+        return "redirect:/login";
     }
 }
 

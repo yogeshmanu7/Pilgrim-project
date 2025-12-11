@@ -8,26 +8,132 @@
     <title>Edit Profile - GlobalPiligrim</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --dutch-white: #EFDFBB;
+            --wine: #722F37;
+            --wine-dark: #5A242B;
+            --wine-light: rgba(114, 47, 55, 0.8);
+            --wine-transparent: rgba(114, 47, 55, 0.1);
+            --text-wine: #722F37;
+            --text-cream: #EFDFBB;
+            --border-wine: #722F37;
+            --shadow-wine: 0 10px 30px rgba(114, 47, 55, 0.2);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dutch-white);
+            color: var(--text-wine);
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(114, 47, 55, 0.05) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, 
+                    transparent, 
+                    transparent 20px, 
+                    rgba(114, 47, 55, 0.02) 20px, 
+                    rgba(114, 47, 55, 0.02) 40px);
+            z-index: 0;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: var(--text-wine);
+        }
+        
         .scholar-card {
-            border-left: 4px solid #667eea;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+            background: white;
+            border: 2px solid var(--border-wine);
+            border-left: 4px solid var(--border-wine);
+            border-radius: 12px;
+            box-shadow: var(--shadow-wine);
         }
+        
         .scholar-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
             border: none;
-            color: white;
+            color: var(--text-cream);
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px;
+            transition: all 0.3s ease;
         }
+        
         .scholar-btn:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--wine-dark) 0%, var(--wine) 100%);
+            color: var(--text-cream);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-wine);
+        }
+        
+        .bg-primary {
+            background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%) !important;
+            color: var(--text-cream) !important;
+        }
+        
+        .form-label {
+            color: var(--text-wine);
+            font-weight: 600;
+        }
+        
+        .form-control {
+            background: white;
+            border: 2px solid var(--border-wine);
+            color: var(--text-wine);
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+        
+        .form-control:focus {
+            background: white;
+            border-color: var(--wine);
+            box-shadow: 0 0 0 3px var(--wine-transparent);
+            color: var(--text-wine);
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--wine);
+            border-color: var(--wine);
+        }
+        
+        .form-check-input {
+            border: 2px solid var(--border-wine);
+        }
+        
+        .form-check-label {
+            color: var(--wine-light);
+        }
+        
+        .card-title {
+            color: var(--text-cream) !important;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+    
+    <div class="container">
         <div class="card scholar-card mx-auto" style="max-width: 800px;">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-primary">
                 <h2 class="card-title mb-0">Edit Profile</h2>
             </div>
             <div class="card-body p-4">
@@ -80,4 +186,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

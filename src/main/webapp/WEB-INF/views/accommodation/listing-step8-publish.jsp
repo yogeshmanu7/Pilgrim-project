@@ -15,66 +15,142 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #EFDFBB; /* Dutch White */
             padding: 40px 20px;
         }
         .container {
             max-width: 1000px;
             margin: 0 auto;
         }
+        
+        /* Progress Indicator */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        .step {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
+            color: #722F37; /* Wine */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            transform: scale(1.1);
+        }
+        .step.completed {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+        }
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: #722F37; /* Wine */
+            opacity: 0.3;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
         .step-header {
             text-align: center;
             margin-bottom: 30px;
         }
         .step-indicator {
-            color: #667eea;
+            color: #722F37; /* Wine */
             font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .step-header h1 {
+            color: #722F37; /* Wine */
             margin-bottom: 10px;
         }
         .form-container {
-            background: white;
+            background: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity */
         }
         .summary-section {
-            background: #f9f9f9;
+            background: rgba(114, 47, 55, 0.05); /* Wine with very low opacity */
             padding: 25px;
             border-radius: 10px;
             margin-bottom: 30px;
+            border: 2px solid #722F37; /* Wine */
         }
         .summary-section h3 {
-            color: #667eea;
+            color: #722F37; /* Wine */
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .summary-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(114, 47, 55, 0.2); /* Wine with opacity */
         }
         .summary-item:last-child {
             border-bottom: none;
+        }
+        .summary-item strong {
+            color: #722F37; /* Wine */
+            font-weight: 600;
+        }
+        .summary-item span {
+            color: #722F37; /* Wine */
+            opacity: 0.8;
         }
         .form-group {
             margin-bottom: 20px;
         }
         label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 8px;
-            color: #555;
+            color: #722F37; /* Wine */
             font-weight: 500;
+        }
+        label i {
+            color: #722F37; /* Wine */
         }
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #722F37; /* Wine */
             border-radius: 8px;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #722F37; /* Wine */
         }
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5a2530; /* Darker Wine */
+            box-shadow: 0 0 0 2px rgba(114, 47, 55, 0.2);
         }
         .checkbox-group {
             margin-top: 20px;
@@ -84,17 +160,27 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 15px;
+            cursor: pointer;
         }
         .checkbox-group input[type="checkbox"] {
-            width: auto;
+            width: 20px;
+            height: 20px;
+            accent-color: #722F37; /* Wine */
         }
         .warning {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity */
+            border: 2px solid #722F37; /* Wine */
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
-            color: #856404;
+            color: #722F37; /* Wine */
+        }
+        .warning i {
+            color: #722F37; /* Wine */
+            margin-right: 10px;
+        }
+        .warning strong {
+            color: #722F37; /* Wine */
         }
         .btn-group {
             display: flex;
@@ -107,19 +193,52 @@
             border-radius: 8px;
             font-size: 1.1rem;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
+        }
+        .btn-primary:hover {
+            background: #5a2530; /* Darker Wine */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.3);
         }
         .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+            background: #EFDFBB; /* Dutch White */
+            color: #722F37; /* Wine */
+            border: 2px solid #722F37; /* Wine */
+        }
+        .btn-secondary:hover {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2);
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="step-line"></div>
+            <div class="progress-steps">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step completed">4</div>
+                <div class="step completed">5</div>
+                <div class="step completed">6</div>
+                <div class="step completed">7</div>
+                <div class="step active">8</div>
+            </div>
+        </div>
+        
         <div class="step-header">
             <div class="step-indicator">🚀 STEP 8/8 — PUBLISH PROPERTY</div>
             <h1><i class="fas fa-rocket"></i> Publish Your Property</h1>
@@ -148,12 +267,12 @@
             
             <div class="form-group">
                 <label><i class="fas fa-id-card"></i> PAN</label>
-                <input type="text" name="pan" required>
+                <input type="text" name="pan" required placeholder="Enter your PAN number">
             </div>
             
             <div class="form-group">
                 <label><i class="fas fa-file-invoice"></i> GST (Optional)</label>
-                <input type="text" name="gst">
+                <input type="text" name="gst" placeholder="Enter your GST number (optional)">
             </div>
             
             <div class="checkbox-group">
@@ -174,7 +293,9 @@
             </div>
             
             <div class="btn-group">
-                <a href="/pilgrim/accommodation/property/listing/step7" class="btn btn-secondary">Back</a>
+                <a href="/pilgrim/accommodation/property/listing/step7" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-check"></i> PUBLISH LISTING
                 </button>
@@ -183,4 +304,3 @@
     </div>
 </body>
 </html>
-
