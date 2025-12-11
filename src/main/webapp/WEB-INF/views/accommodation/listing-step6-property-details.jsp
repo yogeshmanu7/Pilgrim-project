@@ -14,7 +14,7 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             padding: 40px 20px;
         }
         .container {
@@ -26,15 +26,16 @@
             margin-bottom: 30px;
         }
         .step-indicator {
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
             font-weight: bold;
             margin-bottom: 10px;
         }
         .form-container {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
         }
         .form-group {
             margin-bottom: 20px;
@@ -47,7 +48,7 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: #722F37; /* Wine - CHANGED */
             font-weight: 500;
         }
         input[type="text"],
@@ -56,13 +57,16 @@
         select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #722F37; /* Wine - CHANGED */
             border-radius: 8px;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #722F37; /* Wine - CHANGED */
         }
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            box-shadow: 0 0 0 2px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .star-rating {
             display: flex;
@@ -71,11 +75,15 @@
         }
         .star {
             font-size: 2rem;
-            color: #ddd;
+            color: #d4c2a0; /* Light Dutch White - CHANGED */
             cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .star:hover {
+            transform: scale(1.2);
         }
         .star.active {
-            color: #ffd700;
+            color: #FFD700; /* Keep gold for stars */
         }
         .cancellation-options {
             display: grid;
@@ -84,25 +92,28 @@
         }
         .cancellation-card {
             padding: 20px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #722F37; /* Wine - CHANGED */
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            background: #EFDFBB; /* Dutch White - CHANGED */
         }
         .cancellation-card:hover {
-            border-color: #667eea;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
         }
         .cancellation-card.selected {
-            border-color: #667eea;
-            background: #f0f4ff;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
         }
         .cancellation-card input[type="radio"] {
             display: none;
         }
         .badge {
-            background: #ffd700;
-            color: #333;
-            padding: 3px 8px;
+            background: linear-gradient(135deg, #FFD700, #FFC300); /* Gold gradient - ENHANCED */
+            color: #722F37; /* Wine - CHANGED */
+            padding: 4px 10px;
             border-radius: 5px;
             font-size: 0.8rem;
             font-weight: bold;
@@ -119,19 +130,110 @@
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .btn-primary:hover {
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .btn-secondary:hover {
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
+        }
+        
+        /* Progress Indicator (Optional - matches your other pages) */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        .step {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #EFDFBB; /* Dutch White */
+            border: 2px solid #722F37; /* Wine */
+            color: #722F37; /* Wine */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+            transform: scale(1.1);
+        }
+        .step.completed {
+            background: #722F37; /* Wine */
+            color: #EFDFBB; /* Dutch White */
+        }
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: #722F37; /* Wine */
+            opacity: 0.3;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        /* Icon colors */
+        label i {
+            color: #722F37; /* Wine - CHANGED */
+        }
+        
+        /* Keep gold for star icons when active */
+        .star.active i {
+            color: #FFD700;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Optional Progress Indicator (matches your other pages) -->
+        <div class="progress-container">
+            <div class="step-line"></div>
+            <div class="progress-steps">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step completed">4</div>
+                <div class="step completed">5</div>
+                <div class="step active">6</div>
+                <div class="step">7</div>
+                <div class="step">8</div>
+            </div>
+        </div>
+        
         <div class="step-header">
             <div class="step-indicator">🏡 STEP 6/8 — PROPERTY DETAILS</div>
             <h1><i class="fas fa-home"></i> Property Details</h1>
@@ -140,7 +242,7 @@
         <form method="post" action="/pilgrim/accommodation/property/listing/step6" class="form-container">
             <div class="form-group">
                 <label><i class="fas fa-sign"></i> Property Name</label>
-                <input type="text" name="propertyName" required>
+                <input type="text" name="propertyName" required placeholder="Enter your property name">
             </div>
             
             <div class="form-group">
@@ -194,8 +296,12 @@
             </div>
             
             <div class="btn-group">
-                <a href="/pilgrim/accommodation/property/listing/step5" class="btn btn-secondary">Back</a>
-                <button type="submit" class="btn btn-primary">Next Step <i class="fas fa-arrow-right"></i></button>
+                <a href="/pilgrim/accommodation/property/listing/step5" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Next Step <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </form>
     </div>
@@ -215,6 +321,9 @@
             });
         });
         
+        // Set default star rating
+        document.querySelector('.star[data-rating="1"]').click();
+        
         function selectCancellation(element) {
             document.querySelectorAll('.cancellation-card').forEach(card => {
                 card.classList.remove('selected');
@@ -222,7 +331,14 @@
             element.classList.add('selected');
             element.querySelector('input[type="radio"]').checked = true;
         }
+        
+        // Auto-select the recommended option after a delay (like your other pages)
+        setTimeout(() => {
+            const recommendedCard = document.querySelector('.cancellation-card .badge')?.closest('.cancellation-card');
+            if (recommendedCard && !document.querySelector('.cancellation-card.selected')) {
+                selectCancellation(recommendedCard);
+            }
+        }, 1000);
     </script>
 </body>
 </html>
-

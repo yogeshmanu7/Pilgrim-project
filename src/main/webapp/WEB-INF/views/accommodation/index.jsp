@@ -23,23 +23,27 @@
         }
         body {
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #EFDFBB; /* Dutch White - CHANGED */
         }
         .navbar {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             padding: 15px 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 2px solid #722F37; /* Wine - CHANGED */
         }
         .navbar .logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .navbar .nav-links {
             display: flex;
@@ -47,81 +51,117 @@
             align-items: center;
         }
         .navbar .nav-links a {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s ease;
         }
         .navbar .nav-links a:hover {
-            color: #667eea;
+            color: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-1px);
         }
         .btn-signin {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-signin:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .btn-search {
-            background: #4caf50;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-search:hover {
-            background: #45a049;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #EFDFBB; /* Dutch White - CHANGED */
             padding: 80px 30px;
             text-align: center;
-            color: white;
+            color: #722F37; /* Wine - CHANGED */
+            border-bottom: 3px solid #722F37; /* Wine - CHANGED */
         }
         .hero-section h1 {
             font-size: 3rem;
             margin-bottom: 15px;
+            color: #722F37; /* Wine - CHANGED */
         }
         .hero-section p {
             font-size: 1.2rem;
             opacity: 0.9;
             margin-bottom: 30px;
+            color: #722F37; /* Wine - CHANGED */
         }
         .search-box {
             max-width: 1000px;
             margin: 0 auto;
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr auto;
             gap: 10px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .search-box input {
             padding: 15px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #722F37; /* Wine - CHANGED */
             border-radius: 8px;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #722F37; /* Wine - CHANGED */
+            transition: all 0.3s ease;
         }
         .search-box input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5a2530; /* Darker Wine - CHANGED */
+            box-shadow: 0 0 0 3px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+        }
+        .search-box input::placeholder {
+            color: rgba(114, 47, 55, 0.6); /* Wine with opacity - CHANGED */
         }
         .search-box button {
             padding: 15px 30px;
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .search-box button:hover {
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
         }
         .container {
             max-width: 1400px;
@@ -135,8 +175,12 @@
             margin-bottom: 30px;
         }
         .section-header h2 {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 2rem;
+        }
+        .section-header span {
+            color: #722F37; /* Wine - CHANGED */
+            opacity: 0.8;
         }
         .properties-grid {
             display: grid;
@@ -144,25 +188,26 @@
             gap: 30px;
         }
         .property-card {
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 8px rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            transition: all 0.3s ease;
             cursor: pointer;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .property-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .property-image {
             width: 100%;
             height: 220px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 3rem;
             position: relative;
         }
@@ -175,12 +220,13 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(255,255,255,0.9);
-            padding: 5px 12px;
+            background: rgba(239, 223, 187, 0.9); /* Dutch White with opacity - CHANGED */
+            padding: 6px 15px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .property-content {
             padding: 20px;
@@ -188,43 +234,49 @@
         .property-name {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
+            color: #722F37; /* Wine - CHANGED */
+            margin-bottom: 15px;
         }
         .action-card {
-            background: #f8f9fa;
+            background: rgba(114, 47, 55, 0.05); /* Wine with very low opacity - CHANGED */
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 15px;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .action-icon {
             width: 50px;
             height: 50px;
-            background: #667eea;
+            background: #722F37; /* Wine - CHANGED */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            color: white;
+            color: #EFDFBB; /* Dutch White - CHANGED */
             font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .property-card:hover .action-icon {
+            transform: scale(1.1);
+            background: #5a2530; /* Darker Wine - CHANGED */
         }
         .action-card h3 {
-            color: #333;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 1.1rem;
             margin-bottom: 8px;
             font-weight: 600;
         }
         .action-card p {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 0.9rem;
             margin-bottom: 15px;
+            opacity: 0.8;
         }
         .btn-primary {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
@@ -232,10 +284,13 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-primary:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .btn-primary i {
             font-size: 0.9rem;
@@ -245,17 +300,18 @@
             gap: 20px;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .property-detail-item {
             display: flex;
             align-items: center;
             gap: 5px;
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 0.9rem;
+            opacity: 0.8;
         }
         .property-detail-item i {
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
         }
         .property-rating {
             display: flex;
@@ -264,11 +320,12 @@
             margin-bottom: 15px;
         }
         .property-rating .stars {
-            color: #ffc107;
+            color: #722F37; /* Wine - CHANGED */
         }
         .property-rating .rating-text {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 0.9rem;
+            opacity: 0.8;
         }
         .property-price {
             display: flex;
@@ -278,51 +335,134 @@
         .price {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: #722F37; /* Wine - CHANGED */
         }
         .price-period {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             font-size: 0.9rem;
+            opacity: 0.8;
         }
         .btn-view {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .btn-view:hover {
-            background: #5568d3;
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
         .empty-state {
             text-align: center;
             padding: 80px 20px;
-            background: white;
+            background: #EFDFBB; /* Dutch White - CHANGED */
             border-radius: 12px;
+            border: 2px solid #722F37; /* Wine - CHANGED */
         }
         .empty-state i {
             font-size: 4rem;
-            color: #ccc;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 20px;
+            opacity: 0.7;
         }
         .empty-state h3 {
-            color: #666;
+            color: #722F37; /* Wine - CHANGED */
             margin-bottom: 10px;
         }
         .empty-state p {
-            color: #999;
+            color: #722F37; /* Wine - CHANGED */
+            opacity: 0.8;
         }
         .btn-list-property {
-            background: #667eea;
-            color: white;
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
             padding: 12px 30px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 500;
             display: inline-block;
             margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .btn-list-property:hover {
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
+        }
+        
+        /* Sign in required styling */
+        .signin-required {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 40px;
+            background: #EFDFBB; /* Dutch White - CHANGED */
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .signin-required i {
+            font-size: 3rem;
+            color: #722F37; /* Wine - CHANGED */
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        .signin-required h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #722F37; /* Wine - CHANGED */
+            text-align: center;
+        }
+        .signin-required p {
+            opacity: 0.9;
+            margin-bottom: 20px;
+            color: #722F37; /* Wine - CHANGED */
+            text-align: center;
+        }
+        .signin-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .signin-buttons a {
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-signin-alt {
+            background: #722F37; /* Wine - CHANGED */
+            color: #EFDFBB; /* Dutch White - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .btn-signin-alt:hover {
+            background: #5a2530; /* Darker Wine - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.3); /* Wine with opacity - CHANGED */
+        }
+        .btn-signup-alt {
+            background: rgba(114, 47, 55, 0.1); /* Wine with opacity - CHANGED */
+            color: #722F37; /* Wine - CHANGED */
+            border: 2px solid #722F37; /* Wine - CHANGED */
+        }
+        .btn-signup-alt:hover {
+            background: rgba(114, 47, 55, 0.2); /* Wine with more opacity - CHANGED */
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(114, 47, 55, 0.2); /* Wine with opacity - CHANGED */
         }
     </style>
 </head>
@@ -365,17 +505,15 @@
                 </form>
             </c:when>
             <c:otherwise>
-                <div class="search-box" style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 40px;">
-                    <div style="text-align: center; color: white;">
-                        <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.9;"></i>
-                        <h2 style="margin-bottom: 10px; font-size: 1.5rem;">Sign in to search properties</h2>
-                        <p style="opacity: 0.9; margin-bottom: 20px;">Please sign in or create an account to search and book properties</p>
-                    </div>
-                    <div style="display: flex; gap: 15px;">
-                        <a href="/accommodation/signin" style="padding: 15px 40px; background: white; color: #667eea; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: transform 0.3s;">
+                <div class="signin-required">
+                    <i class="fas fa-lock"></i>
+                    <h2>Sign in to search properties</h2>
+                    <p>Please sign in or create an account to search and book properties</p>
+                    <div class="signin-buttons">
+                        <a href="/accommodation/signin" class="btn-signin-alt">
                             <i class="fas fa-sign-in-alt"></i> Sign In
                         </a>
-                        <a href="/accommodation/signup" style="padding: 15px 40px; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: transform 0.3s;">
+                        <a href="/accommodation/signup" class="btn-signup-alt">
                             <i class="fas fa-user-plus"></i> Sign Up
                         </a>
                     </div>
@@ -387,7 +525,7 @@
     <div class="container">
         <div class="section-header">
             <h2>Available Properties</h2>
-            <span style="color: #666;">${properties.size()} properties available</span>
+            <span>${properties.size()} properties available</span>
         </div>
         
         <c:choose>
@@ -440,7 +578,7 @@
                                             <%
                                                 } else {
                                             %>
-                                                <p style="color: #999; font-size: 0.85rem; margin: 0;">Location not available</p>
+                                                <p style="color: #722F37; font-size: 0.85rem; margin: 0; opacity: 0.6;">Location not available</p>
                                             <%
                                                 }
                                             %>
@@ -464,13 +602,13 @@
                                             <%
                                                 } else {
                                             %>
-                                                <p style="color: #999; font-size: 0.85rem; margin: 0;">Location not available</p>
+                                                <p style="color: #722F37; font-size: 0.85rem; margin: 0; opacity: 0.6;">Location not available</p>
                                             <%
                                                 }
                                             %>
                                         </c:when>
                                         <c:otherwise>
-                                            <p style="color: #999; font-size: 0.85rem; margin: 0;">Location not available</p>
+                                            <p style="color: #722F37; font-size: 0.85rem; margin: 0; opacity: 0.6;">Location not available</p>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
@@ -501,6 +639,7 @@
                                 <div class="property-price">
                                     <div>
                                         <span class="price">View Details</span>
+                                        <span class="price-period"></span>
                                     </div>
                                     <a href="/accommodation/property/view/${property.id}" class="btn-view" onclick="event.stopPropagation();">
                                         <i class="fas fa-arrow-right"></i>
@@ -525,4 +664,3 @@
     </div>
 </body>
 </html>
-
